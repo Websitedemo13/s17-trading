@@ -3,17 +3,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useAuthStore } from '@/stores/authStore';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuthStore();
+  const { signIn, forgotPassword } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +45,35 @@ const Login = () => {
     }
     
     setLoading(false);
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!forgotEmail) {
+      toast({
+        title: "Lỗi",
+        description: "Vui lòng nhập email",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setForgotLoading(true);
+    const result = await forgotPassword(forgotEmail);
+    
+    if (result.error) {
+      toast({
+        title: "Gửi email thất bại",
+        description: result.error,
+        variant: "destructive"
+      });
+    } else {
+      setForgotOpen(false);
+      setForgotEmail('');
+    }
+    
+    setForgotLoading(false);
   };
 
   return (
@@ -104,6 +137,46 @@ const Login = () => {
               Đăng nhập
             </Button>
           </form>
+
+          <div className="mt-4 text-center">
+            <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+              <DialogTrigger asChild>
+                <Button variant="link" className="text-sm text-muted-foreground hover:text-primary">
+                  Quên mật khẩu?
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Quên mật khẩu</DialogTitle>
+                  <DialogDescription>
+                    Nhập email của bạn để nhận link reset mật khẩu
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleForgotPassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Email</label>
+                    <Input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                      disabled={forgotLoading}
+                    />
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full"
+                    disabled={forgotLoading}
+                  >
+                    {forgotLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : null}
+                    Gửi email reset
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">

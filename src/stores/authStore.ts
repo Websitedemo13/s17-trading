@@ -10,6 +10,8 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<{ error?: string }>;
+  resetPassword: (password: string) => Promise<{ error?: string }>;
   initialize: () => void;
 }
 
@@ -74,6 +76,50 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       title: "Đăng xuất thành công",
       description: "Hẹn gặp lại bạn!",
     });
+  },
+
+  forgotPassword: async (email: string) => {
+    try {
+      const redirectUrl = `${window.location.origin}/reset-password`;
+      
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectUrl
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      toast({
+        title: "Email đã được gửi",
+        description: "Vui lòng kiểm tra email để reset mật khẩu.",
+      });
+
+      return {};
+    } catch (error) {
+      return { error: "Có lỗi xảy ra khi gửi email reset mật khẩu" };
+    }
+  },
+
+  resetPassword: async (password: string) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: password
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      toast({
+        title: "Đổi mật khẩu thành công",
+        description: "Mật khẩu của bạn đã được cập nhật.",
+      });
+
+      return {};
+    } catch (error) {
+      return { error: "Có lỗi xảy ra khi đổi mật khẩu" };
+    }
   },
 
   initialize: () => {
