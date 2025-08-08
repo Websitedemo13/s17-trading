@@ -5,25 +5,67 @@ import CryptoList from "@/components/CryptoList";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Crypto Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back to your portfolio</p>
-        </header>
-        
-        <MarketStats />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <CryptoChart />
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Hero background with animated gradients */}
+      <div className="absolute inset-0 animated-bg opacity-30"></div>
+      
+      {/* Floating geometric shapes */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-float"></div>
+      <div className="absolute top-60 right-20 w-48 h-48 bg-accent/10 rounded-full blur-2xl animate-float animate-delay-200"></div>
+      <div className="absolute bottom-40 left-1/3 w-40 h-40 bg-success/10 rounded-full blur-2xl animate-float animate-delay-400"></div>
+      
+      {/* Hero Section */}
+      <div className="relative z-10 min-h-screen">
+        {/* Hero Content */}
+        <div className="max-w-7xl mx-auto px-8 pt-20 pb-12">
+          <div className="text-center mb-16">
+            <h1 className="text-6xl md:text-8xl font-display font-bold text-gradient mb-6 animate-slide-up">
+              S17 Trading
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up animate-delay-200 max-w-3xl mx-auto">
+              Nền tảng giao dịch crypto xã hội tiên tiến với AI insights và team collaboration
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animate-delay-400">
+              <button className="btn-premium text-lg px-8 py-4">
+                Bắt đầu giao dịch
+              </button>
+              <button className="px-8 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold">
+                Tìm hiểu thêm
+              </button>
+            </div>
           </div>
-          <div>
-            <PortfolioCard />
+          
+          {/* Dashboard Preview */}
+          <div className="max-w-7xl mx-auto animate-slide-up animate-delay-600">
+            <header className="mb-12 text-center">
+              <h2 className="text-4xl font-display font-bold mb-4 text-gradient">
+                Dashboard Overview
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Theo dõi thị trường crypto real-time với giao diện đẹp mắt
+              </p>
+            </header>
+            
+            <div className="space-y-8">
+              <div className="animate-slide-up animate-delay-700">
+                <MarketStats />
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 animate-slide-left animate-delay-800">
+                  <CryptoChart />
+                </div>
+                <div className="animate-slide-right animate-delay-900">
+                  <PortfolioCard />
+                </div>
+              </div>
+              
+              <div className="animate-slide-up animate-delay-1000">
+                <CryptoList />
+              </div>
+            </div>
           </div>
         </div>
-        
-        <CryptoList />
       </div>
     </div>
   );
