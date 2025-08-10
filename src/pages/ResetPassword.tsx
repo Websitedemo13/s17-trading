@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/authStore';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const ResetPassword = () => {
@@ -18,18 +19,45 @@ const ResetPassword = () => {
   const { resetPassword } = useAuthStore();
 
   useEffect(() => {
-    // Check if we have the required tokens
+    // Check if we have the required tokens and set session
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
+    const type = searchParams.get('type');
     
-    if (!accessToken || !refreshToken) {
+    if (!accessToken || !refreshToken || type !== 'recovery') {
       toast({
         title: "Link không hợp lệ",
         description: "Link reset mật khẩu không hợp lệ hoặc đã hết hạn.",
         variant: "destructive",
       });
       navigate('/login');
+      return;
     }
+
+    // Set session with the tokens from URL
+    const setSession = async () => {
+      try {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+        
+        if (error) {
+          console.error('Error setting session:', error);
+          toast({
+            title: "Lỗi xác thực",
+            description: "Không thể xác thực link reset. Vui lòng thử lại.",
+            variant: "destructive",
+          });
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        navigate('/login');
+      }
+    };
+
+    setSession();
   }, [searchParams, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {

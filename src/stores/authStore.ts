@@ -103,6 +103,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   resetPassword: async (password: string) => {
     try {
+      // Get current session to verify user is authenticated via reset link
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        return { error: "Phiên đăng nhập không hợp lệ. Vui lòng thử lại từ email." };
+      }
+
       const { error } = await supabase.auth.updateUser({
         password: password
       });
