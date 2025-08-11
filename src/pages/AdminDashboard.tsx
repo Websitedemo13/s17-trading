@@ -36,9 +36,13 @@ import { Navigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { user } = useAuthStore();
-  const { isAdmin, adminUser, stats, loading, fetchStats, getAllUsers } = useAdminStore();
+  const { isAdmin, adminUser, stats, loading, fetchStats, getAllUsers, updateUserStatus, deleteUser } = useAdminStore();
+  const { posts, loading: blogLoading, fetchPosts, createPost, updatePost, deletePost, publishPost, unpublishPost } = useBlogStore();
   const [activeTab, setActiveTab] = useState('overview');
   const [users, setUsers] = useState<any[]>([]);
+  const [newPostTitle, setNewPostTitle] = useState('');
+  const [newPostContent, setNewPostContent] = useState('');
+  const [editingPost, setEditingPost] = useState<any>(null);
 
   useEffect(() => {
     if (isAdmin) {
@@ -208,7 +212,7 @@ const AdminDashboard = () => {
                   onClick={() => setActiveTab('users')}
                 />
                 <QuickActionCard
-                  title="Đào tạo AI"
+                  title="Đào t��o AI"
                   description="Training dataset và model"
                   icon={Brain}
                   color="purple"
