@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ChatAI from "./pages/ChatAI";
+import Chat from "./pages/Chat";
 import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
 import About from "./pages/About";
