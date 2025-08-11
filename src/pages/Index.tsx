@@ -94,6 +94,7 @@ const Index = () => {
           </div>
         </div>
       </div>
+      <ScrollToTop />
     </div>
   );
 };
