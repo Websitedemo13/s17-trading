@@ -21,6 +21,7 @@ const Navbar = () => {
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: '📊' },
     { path: '/teams', label: 'Teams', icon: '👥' },
+    { path: '/chat', label: 'Chat', icon: '💬' },
     { path: '/chat-ai', label: 'AI Chat', icon: '🤖' },
     { path: '/profile', label: 'Profile', icon: '👤' }
   ];
