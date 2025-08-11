@@ -52,14 +52,14 @@ import { UserAvatarWithPresence, StatusSelector, OnlineUsersList, usePresenceMan
 
 const EnhancedChat = () => {
   const { user } = useAuthStore();
-  const { 
-    messages, 
-    loading, 
+  const {
+    messages,
+    loading,
     typingUsers,
     userPresences,
-    fetchMessages, 
-    sendMessage, 
-    replyToMessage,
+    fetchMessages,
+    sendMessage,
+    replyToMessage: sendReplyToMessage,
     addReaction,
     removeReaction,
     setTyping,
