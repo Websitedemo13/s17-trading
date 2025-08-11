@@ -18,27 +18,57 @@ export const useChatStore = create<ChatState>((set, get) => ({
   fetchMessages: async (teamId: string) => {
     set({ loading: true });
     try {
+      // First check if user is authenticated
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        throw new Error('Người dùng chưa đăng nhập');
+      }
+
+      // Check if user is member of the team
+      const { data: memberData, error: memberError } = await supabase
+        .from('team_members')
+        .select('*')
+        .eq('team_id', teamId)
+        .eq('user_id', userData.user.id)
+        .single();
+
+      if (memberError || !memberData) {
+        throw new Error('Bạn không có quyền truy cập nhóm này');
+      }
+
+      // Fetch messages with user profiles
       const { data, error } = await supabase
         .from('chat_messages')
-        .select('*')
+        .select(`
+          *,
+          user:user_id (
+            display_name,
+            avatar_url
+          )
+        `)
         .eq('team_id', teamId)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Lỗi tải tin nhắn: ${error.message}`);
+      }
 
       const messages = data?.map(message => ({
         ...message,
-        user: { display_name: 'User', avatar_url: null }
+        user: message.user || { display_name: 'Anonymous', avatar_url: null }
       })) || [];
 
       set({ messages });
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định';
+      console.error('Error fetching messages:', errorMessage);
       toast({
         title: "Lỗi",
-        description: "Không thể tải tin nhắn",
+        description: errorMessage,
         variant: "destructive"
       });
+      set({ messages: [] });
     } finally {
       set({ loading: false });
     }
