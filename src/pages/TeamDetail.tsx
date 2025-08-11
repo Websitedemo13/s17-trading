@@ -281,28 +281,30 @@ const TeamDetail = () => {
                     <Separator />
                     
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Hoặc chia sẻ mã mời</label>
+                      <label className="text-sm font-medium mb-2 block">Link mời nhóm</label>
                       <div className="flex gap-2">
                         <Input
-                          value={inviteCode || teamId}
+                          value={generateInviteLink(teamId!)}
                           readOnly
-                          placeholder="Nhấn tạo mã để có mã mời"
+                          className="text-sm"
                         />
-                        <Button 
-                          variant="outline" 
-                          onClick={handleGenerateInviteCode}
-                          disabled={!!inviteCode}
+                        <Button
+                          variant="outline"
+                          onClick={handleCopyInviteCode}
+                          title="Sao chép link"
                         >
-                          {inviteCode ? <Copy className="h-4 w-4" /> : <Link2 className="h-4 w-4" />}
+                          <Copy className="h-4 w-4" />
                         </Button>
-                        {inviteCode && (
-                          <Button variant="outline" onClick={handleCopyInviteCode}>
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        )}
+                        <Button
+                          variant="outline"
+                          onClick={handleShareInvite}
+                          title="Chia sẻ link"
+                        >
+                          <Share2 className="h-4 w-4" />
+                        </Button>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Chia sẻ mã này để mời người khác tham gia nhóm
+                        Chia sẻ link này để mời người khác tham gia nhóm. Họ chỉ cần nhấn vào link!
                       </p>
                     </div>
                     
