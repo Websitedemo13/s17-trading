@@ -57,7 +57,7 @@ const Markets = () => {
   const [sortBy, setSortBy] = useState<'marketCap' | 'price' | 'changePercent'>('marketCap');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [watchlist, setWatchlist] = useState<string[]>([]);
-  const [selectedChart, setSelectedChart] = useState<string>('VN-INDEX');
+  const [selectedChart, setSelectedChart] = useState<string>('VNINDEX');
 
   useEffect(() => {
     loadMarketData();
