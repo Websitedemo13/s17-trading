@@ -91,6 +91,54 @@ const Index = () => {
                 <CryptoList />
               </div>
             </div>
+
+            {/* Feature Highlights */}
+            <div className="mt-20 pt-20 border-t border-primary/20">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-display font-bold mb-4 text-gradient">
+                  Tại sao chọn S17 Trading?
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Khám phá những tính năng độc đáo giúp bạn giao dịch thông minh hơn
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div className="text-center p-6 bg-card/30 backdrop-blur-sm rounded-2xl border border-primary/20 hover:border-primary/40 transition-all duration-300">
+                  <div className="text-4xl mb-4">🤖</div>
+                  <h3 className="text-xl font-semibold mb-3 text-foreground">AI Insights</h3>
+                  <p className="text-muted-foreground">
+                    Phân tích thị trường thông minh với AI để đưa ra quyết định giao dịch tối ưu
+                  </p>
+                </div>
+
+                <div className="text-center p-6 bg-card/30 backdrop-blur-sm rounded-2xl border border-primary/20 hover:border-primary/40 transition-all duration-300">
+                  <div className="text-4xl mb-4">👥</div>
+                  <h3 className="text-xl font-semibold mb-3 text-foreground">Social Trading</h3>
+                  <p className="text-muted-foreground">
+                    Kết nối với cộng đồng trader, chia sẻ chiến lược và học hỏi từ chuyên gia
+                  </p>
+                </div>
+
+                <div className="text-center p-6 bg-card/30 backdrop-blur-sm rounded-2xl border border-primary/20 hover:border-primary/40 transition-all duration-300">
+                  <div className="text-4xl mb-4">📊</div>
+                  <h3 className="text-xl font-semibold mb-3 text-foreground">Real-time Data</h3>
+                  <p className="text-muted-foreground">
+                    Theo dõi thị trường real-time với biểu đồ tương tác và dữ liệu chính xác
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <Link
+                  to="/about"
+                  className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
+                >
+                  Khám phá tất cả tính năng
+                  <span>→</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
