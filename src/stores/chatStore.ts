@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '@/integrations/supabase/client';
 import { ChatMessage } from '@/types';
 import { toast } from '@/hooks/use-toast';
+import { useAuthStore } from './authStore';
 
 interface ChatState {
   messages: ChatMessage[];
