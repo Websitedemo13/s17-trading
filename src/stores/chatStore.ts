@@ -40,7 +40,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         .from('team_members')
         .select('*')
         .eq('team_id', teamId)
-        .eq('user_id', userData.user.id)
+        .eq('user_id', authUser.id)
         .single();
 
       if (memberError || !memberData) {
@@ -127,7 +127,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         .from('team_members')
         .select('*')
         .eq('team_id', teamId)
-        .eq('user_id', userData.user.id)
+        .eq('user_id', authUser.id)
         .single();
 
       if (memberError || !memberData) {
