@@ -2,23 +2,47 @@ import { create } from 'zustand';
 import { supabase } from '@/integrations/supabase/client';
 import { Team, TeamMember } from '@/types';
 import { toast } from '@/hooks/use-toast';
+import { useNotificationStore } from './notificationStore';
 
 interface TeamState {
   teams: Team[];
   currentTeam: Team | null;
   teamMembers: TeamMember[];
   loading: boolean;
+  teamSettings: Record<string, any>;
+
+  // Core team methods
   fetchTeams: () => Promise<void>;
-  createTeam: (data: { name: string; description?: string }) => Promise<boolean>;
+  createTeam: (data: { name: string; description?: string; avatar_url?: string }) => Promise<boolean>;
+  updateTeam: (teamId: string, data: { name?: string; description?: string; avatar_url?: string }) => Promise<boolean>;
+  deleteTeam: (teamId: string) => Promise<boolean>;
+
+  // Member management
   joinTeam: (inviteCode: string) => Promise<boolean>;
   leaveTeam: (teamId: string) => Promise<boolean>;
   fetchTeamMembers: (teamId: string) => Promise<void>;
-  inviteMember: (teamId: string, email: string) => Promise<boolean>;
+  inviteMember: (teamId: string, email: string, role?: 'admin' | 'member') => Promise<boolean>;
   removeMember: (teamId: string, userId: string) => Promise<boolean>;
   updateMemberRole: (teamId: string, userId: string, role: 'admin' | 'member') => Promise<boolean>;
-  generateInviteCode: (teamId: string) => Promise<string | null>;
+
+  // Team settings and features
+  fetchTeamSettings: (teamId: string) => Promise<void>;
+  updateTeamSettings: (teamId: string, settings: any) => Promise<boolean>;
+
+  // Invite system
+  generateInviteCode: (teamId: string, expiresIn?: number) => Promise<string | null>;
   generateInviteLink: (teamId: string) => string;
+  validateInviteCode: (inviteCode: string) => Promise<{ valid: boolean; team?: Team; error?: string }>;
+
+  // Real-time subscriptions
+  subscribeToTeam: (teamId: string) => () => void;
+  subscribeToTeamMembers: (teamId: string) => () => void;
+
+  // Utility methods
   setCurrentTeam: (team: Team | null) => void;
+  searchTeams: (query: string) => Promise<Team[]>;
+  getTeamStats: (teamId: string) => Promise<any>;
+  cleanup: () => void;
 }
 
 // Helper functions for localStorage fallback
@@ -272,6 +296,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
             .insert({
               name: data.name,
               description: data.description,
+              avatar_url: data.avatar_url,
               created_by: userData.user.id
             })
             .select()
@@ -288,6 +313,17 @@ export const useTeamStore = create<TeamState>((set, get) => ({
               });
 
             if (!memberError) {
+              // Create welcome notification
+              await useNotificationStore.getState().createNotification({
+                title: 'Nhóm mới được tạo!',
+                message: `Nhóm "${team.name}" đã được tạo thành công. Hãy mời thêm thành viên để bắt đầu!`,
+                type: 'team_update',
+                team_id: team.id,
+                dismissible: true,
+                auto_dismiss_ms: 5000,
+                metadata: { teamCreated: true }
+              });
+
               await get().fetchTeams();
               toast({
                 title: "Thành công",
@@ -650,6 +686,311 @@ export const useTeamStore = create<TeamState>((set, get) => ({
   generateInviteLink: (teamId) => {
     const baseUrl = window.location.origin;
     return `${baseUrl}/teams?invite=${teamId}`;
+  },
+
+  updateTeam: async (teamId, data) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData.user) {
+        // Check if user is admin
+        const { data: memberData } = await supabase
+          .from('team_members')
+          .select('role')
+          .eq('team_id', teamId)
+          .eq('user_id', userData.user.id)
+          .single();
+
+        if (memberData?.role !== 'admin') {
+          toast({
+            title: "Lỗi",
+            description: "Chỉ admin mới có thể cập nhật thông tin nhóm",
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        const { error } = await supabase
+          .from('teams')
+          .update({
+            ...data,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', teamId);
+
+        if (!error) {
+          await get().fetchTeams();
+
+          // Create notification
+          await useNotificationStore.getState().createNotification({
+            title: 'Thông tin nhóm được cập nhật',
+            message: 'Thông tin nhóm đã được cập nhật bởi admin',
+            type: 'team_update',
+            team_id: teamId,
+            dismissible: true,
+            metadata: { updateData: data }
+          });
+
+          toast({
+            title: "Thành công",
+            description: "Thông tin nhóm đã được cập nhật!",
+          });
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error('Error updating team:', error);
+    }
+
+    toast({
+      title: "Lỗi",
+      description: "Không thể cập nhật thông tin nhóm",
+      variant: "destructive"
+    });
+    return false;
+  },
+
+  deleteTeam: async (teamId) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData.user) {
+        // Check if user is admin
+        const { data: memberData } = await supabase
+          .from('team_members')
+          .select('role')
+          .eq('team_id', teamId)
+          .eq('user_id', userData.user.id)
+          .single();
+
+        if (memberData?.role !== 'admin') {
+          toast({
+            title: "Lỗi",
+            description: "Chỉ admin mới có thể xóa nhóm",
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        const { error } = await supabase
+          .from('teams')
+          .delete()
+          .eq('id', teamId);
+
+        if (!error) {
+          // Update local state
+          const teams = get().teams.filter(team => team.id !== teamId);
+          set({ teams });
+
+          // Clear current team if it was deleted
+          if (get().currentTeam?.id === teamId) {
+            set({ currentTeam: null });
+          }
+
+          toast({
+            title: "Thành công",
+            description: "Nhóm đã được xóa!",
+          });
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting team:', error);
+    }
+
+    toast({
+      title: "Lỗi",
+      description: "Không thể xóa nhóm",
+      variant: "destructive"
+    });
+    return false;
+  },
+
+  fetchTeamSettings: async (teamId) => {
+    try {
+      // In real app, this would fetch from a team_settings table
+      const defaultSettings = {
+        allowPublicJoin: false,
+        requireApproval: true,
+        maxMembers: 100,
+        enableNotifications: true,
+        enableActivities: true
+      };
+
+      const teamSettings = get().teamSettings;
+      set({
+        teamSettings: {
+          ...teamSettings,
+          [teamId]: defaultSettings
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching team settings:', error);
+    }
+  },
+
+  updateTeamSettings: async (teamId, settings) => {
+    try {
+      const teamSettings = get().teamSettings;
+      set({
+        teamSettings: {
+          ...teamSettings,
+          [teamId]: { ...teamSettings[teamId], ...settings }
+        }
+      });
+
+      toast({
+        title: "Thành công",
+        description: "Cài đặt nhóm đã được cập nhật!",
+      });
+      return true;
+    } catch (error) {
+      console.error('Error updating team settings:', error);
+      return false;
+    }
+  },
+
+  validateInviteCode: async (inviteCode) => {
+    try {
+      const { data: team, error } = await supabase
+        .from('teams')
+        .select('*')
+        .eq('id', inviteCode)
+        .single();
+
+      if (error || !team) {
+        return {
+          valid: false,
+          error: 'Mã mời không hợp lệ hoặc nhóm không tồn tại'
+        };
+      }
+
+      return { valid: true, team };
+    } catch (error) {
+      return {
+        valid: false,
+        error: 'Không thể xác thực mã mời'
+      };
+    }
+  },
+
+  searchTeams: async (query) => {
+    try {
+      const { data, error } = await supabase
+        .from('teams')
+        .select('*')
+        .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+        .limit(20);
+
+      if (!error && data) {
+        return data;
+      }
+    } catch (error) {
+      console.log('Search not available, using local data');
+    }
+
+    // Fallback to local search
+    const teams = get().teams;
+    return teams.filter(team =>
+      team.name.toLowerCase().includes(query.toLowerCase()) ||
+      team.description?.toLowerCase().includes(query.toLowerCase())
+    );
+  },
+
+  getTeamStats: async (teamId) => {
+    try {
+      const { data: memberCount } = await supabase
+        .from('team_members')
+        .select('id', { count: 'exact' })
+        .eq('team_id', teamId);
+
+      const { data: recentActivity } = await supabase
+        .from('team_activities')
+        .select('*')
+        .eq('team_id', teamId)
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .limit(10);
+
+      const { data: unreadNotifications } = await supabase
+        .from('team_notifications')
+        .select('id', { count: 'exact' })
+        .eq('team_id', teamId)
+        .eq('read', false);
+
+      return {
+        memberCount: memberCount?.length || 0,
+        recentActivity: recentActivity || [],
+        unreadNotifications: unreadNotifications?.length || 0
+      };
+    } catch (error) {
+      console.error('Error fetching team stats:', error);
+      return {
+        memberCount: 0,
+        recentActivity: [],
+        unreadNotifications: 0
+      };
+    }
+  },
+
+  subscribeToTeam: (teamId) => {
+    try {
+      const subscription = supabase
+        .channel(`team_${teamId}`)
+        .on('postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'teams',
+            filter: `id=eq.${teamId}`
+          },
+          (payload) => {
+            console.log('Team updated:', payload);
+            get().fetchTeams();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    } catch (error) {
+      console.log('Real-time not available');
+      return () => {};
+    }
+  },
+
+  subscribeToTeamMembers: (teamId) => {
+    try {
+      const subscription = supabase
+        .channel(`team_members_${teamId}`)
+        .on('postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'team_members',
+            filter: `team_id=eq.${teamId}`
+          },
+          (payload) => {
+            console.log('Team members updated:', payload);
+            get().fetchTeamMembers(teamId);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    } catch (error) {
+      console.log('Real-time not available');
+      return () => {};
+    }
+  },
+
+  cleanup: () => {
+    set({
+      teams: [],
+      currentTeam: null,
+      teamMembers: [],
+      teamSettings: {}
+    });
   },
 
   setCurrentTeam: (team) => {
