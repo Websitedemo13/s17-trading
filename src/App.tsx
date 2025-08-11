@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useThemeStore } from "@/stores/themeStore";
+import { useEnhancedTeamStore } from "@/stores/enhancedTeamStore";
 import Navbar from "@/components/Layout/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Teams from "./pages/Teams";
@@ -24,6 +25,7 @@ import About from "./pages/About";
 import TeamDetail from "./pages/TeamDetail";
 import TeamDashboard from "./pages/TeamDashboard";
 import FloatingNotifications from "@/components/FloatingNotifications";
+import FloatingNotificationSystem from "@/components/FloatingNotificationSystem";
 
 const queryClient = new QueryClient();
 
@@ -49,11 +51,18 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const App = () => {
   const { initialize, user } = useAuthStore();
   const { initializeTheme } = useThemeStore();
+  const { fetchUserProfile } = useEnhancedTeamStore();
 
   useEffect(() => {
     initialize();
     initializeTheme();
   }, [initialize, initializeTheme]);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+    }
+  }, [user, fetchUserProfile]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -64,7 +73,12 @@ const App = () => {
           <div className="min-h-screen bg-background">
             <Navbar />
             <main>
+              {/* Original floating notifications for general app notifications */}
               <FloatingNotifications />
+              
+              {/* Enhanced floating notification system for teams */}
+              {user && <FloatingNotificationSystem />}
+              
               <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
                 <Route path="/about" element={<About />} />
