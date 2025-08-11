@@ -155,56 +155,26 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
   getAllUsers: async () => {
     try {
-      // Mock user data - in production, query from profiles table
-      const mockUsers: AdminUser[] = [
-        {
-          id: '1',
-          email: 'nguyen.van.a@example.com',
-          displayName: 'Nguyễn Văn A',
-          role: 'User',
-          lastLogin: '2024-01-15T10:30:00Z',
-          isActive: true,
-          permissions: ['user:read', 'chat:write']
-        },
-        {
-          id: '2',
-          email: 'tran.thi.b@example.com',
-          displayName: 'Trần Thị B',
-          role: 'User',
-          lastLogin: '2024-01-14T15:45:00Z',
-          isActive: true,
-          permissions: ['user:read', 'chat:write']
-        },
-        {
-          id: '3',
-          email: 'le.hoang.c@example.com',
-          displayName: 'Lê Hoàng C',
-          role: 'Premium User',
-          lastLogin: '2024-01-13T09:20:00Z',
-          isActive: false,
-          permissions: ['user:read', 'chat:write', 'ai:access']
-        },
-        {
-          id: '4',
-          email: 'pham.minh.d@example.com',
-          displayName: 'Phạm Minh D',
-          role: 'User',
-          lastLogin: '2024-01-12T14:15:00Z',
-          isActive: true,
-          permissions: ['user:read', 'chat:write']
-        },
-        {
-          id: '5',
-          email: 'hoang.thi.e@example.com',
-          displayName: 'Hoàng Thị E',
-          role: 'Moderator',
-          lastLogin: '2024-01-11T11:30:00Z',
-          isActive: true,
-          permissions: ['user:read', 'chat:write', 'chat:moderate', 'post:moderate']
-        }
-      ];
+      // Get real users from Supabase auth and profiles
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-      return mockUsers;
+      if (error) throw error;
+
+      const realUsers: AdminUser[] = (profiles || []).map((profile) => ({
+        id: profile.id,
+        email: profile.id + '@user.com', // Would need actual email from auth.users if accessible
+        displayName: profile.display_name || 'Người dùng',
+        role: 'User',
+        lastLogin: profile.updated_at || profile.created_at,
+        isActive: true,
+        permissions: ['user:read', 'chat:write'],
+        avatarUrl: profile.avatar_url
+      }));
+
+      return realUsers;
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
