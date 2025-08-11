@@ -54,7 +54,7 @@ import {
 const Teams = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { teams, loading, fetchTeams, createTeam, joinTeam } = useTeamStore();
+  const { teams, loading, fetchTeams, createTeam, joinTeam, generateInviteLink } = useTeamStore();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showJoinDialog, setShowJoinDialog] = useState(false);
   const [newTeamName, setNewTeamName] = useState('');
