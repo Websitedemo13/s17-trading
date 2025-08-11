@@ -20,10 +20,11 @@ const Navbar = () => {
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { path: '/markets', label: 'Markets', icon: '📈' },
     { path: '/teams', label: 'Teams', icon: '👥' },
     { path: '/chat', label: 'Chat', icon: '💬' },
-    { path: '/chat-ai', label: 'AI Chat', icon: '🤖' },
-    { path: '/profile', label: 'Profile', icon: '👤' }
+    { path: '/blog', label: 'Blog', icon: '📝' },
+    { path: '/chat-ai', label: 'AI Chat', icon: '🤖' }
   ];
 
   if (!user) {
