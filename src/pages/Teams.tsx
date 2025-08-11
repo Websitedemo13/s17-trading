@@ -24,7 +24,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import TeamCard from '@/components/TeamCard\';\nimport TeamQuickActions from \'@/components/TeamQuickActions';
+import TeamCard from '@/components/TeamCard';
+import TeamQuickActions from '@/components/TeamQuickActions';
 import { useTeamStore } from '@/stores/teamStore';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -171,7 +172,7 @@ const Teams = () => {
       navigator.clipboard.writeText(inviteLink).then(() => {
         toast({
           title: "Đã sao chép link mời",
-          description: "Link mời đã được sao chép. Chia sẻ để mời thành viên tham gia!",
+          description: "Link mời đã được sao chép. Chia sẻ để mời thành vi��n tham gia!",
         });
       });
     }
