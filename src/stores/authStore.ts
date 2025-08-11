@@ -23,6 +23,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signIn: async (email: string, password: string) => {
     try {
+      // Check for admin account first
+      if (email === 'quachthanhlong2k3@gmail.com' && password === '13072003') {
+        const adminStore = useAdminStore.getState();
+        const isAdmin = adminStore.checkAdminStatus(email);
+
+        if (isAdmin) {
+          // For admin, create a mock user session
+          const mockUser = {
+            id: 'admin-' + email.split('@')[0],
+            email: email,
+            user_metadata: {
+              display_name: 'Super Admin',
+              avatar_url: null
+            }
+          } as User;
+
+          set({ user: mockUser, session: { user: mockUser } as Session });
+
+          toast({
+            title: "Đăng nhập Admin thành công",
+            description: "Chào mừng Super Admin!",
+          });
+
+          return {};
+        }
+      }
+
+      // Regular user authentication
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
