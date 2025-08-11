@@ -61,18 +61,25 @@ class MarketDataService {
       // - SSI API
       // - HOSE/HNX official APIs
       
-      const mockStocks: StockData[] = [
+      // Generate realistic dynamic stock data
+      const basePrice = 42500;
+      const variation = (Math.random() - 0.5) * 2000; // ±1000 VND variation
+      const currentPrice = basePrice + variation;
+      const change = variation;
+      const changePercent = (change / basePrice) * 100;
+
+      const dynamicStocks: StockData[] = [
         {
           symbol: 'VIC',
           name: 'Tập đoàn Vingroup',
-          price: 42500,
-          change: 500,
-          changePercent: 1.19,
-          volume: 2150000,
-          high: 43000,
-          low: 41800,
-          open: 42000,
-          previousClose: 42000,
+          price: Math.round(currentPrice),
+          change: Math.round(change),
+          changePercent: Math.round(changePercent * 100) / 100,
+          volume: Math.floor(Math.random() * 2000000 + 1500000),
+          high: Math.round(currentPrice + Math.abs(variation) * 0.5),
+          low: Math.round(currentPrice - Math.abs(variation) * 0.5),
+          open: Math.round(basePrice + (Math.random() - 0.5) * 500),
+          previousClose: basePrice,
           marketCap: 195000000000000,
           pe: 15.2,
           eps: 2800,
@@ -95,7 +102,7 @@ class MarketDataService {
           pe: 10.8,
           eps: 7620,
           exchange: 'HOSE',
-          sector: 'Ngân hàng',
+          sector: 'Ngân h��ng',
           lastUpdate: new Date().toISOString()
         },
         {
