@@ -143,15 +143,36 @@ const Settings = () => {
     }
   };
 
-  const handleSendFeedback = () => {
-    if (!feedback.trim()) return;
-    
-    // In real app, send to backend
-    toast({
-      title: "Cảm ơn!",
-      description: "Góp ý của bạn rất quan trọng với chúng tôi!"
-    });
-    setFeedback('');
+  const handleSendFeedback = async () => {
+    if (!feedback.trim() || !user) return;
+
+    try {
+      // Create a feedback entry
+      const { error } = await supabase
+        .from('blog_posts')
+        .insert({
+          title: `Feedback - ${feedbackType} - ${new Date().toLocaleDateString()}`,
+          content: feedback,
+          author: user.email,
+          status: 'draft',
+          slug: `feedback-${feedbackType}-${Date.now()}`
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Cảm ơn!",
+        description: "Góp ý của bạn rất quan trọng với chúng tôi!"
+      });
+      setFeedback('');
+    } catch (error) {
+      console.error('Error saving feedback:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể gửi góp ý",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleThemeChange = (newTheme: string) => {
@@ -543,7 +564,7 @@ const Settings = () => {
                       <DialogTitle>Điều khoản sử dụng</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 text-sm">
-                      <p><strong>1. Chấp nhận điều khoản</strong></p>
+                      <p><strong>1. Chấp nhận điều kho���n</strong></p>
                       <p>Bằng việc sử dụng S17 Trading Platform, bạn đồng ý tuân thủ các điều khoản và điều kiện được nêu dưới đây.</p>
                       
                       <p><strong>2. Sử dụng dịch vụ</strong></p>
@@ -583,7 +604,7 @@ const Settings = () => {
                       <p>Chúng tôi không chia sẻ thông tin cá nhân với bên thứ ba trừ khi được pháp luật yêu cầu.</p>
                       
                       <p><strong>Bảo mật dữ liệu</strong></p>
-                      <p>Chúng tôi áp dụng các biện pháp bảo mật hàng đầu để bảo vệ dữ liệu của bạn.</p>
+                      <p>Chúng tôi áp dụng các biện pháp bảo mật hàng đầu đ�� bảo vệ dữ liệu của bạn.</p>
                     </div>
                   </DialogContent>
                 </Dialog>
