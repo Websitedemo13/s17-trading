@@ -116,7 +116,7 @@ const TeamDetail = () => {
       setCurrentTeam({
         id: teamId,
         name: 'Crypto Hunters Vietnam',
-        description: 'Nhóm trading crypto chuyên nghiệp, tập trung vào swing trading và phân tích kỹ thuật. Chia sẻ signals, h��c hỏi và cùng nhau profit!',
+        description: 'Nhóm trading crypto chuyên nghiệp, tập trung vào swing trading và phân tích kỹ thuật. Chia sẻ signals, học hỏi và cùng nhau profit!',
         avatar_url: '',
         created_by: 'admin-user',
         created_at: new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString(),
@@ -158,7 +158,7 @@ const TeamDetail = () => {
 
   const handleGenerateInviteCode = async () => {
     if (!teamId) return;
-    
+
     const code = await generateInviteCode(teamId);
     if (code) {
       setInviteCode(code);
@@ -166,11 +166,27 @@ const TeamDetail = () => {
   };
 
   const handleCopyInviteCode = () => {
-    navigator.clipboard.writeText(inviteCode);
+    const inviteLink = generateInviteLink(teamId!);
+    navigator.clipboard.writeText(inviteLink);
     toast({
-      title: "Đã sao chép",
-      description: "Mã mời đã được sao chép vào clipboard",
+      title: "Đã sao chép link mời",
+      description: "Link mời đã được sao chép. Chia sẻ link này để mời thành viên tham gia!",
     });
+  };
+
+  const handleShareInvite = () => {
+    const inviteLink = generateInviteLink(teamId!);
+
+    if (navigator.share) {
+      navigator.share({
+        title: `Tham gia nhóm ${currentTeam?.name}`,
+        text: `Bạn được mời tham gia nhóm trading "${currentTeam?.name}". Nhấn link để tham gia ngay!`,
+        url: inviteLink,
+      });
+    } else {
+      // Fallback to copying link
+      handleCopyInviteCode();
+    }
   };
 
   const handleLeaveTeam = async () => {
