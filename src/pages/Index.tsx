@@ -44,12 +44,12 @@ const Index = () => {
               >
                 Bắt đầu giao dịch
               </Link>
-              <button
-                onClick={handleLearnMore}
-                className="px-8 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold"
+              <Link
+                to="/about"
+                className="px-8 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold inline-block text-center"
               >
                 Tìm hiểu thêm
-              </button>
+              </Link>
             </div>
           </div>
           
