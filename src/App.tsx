@@ -124,6 +124,30 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/markets"
+                  element={
+                    <ProtectedRoute>
+                      <Markets />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/blog"
+                  element={
+                    <ProtectedRoute>
+                      <Blog />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
               </Routes>
             </main>
           </div>
