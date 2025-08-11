@@ -112,6 +112,14 @@ export const useTeamStore = create<TeamState>((set, get) => ({
 
       if (memberError) throw memberError;
 
+      // Refresh teams list
+      await get().fetchTeams();
+
+      toast({
+        title: "Thành công",
+        description: "Nhóm đã được tạo thành công!",
+      });
+
       return true;
     } catch (error) {
       console.error('Error creating team:', error);
