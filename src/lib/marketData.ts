@@ -161,7 +161,7 @@ class MarketDataService {
         }
       ];
 
-      return mockStocks;
+      return dynamicStocks;
     } catch (error) {
       console.error('Error fetching Vietnam stocks:', error);
       return [];
