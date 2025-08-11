@@ -132,7 +132,7 @@ const EnhancedChat = () => {
     let success = false;
 
     if (replyToMessage) {
-      success = await replyToMessage(selectedTeam.id, inputMessage, replyToMessage.id);
+      success = await sendReplyToMessage(selectedTeam.id, inputMessage, replyToMessage.id);
       setReplyToMessage(null);
     } else {
       success = await sendMessage(selectedTeam.id, inputMessage);
