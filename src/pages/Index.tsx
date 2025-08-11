@@ -38,10 +38,16 @@ const Index = () => {
               Nền tảng giao dịch crypto xã hội tiên tiến với AI insights và team collaboration
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animate-delay-400">
-              <button className="btn-premium text-lg px-8 py-4">
+              <Link
+                to={user ? "/dashboard" : "/register"}
+                className="btn-premium text-lg px-8 py-4 inline-block text-center"
+              >
                 Bắt đầu giao dịch
-              </button>
-              <button className="px-8 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold">
+              </Link>
+              <button
+                onClick={handleLearnMore}
+                className="px-8 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold"
+              >
                 Tìm hiểu thêm
               </button>
             </div>
