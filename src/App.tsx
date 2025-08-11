@@ -13,7 +13,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ChatAI from "./pages/ChatAI";
-import Chat from "./pages/Chat";
+import EnhancedChat from "./pages/EnhancedChat";
 import Settings from "./pages/Settings";
 import Markets from "./pages/Markets";
 import Blog from "./pages/Blog";
