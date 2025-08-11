@@ -148,6 +148,97 @@ export const useTeamStore = create<TeamState>((set, get) => ({
       const storedTeams = loadFromStorage(currentUser.id, 'teams') || [];
       const globalTeams = JSON.parse(localStorage.getItem('global_teams') || '[]');
 
+      // Create demo teams if none exist
+      if (globalTeams.length === 0) {
+        const demoTeams = [
+          {
+            id: 'team_demo_1',
+            name: 'Crypto Traders VN',
+            description: 'Nhóm trading crypto chuyên nghiệp tại Việt Nam. Chia sẻ signal, phân tích thị trường và học hỏi kinh nghiệm.',
+            avatar_url: '',
+            created_by: 'demo-user-admin',
+            created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date().toISOString(),
+            member_count: 15,
+            role: 'admin',
+            members: [{
+              id: 'member_1',
+              team_id: 'team_demo_1',
+              user_id: currentUser.id,
+              role: 'admin',
+              joined_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+              user: {
+                display_name: currentUser.display_name,
+                avatar_url: ''
+              }
+            }]
+          },
+          {
+            id: 'team_demo_2',
+            name: 'Stock Analysis Hub',
+            description: 'Phân tích chứng khoán Việt Nam. Focus vào blue-chip stocks như VIC, VHM, VCB và các cổ phiếu tiềm năng.',
+            avatar_url: '',
+            created_by: 'demo-user-2',
+            created_at: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            member_count: 23,
+            role: 'member',
+            members: [{
+              id: 'member_2',
+              team_id: 'team_demo_2',
+              user_id: currentUser.id,
+              role: 'member',
+              joined_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+              user: {
+                display_name: currentUser.display_name,
+                avatar_url: ''
+              }
+            }]
+          },
+          {
+            id: 'team_demo_3',
+            name: 'DeFi Yield Farmers',
+            description: 'Cộng đồng yield farming và DeFi strategies. Chia sẻ opportunities trên các protocols như Uniswap, Aave, Curve.',
+            avatar_url: '',
+            created_by: 'demo-user-3',
+            created_at: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+            member_count: 8,
+            role: 'member',
+            members: [{
+              id: 'member_3',
+              team_id: 'team_demo_3',
+              user_id: currentUser.id,
+              role: 'member',
+              joined_at: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
+              user: {
+                display_name: currentUser.display_name,
+                avatar_url: ''
+              }
+            }]
+          }
+        ];
+
+        localStorage.setItem('global_teams', JSON.stringify(demoTeams));
+
+        // Add demo teams to user's teams list
+        const userTeams = demoTeams.map(team => ({
+          id: team.id,
+          name: team.name,
+          description: team.description,
+          avatar_url: team.avatar_url,
+          created_by: team.created_by,
+          created_at: team.created_at,
+          updated_at: team.updated_at,
+          member_count: team.member_count,
+          role: team.role
+        }));
+
+        saveToStorage(currentUser.id, 'teams', userTeams);
+        set({ teams: userTeams });
+        return;
+      }
+
       // Combine user teams with global teams they've joined
       const userTeamIds = storedTeams.map((t: any) => t.id);
       const joinedTeams = globalTeams.filter((t: any) =>
@@ -420,7 +511,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
       console.error('Error leaving team:', error);
       toast({
         title: "Lỗi",
-        description: "Không th�� rời khỏi nhóm",
+        description: "Không thể rời khỏi nhóm",
         variant: "destructive"
       });
       return false;
