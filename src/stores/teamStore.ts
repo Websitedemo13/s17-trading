@@ -314,16 +314,8 @@ export const useTeamStore = create<TeamState>((set, get) => ({
               });
 
             if (!memberError) {
-              // Create welcome notification
-              await useNotificationStore.getState().createNotification({
-                title: 'Nhóm mới được tạo!',
-                message: `Nhóm "${team.name}" đã được tạo thành công. Hãy mời thêm thành viên để bắt đầu!`,
-                type: 'team_update',
-                team_id: team.id,
-                dismissible: true,
-                auto_dismiss_ms: 5000,
-                metadata: { teamCreated: true }
-              });
+              // Welcome notification removed to fix circular dependency
+              // TODO: Add notification system integration later
 
               await get().fetchTeams();
               toast({
@@ -714,7 +706,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
       // For demo, we'll copy the invite link to clipboard
       navigator.clipboard.writeText(inviteLink).then(() => {
         toast({
-          title: "Link mời đã được sao chép",
+          title: "Link mời đã đư���c sao chép",
           description: `Chia sẻ link này để mời ${email} tham gia nhóm`,
         });
       }).catch(() => {
