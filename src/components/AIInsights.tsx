@@ -64,14 +64,14 @@ const AIInsights = () => {
         </CardDescription>
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3 sm:space-y-4 p-3 sm:p-6">
         <div className="space-y-2">
           <label className="text-sm font-medium">Đặt câu hỏi cho AI:</label>
           <Textarea
             placeholder="Ví dụ: Bitcoin có nên mua vào thời điểm này không?"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            className="min-h-[80px]"
+            className="min-h-[60px] sm:min-h-[80px] text-sm sm:text-base"
           />
           <Button 
             onClick={handleAnalyze}
@@ -89,33 +89,33 @@ const AIInsights = () => {
 
         {insights && (
           <div className="space-y-4 border-t pt-4">
-            <div className="flex items-center justify-between">
-              <h4 className="font-semibold">Phân tích AI</h4>
-              <div className="flex items-center gap-2">
-                <Badge 
-                  variant="outline" 
-                  className={`${getRiskColor(insights.risk_level)}`}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+              <h4 className="font-semibold text-sm sm:text-base">Phân tích AI</h4>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${getRiskColor(insights.risk_level)}`}
                 >
                   <span className="mr-1">{getRiskIcon(insights.risk_level)}</span>
                   Rủi ro: {insights.risk_level}
                 </Badge>
-                <Badge variant="secondary">
-                  Độ tin cậy: {Math.round(insights.confidence * 100)}%
+                <Badge variant="secondary" className="text-xs">
+                  Tin cậy: {Math.round(insights.confidence * 100)}%
                 </Badge>
               </div>
             </div>
             
             <div className="prose prose-sm max-w-none">
-              <p className="text-sm leading-relaxed">
+              <p className="text-xs sm:text-sm leading-relaxed">
                 {insights.analysis}
               </p>
             </div>
 
             <div className="space-y-2">
-              <h5 className="font-medium text-sm">Gợi ý:</h5>
+              <h5 className="font-medium text-xs sm:text-sm">Gợi ý:</h5>
               <ul className="space-y-1">
                 {insights.suggestions.map((suggestion, index) => (
-                  <li key={index} className="text-sm flex items-start gap-2">
+                  <li key={index} className="text-xs sm:text-sm flex items-start gap-2">
                     <span className="text-primary text-xs mt-1">•</span>
                     <span className="leading-relaxed">{suggestion}</span>
                   </li>

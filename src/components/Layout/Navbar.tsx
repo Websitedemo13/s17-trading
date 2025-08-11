@@ -52,7 +52,7 @@ const Navbar = () => {
           S17 Trading
         </Link>
         
-        <div className="flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -63,8 +63,27 @@ const Navbar = () => {
                   : 'hover:bg-accent hover:text-accent-foreground'
               }`}
             >
+              <span className="hidden sm:inline">{item.icon}</span>
+              <span className="hidden lg:inline">{item.label}</span>
+              <span className="lg:hidden">{item.icon}</span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile navigation */}
+        <div className="md:hidden flex items-center gap-2">
+          {navItems.slice(0, 3).map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center p-2 rounded-md transition-colors text-sm ${
+                isActive(item.path)
+                  ? 'bg-primary text-primary-foreground'
+                  : 'hover:bg-accent hover:text-accent-foreground'
+              }`}
+              title={item.label}
+            >
               <span>{item.icon}</span>
-              {item.label}
             </Link>
           ))}
         </div>
