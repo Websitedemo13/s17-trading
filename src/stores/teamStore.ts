@@ -149,35 +149,88 @@ export const useTeamStore = create<TeamState>((set, get) => ({
 
   createTeam: async (data) => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return false;
+      const currentUser = getCurrentUser();
 
-      // Create team
-      const { data: team, error: teamError } = await supabase
-        .from('teams')
-        .insert({
-          name: data.name,
-          description: data.description,
-          created_by: userData.user.id
-        })
-        .select()
-        .single();
+      // Try Supabase first, fallback to localStorage
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          // Create team
+          const { data: team, error: teamError } = await supabase
+            .from('teams')
+            .insert({
+              name: data.name,
+              description: data.description,
+              created_by: userData.user.id
+            })
+            .select()
+            .single();
 
-      if (teamError) throw teamError;
+          if (!teamError && team) {
+            // Add creator as admin
+            const { error: memberError } = await supabase
+              .from('team_members')
+              .insert({
+                team_id: team.id,
+                user_id: userData.user.id,
+                role: 'admin'
+              });
 
-      // Add creator as admin
-      const { error: memberError } = await supabase
-        .from('team_members')
-        .insert({
-          team_id: team.id,
-          user_id: userData.user.id,
-          role: 'admin'
-        });
+            if (!memberError) {
+              await get().fetchTeams();
+              toast({
+                title: "Thành công",
+                description: "Nhóm đã được tạo thành công!",
+              });
+              return true;
+            }
+          }
+        }
+      } catch (supabaseError) {
+        console.log('Supabase not available, using localStorage fallback');
+      }
 
-      if (memberError) throw memberError;
+      // Fallback to localStorage
+      const teamId = 'team_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      const newTeam: Team = {
+        id: teamId,
+        name: data.name,
+        description: data.description,
+        avatar_url: '',
+        created_by: currentUser.id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        member_count: 1,
+        role: 'admin'
+      };
 
-      // Refresh teams list
-      await get().fetchTeams();
+      // Save to user's teams
+      const userTeams = loadFromStorage(currentUser.id, 'teams') || [];
+      userTeams.push(newTeam);
+      saveToStorage(currentUser.id, 'teams', userTeams);
+
+      // Save to global teams for sharing
+      const globalTeams = JSON.parse(localStorage.getItem('global_teams') || '[]');
+      const globalTeam = {
+        ...newTeam,
+        members: [{
+          id: 'member_' + Date.now(),
+          team_id: teamId,
+          user_id: currentUser.id,
+          role: 'admin',
+          joined_at: new Date().toISOString(),
+          user: {
+            display_name: currentUser.display_name,
+            avatar_url: ''
+          }
+        }]
+      };
+      globalTeams.push(globalTeam);
+      localStorage.setItem('global_teams', JSON.stringify(globalTeams));
+
+      // Update local state
+      const currentTeams = get().teams;
+      set({ teams: [...currentTeams, newTeam] });
 
       toast({
         title: "Thành công",
