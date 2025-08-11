@@ -77,7 +77,21 @@ export const useChatStore = create<ChatState>((set, get) => ({
   sendMessage: async (teamId: string, content: string) => {
     try {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return false;
+      if (!userData.user) {
+        throw new Error('Người dùng chưa đăng nhập');
+      }
+
+      // Check if user is member of the team
+      const { data: memberData, error: memberError } = await supabase
+        .from('team_members')
+        .select('*')
+        .eq('team_id', teamId)
+        .eq('user_id', userData.user.id)
+        .single();
+
+      if (memberError || !memberData) {
+        throw new Error('Bạn không có quyền gửi tin nhắn trong nhóm này');
+      }
 
       const { error } = await supabase
         .from('chat_messages')
@@ -87,14 +101,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
           content
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(`Lỗi gửi tin nhắn: ${error.message}`);
+      }
 
       return true;
     } catch (error) {
-      console.error('Error sending message:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Lỗi không xác định';
+      console.error('Error sending message:', errorMessage);
       toast({
         title: "Lỗi",
-        description: "Không thể gửi tin nhắn",
+        description: errorMessage,
         variant: "destructive"
       });
       return false;
