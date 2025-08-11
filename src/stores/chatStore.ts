@@ -41,7 +41,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         .from('chat_messages')
         .select(`
           *,
-          user:user_id (
+          profiles!chat_messages_user_id_fkey (
             display_name,
             avatar_url
           )
@@ -56,7 +56,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       const messages = data?.map(message => ({
         ...message,
-        user: message.user || { display_name: 'Anonymous', avatar_url: null }
+        user: message.profiles || { display_name: 'Anonymous', avatar_url: null }
       })) || [];
 
       set({ messages });
