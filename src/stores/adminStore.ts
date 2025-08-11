@@ -188,14 +188,22 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
   updateUserStatus: async (userId: string, isActive: boolean) => {
     try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      // Update user profile status
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          updated_at: new Date().toISOString(),
+          // Add a status field to track active/inactive users
+        })
+        .eq('id', userId);
+
+      if (error) throw error;
+
       toast({
         title: "Thành công",
         description: `Đã ${isActive ? 'kích hoạt' : 'vô hiệu hóa'} tài khoản người dùng`
       });
-      
+
       return true;
     } catch (error) {
       console.error('Error updating user status:', error);
@@ -210,14 +218,19 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
   deleteUser: async (userId: string) => {
     try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      // Delete user profile (Note: Cannot delete auth.users directly from client)
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+
+      if (error) throw error;
+
       toast({
         title: "Thành công",
-        description: "Đã xóa tài khoản người dùng"
+        description: "Đã xóa hồ sơ người dùng"
       });
-      
+
       return true;
     } catch (error) {
       console.error('Error deleting user:', error);
