@@ -72,55 +72,76 @@ export const useTeamStore = create<TeamState>((set, get) => ({
   fetchTeams: async () => {
     set({ loading: true });
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+      const currentUser = getCurrentUser();
 
-      // Fetch teams where user is a member
-      const { data: memberTeams, error: memberError } = await supabase
-        .from('team_members')
-        .select(`
-          team_id,
-          role,
-          teams (
-            id,
-            name,
-            description,
-            avatar_url,
-            created_by,
-            created_at,
-            updated_at
-          )
-        `)
-        .eq('user_id', userData.user.id);
+      // Try Supabase first, fallback to localStorage
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          // Fetch teams where user is a member
+          const { data: memberTeams, error: memberError } = await supabase
+            .from('team_members')
+            .select(`
+              team_id,
+              role,
+              teams (
+                id,
+                name,
+                description,
+                avatar_url,
+                created_by,
+                created_at,
+                updated_at
+              )
+            `)
+            .eq('user_id', userData.user.id);
 
-      if (memberError) throw memberError;
+          if (!memberError && memberTeams) {
+            // Get member counts for each team
+            const teamIds = memberTeams?.map(tm => tm.team_id) || [];
+            const { data: memberCounts } = await supabase
+              .from('team_members')
+              .select('team_id')
+              .in('team_id', teamIds);
 
-      // Get member counts for each team
-      const teamIds = memberTeams?.map(tm => tm.team_id) || [];
-      const { data: memberCounts } = await supabase
-        .from('team_members')
-        .select('team_id')
-        .in('team_id', teamIds);
+            const teams: Team[] = memberTeams?.map(tm => {
+              const team = tm.teams as any;
+              const memberCount = memberCounts?.filter(mc => mc.team_id === tm.team_id).length || 0;
 
-      const teams: Team[] = memberTeams?.map(tm => {
-        const team = tm.teams as any;
-        const memberCount = memberCounts?.filter(mc => mc.team_id === tm.team_id).length || 0;
-        
-        return {
-          ...team,
-          role: tm.role,
-          member_count: memberCount
-        };
-      }) || [];
+              return {
+                ...team,
+                role: tm.role,
+                member_count: memberCount
+              };
+            }) || [];
 
-      set({ teams });
+            set({ teams });
+            set({ loading: false });
+            return;
+          }
+        }
+      } catch (supabaseError) {
+        console.log('Supabase not available, using localStorage fallback');
+      }
+
+      // Fallback to localStorage
+      const storedTeams = loadFromStorage(currentUser.id, 'teams') || [];
+      const globalTeams = JSON.parse(localStorage.getItem('global_teams') || '[]');
+
+      // Combine user teams with global teams they've joined
+      const userTeamIds = storedTeams.map((t: any) => t.id);
+      const joinedTeams = globalTeams.filter((t: any) =>
+        t.members && t.members.some((m: any) => m.user_id === currentUser.id)
+      );
+
+      const allTeams = [...storedTeams, ...joinedTeams.filter((t: any) => !userTeamIds.includes(t.id))];
+
+      set({ teams: allTeams });
+
     } catch (error) {
       console.error('Error fetching teams:', error);
-      toast({
-        title: "Lỗi",
-        description: "Không thể tải danh sách nhóm",
-        variant: "destructive"
-      });
+      // Even if there's an error, don't show error toast for localStorage fallback
+      set({ teams: [] });
     } finally {
       set({ loading: false });
     }
