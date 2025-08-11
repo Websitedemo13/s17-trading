@@ -69,15 +69,12 @@ const ChatAI = () => {
     setLoading(true);
 
     try {
-      const response = await getAIInsights({
-        type: 'trading_suggestion',
-        data: { question: messageText }
-      });
+      const response = await getChatResponse(messageText);
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.analysis + '\n\n' + response.suggestions.map(s => `• ${s}`).join('\n'),
+        content: response.analysis + '\n\n💡 **Gợi ý:**\n' + response.suggestions.map(s => `${s}`).join('\n'),
         timestamp: new Date()
       };
 
