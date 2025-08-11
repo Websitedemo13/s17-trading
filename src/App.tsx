@@ -43,10 +43,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const App = () => {
   const { initialize, user } = useAuthStore();
+  const { initializeTheme } = useThemeStore();
 
   useEffect(() => {
     initialize();
-  }, [initialize]);
+    initializeTheme();
+  }, [initialize, initializeTheme]);
 
   return (
     <QueryClientProvider client={queryClient}>
