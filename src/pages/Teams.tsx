@@ -66,7 +66,20 @@ const Teams = () => {
 
   useEffect(() => {
     fetchTeams();
-  }, [fetchTeams]);
+
+    // Check for invite parameter in URL
+    const inviteCode = searchParams.get('invite');
+    if (inviteCode) {
+      setInviteCode(inviteCode);
+      setShowJoinDialog(true);
+      // Remove invite parameter from URL
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('invite');
+        return newParams;
+      });
+    }
+  }, [fetchTeams, searchParams, setSearchParams]);
 
   const handleCreateTeam = async () => {
     if (!newTeamName.trim()) return;
@@ -171,7 +184,7 @@ const Teams = () => {
               <DialogHeader>
                 <DialogTitle>Tham gia nhóm existing</DialogTitle>
                 <DialogDescription>
-                  Nhập mã mời để tham gia một nhóm ��ã có
+                  Nhập mã mời để tham gia một nhóm đã có
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
@@ -439,7 +452,7 @@ const Teams = () => {
                           )}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-red-600">
-                            R���i nhóm
+                            Rời nhóm
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
