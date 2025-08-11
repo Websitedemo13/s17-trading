@@ -524,51 +524,167 @@ const AdminDashboard = () => {
 
         {/* Blog Management Tab */}
         <TabsContent value="blog" className="space-y-6">
+          {/* Create New Post */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-green-600" />
-                Quản lý Blog
+                Tạo bài viết mới
               </CardTitle>
-              <CardDescription>
-                CRUD bài viết, danh mục và quản lý nội dung
-              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Input
+                placeholder="Tiêu đề bài viết..."
+                value={newPostTitle}
+                onChange={(e) => setNewPostTitle(e.target.value)}
+              />
+              <Textarea
+                placeholder="Nội dung bài viết..."
+                value={newPostContent}
+                onChange={(e) => setNewPostContent(e.target.value)}
+                rows={4}
+              />
+              <Button onClick={handleCreatePost} disabled={blogLoading}>
+                <FileText className="h-4 w-4 mr-2" />
+                Tạo bài viết
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Blog Statistics */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Thống kê Blog</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">45</div>
-                  <div className="text-sm text-muted-foreground">Bài viết</div>
+                  <div className="text-2xl font-bold text-green-600">{posts.length}</div>
+                  <div className="text-sm text-muted-foreground">Tổng bài viết</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">6</div>
-                  <div className="text-sm text-muted-foreground">Danh mục</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {posts.filter(p => p.status === 'published').length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Đã xuất bản</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-orange-600">12</div>
+                  <div className="text-2xl font-bold text-orange-600">
+                    {posts.filter(p => p.status === 'draft').length}
+                  </div>
                   <div className="text-sm text-muted-foreground">Bản nháp</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">156K</div>
-                  <div className="text-sm text-muted-foreground">Lượt xem</div>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {posts.filter(p => p.created_at > new Date(Date.now() - 30*24*60*60*1000).toISOString()).length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Tháng này</div>
                 </div>
-              </div>
-              <div className="flex gap-4">
-                <Button>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Tạo bài viết mới
-                </Button>
-                <Button variant="outline">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Quản lý danh mục
-                </Button>
-                <Button variant="outline">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Thống kê
-                </Button>
               </div>
             </CardContent>
           </Card>
+
+          {/* Posts List */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Danh sách bài viết</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <div
+                    key={post.id}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
+                    <div className="flex-1">
+                      <h4 className="font-medium">{post.title}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {post.author} • {new Date(post.created_at).toLocaleDateString('vi-VN')}
+                      </p>
+                      <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
+                        {post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {post.status === 'draft' ? (
+                        <Button
+                          size="sm"
+                          onClick={() => publishPost(post.id)}
+                          disabled={blogLoading}
+                        >
+                          Xuất bản
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => unpublishPost(post.id)}
+                          disabled={blogLoading}
+                        >
+                          Hủy xuất bản
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setEditingPost(post)}
+                      >
+                        Sửa
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deletePost(post.id)}
+                        disabled={blogLoading}
+                      >
+                        Xóa
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+
+                {posts.length === 0 && !blogLoading && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Chưa có bài viết nào
+                  </div>
+                )}
+
+                {blogLoading && (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Edit Post Modal */}
+          {editingPost && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Chỉnh sửa bài viết</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input
+                  value={editingPost.title}
+                  onChange={(e) => setEditingPost({...editingPost, title: e.target.value})}
+                />
+                <Textarea
+                  value={editingPost.content}
+                  onChange={(e) => setEditingPost({...editingPost, content: e.target.value})}
+                  rows={6}
+                />
+                <div className="flex gap-2">
+                  <Button onClick={handleUpdatePost} disabled={blogLoading}>
+                    Cập nhật
+                  </Button>
+                  <Button variant="outline" onClick={() => setEditingPost(null)}>
+                    Hủy
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         {/* System Tab */}
