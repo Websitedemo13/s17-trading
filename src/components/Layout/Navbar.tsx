@@ -32,6 +32,11 @@ const Navbar = () => {
           <Link to="/" className="text-xl font-bold text-primary">
             S17 Trading
           </Link>
+          <div className="hidden md:flex items-center gap-6">
+            <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors">
+              Về chúng tôi
+            </Link>
+          </div>
           <div className="flex gap-2">
             <Button variant="ghost" asChild>
               <Link to="/login">Đăng nhập</Link>

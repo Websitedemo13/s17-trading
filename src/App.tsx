@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import ChatAI from "./pages/ChatAI";
 import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
+import About from "./pages/About";
 import TeamDetail from "./pages/TeamDetail";
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ const App = () => {
             <main>
               <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
+                <Route path="/about" element={<About />} />
                 <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
                 <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
