@@ -107,8 +107,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   sendMessage: async (teamId: string, content: string) => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) {
+      // Check if user is authenticated using auth store
+      const authUser = useAuthStore.getState().user;
+      if (!authUser) {
         throw new Error('Người dùng chưa đăng nhập');
       }
 
