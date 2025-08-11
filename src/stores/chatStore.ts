@@ -36,16 +36,10 @@ export const useChatStore = create<ChatState>((set, get) => ({
         throw new Error('Bạn không có quyền truy cập nhóm này');
       }
 
-      // Fetch messages with user profiles
-      const { data, error } = await supabase
+      // Fetch messages
+      const { data: messagesData, error } = await supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles!chat_messages_user_id_fkey (
-            display_name,
-            avatar_url
-          )
-        `)
+        .select('*')
         .eq('team_id', teamId)
         .order('created_at', { ascending: true });
 
@@ -54,9 +48,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
         throw new Error(`Lỗi tải tin nhắn: ${error.message}`);
       }
 
-      const messages = data?.map(message => ({
+      // Get unique user IDs from messages
+      const userIds = [...new Set(messagesData?.map(m => m.user_id) || [])];
+
+      // Fetch user profiles for all users in the chat
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('id, display_name, avatar_url')
+        .in('id', userIds);
+
+      // Create a map of user profiles
+      const profilesMap = new Map(
+        profilesData?.map(profile => [profile.id, profile]) || []
+      );
+
+      // Combine messages with user data
+      const messages = messagesData?.map(message => ({
         ...message,
-        user: message.profiles || { display_name: 'Anonymous', avatar_url: null }
+        user: profilesMap.get(message.user_id) || { display_name: 'Anonymous', avatar_url: null }
       })) || [];
 
       set({ messages });
