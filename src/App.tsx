@@ -22,6 +22,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import TeamDetail from "./pages/TeamDetail";
+import TeamDashboard from "./pages/TeamDashboard";
+import FloatingNotifications from "@/components/FloatingNotifications";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +64,7 @@ const App = () => {
           <div className="min-h-screen bg-background">
             <Navbar />
             <main>
+              <FloatingNotifications />
               <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
                 <Route path="/about" element={<About />} />
@@ -86,6 +89,14 @@ const App = () => {
                 />
                 <Route
                   path="/teams/:teamId"
+                  element={
+                    <ProtectedRoute>
+                      <TeamDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/teams/:teamId/detail"
                   element={
                     <ProtectedRoute>
                       <TeamDetail />
