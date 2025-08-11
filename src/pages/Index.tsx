@@ -6,6 +6,16 @@ import PortfolioCard from "@/components/PortfolioCard";
 import CryptoList from "@/components/CryptoList";
 
 const Index = () => {
+  const { user } = useAuthStore();
+
+  const handleLearnMore = () => {
+    // Scroll to dashboard preview section
+    const dashboardSection = document.querySelector('#dashboard-preview');
+    if (dashboardSection) {
+      dashboardSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Hero background with animated gradients */}
