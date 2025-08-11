@@ -158,6 +158,25 @@ const Teams = () => {
     navigate(`/teams/${teamId}`);
   };
 
+  const handleShareTeam = (teamId: string, teamName: string) => {
+    const inviteLink = generateInviteLink(teamId);
+
+    if (navigator.share) {
+      navigator.share({
+        title: `Tham gia nhóm ${teamName}`,
+        text: `Bạn được mời tham gia nhóm trading "${teamName}". Nhấn link để tham gia ngay!`,
+        url: inviteLink,
+      });
+    } else {
+      navigator.clipboard.writeText(inviteLink).then(() => {
+        toast({
+          title: "Đã sao chép link mời",
+          description: "Link mời đã được sao chép. Chia sẻ để mời thành viên tham gia!",
+        });
+      });
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
