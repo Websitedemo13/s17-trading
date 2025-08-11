@@ -44,12 +44,20 @@ const Index = () => {
               >
                 Bắt đầu giao dịch
               </Link>
-              <Link
-                to="/about"
-                className="px-8 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold inline-block text-center"
-              >
-                Tìm hiểu thêm
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={handleLearnMore}
+                  className="px-6 py-4 rounded-xl border border-primary/30 text-primary hover:bg-primary/10 transition-all duration-300 font-semibold"
+                >
+                  Xem demo
+                </button>
+                <Link
+                  to="/about"
+                  className="px-6 py-4 rounded-xl border border-accent/30 text-accent hover:bg-accent/10 transition-all duration-300 font-semibold inline-block text-center"
+                >
+                  Tìm hiểu thêm
+                </Link>
+              </div>
             </div>
           </div>
           
