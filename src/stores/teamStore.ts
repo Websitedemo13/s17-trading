@@ -444,12 +444,22 @@ export const useTeamStore = create<TeamState>((set, get) => ({
 
   inviteMember: async (teamId, email) => {
     try {
+      const inviteLink = get().generateInviteLink(teamId);
+
       // In a real app, you'd send an email invitation
-      // For demo, we'll just show the team ID that can be used to join
-      toast({
-        title: "Mã mời",
-        description: `Chia sẻ mã này để mời thành viên: ${teamId}`,
+      // For demo, we'll copy the invite link to clipboard
+      navigator.clipboard.writeText(inviteLink).then(() => {
+        toast({
+          title: "Link mời đã được sao chép",
+          description: `Chia sẻ link này để mời ${email} tham gia nhóm`,
+        });
+      }).catch(() => {
+        toast({
+          title: "Mã mời",
+          description: `Mã mời: ${teamId}`,
+        });
       });
+
       return true;
     } catch (error) {
       console.error('Error inviting member:', error);
