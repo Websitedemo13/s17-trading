@@ -58,15 +58,16 @@ const TeamDetail = () => {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { 
-    currentTeam, 
-    teamMembers, 
-    loading, 
-    fetchTeamMembers, 
+  const {
+    currentTeam,
+    teamMembers,
+    loading,
+    fetchTeamMembers,
     inviteMember,
     removeMember,
     updateMemberRole,
     generateInviteCode,
+    generateInviteLink,
     leaveTeam,
     setCurrentTeam
   } = useTeamStore();
