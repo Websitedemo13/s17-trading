@@ -9,11 +9,15 @@ interface TeamState {
   teamMembers: TeamMember[];
   loading: boolean;
   fetchTeams: () => Promise<void>;
-  createTeam: (name: string, description?: string) => Promise<boolean>;
-  joinTeam: (teamId: string) => Promise<boolean>;
+  createTeam: (data: { name: string; description?: string }) => Promise<boolean>;
+  joinTeam: (inviteCode: string) => Promise<boolean>;
   leaveTeam: (teamId: string) => Promise<boolean>;
-  setCurrentTeam: (team: Team | null) => void;
   fetchTeamMembers: (teamId: string) => Promise<void>;
+  inviteMember: (teamId: string, email: string) => Promise<boolean>;
+  removeMember: (teamId: string, userId: string) => Promise<boolean>;
+  updateMemberRole: (teamId: string, userId: string, role: 'admin' | 'member') => Promise<boolean>;
+  generateInviteCode: (teamId: string) => Promise<string | null>;
+  setCurrentTeam: (team: Team | null) => void;
 }
 
 export const useTeamStore = create<TeamState>((set, get) => ({
@@ -25,23 +29,48 @@ export const useTeamStore = create<TeamState>((set, get) => ({
   fetchTeams: async () => {
     set({ loading: true });
     try {
-      const { data, error } = await supabase
-        .from('teams')
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      // Fetch teams where user is a member
+      const { data: memberTeams, error: memberError } = await supabase
+        .from('team_members')
         .select(`
-          *,
-          team_members!inner(role),
-          team_members(count)
-        `);
+          team_id,
+          role,
+          teams (
+            id,
+            name,
+            description,
+            avatar_url,
+            created_by,
+            created_at,
+            updated_at
+          )
+        `)
+        .eq('user_id', userData.user.id);
 
-      if (error) throw error;
+      if (memberError) throw memberError;
 
-      const teamsWithCounts = data?.map(team => ({
-        ...team,
-        member_count: team.team_members?.length || 0,
-        role: team.team_members?.[0]?.role
-      })) || [];
+      // Get member counts for each team
+      const teamIds = memberTeams?.map(tm => tm.team_id) || [];
+      const { data: memberCounts } = await supabase
+        .from('team_members')
+        .select('team_id')
+        .in('team_id', teamIds);
 
-      set({ teams: teamsWithCounts });
+      const teams: Team[] = memberTeams?.map(tm => {
+        const team = tm.teams as any;
+        const memberCount = memberCounts?.filter(mc => mc.team_id === tm.team_id).length || 0;
+        
+        return {
+          ...team,
+          role: tm.role,
+          member_count: memberCount
+        };
+      }) || [];
+
+      set({ teams });
     } catch (error) {
       console.error('Error fetching teams:', error);
       toast({
@@ -54,16 +83,17 @@ export const useTeamStore = create<TeamState>((set, get) => ({
     }
   },
 
-  createTeam: async (name: string, description?: string) => {
+  createTeam: async (data) => {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return false;
 
+      // Create team
       const { data: team, error: teamError } = await supabase
         .from('teams')
         .insert({
-          name,
-          description,
+          name: data.name,
+          description: data.description,
           created_by: userData.user.id
         })
         .select()
@@ -82,12 +112,6 @@ export const useTeamStore = create<TeamState>((set, get) => ({
 
       if (memberError) throw memberError;
 
-      toast({
-        title: "Thành công",
-        description: "Tạo nhóm thành công!"
-      });
-
-      get().fetchTeams();
       return true;
     } catch (error) {
       console.error('Error creating team:', error);
@@ -100,11 +124,49 @@ export const useTeamStore = create<TeamState>((set, get) => ({
     }
   },
 
-  joinTeam: async (teamId: string) => {
+  joinTeam: async (inviteCode) => {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return false;
 
+      // For demo purposes, treat inviteCode as team ID
+      // In production, you'd have a proper invite system
+      const teamId = inviteCode;
+
+      // Check if user is already a member
+      const { data: existingMember } = await supabase
+        .from('team_members')
+        .select('id')
+        .eq('team_id', teamId)
+        .eq('user_id', userData.user.id)
+        .single();
+
+      if (existingMember) {
+        toast({
+          title: "Thông báo",
+          description: "Bạn đã là thành viên của nhóm này",
+          variant: "default"
+        });
+        return false;
+      }
+
+      // Verify team exists
+      const { data: team } = await supabase
+        .from('teams')
+        .select('id, name')
+        .eq('id', teamId)
+        .single();
+
+      if (!team) {
+        toast({
+          title: "Lỗi",
+          description: "Nhóm không tồn tại",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // Join team
       const { error } = await supabase
         .from('team_members')
         .insert({
@@ -115,12 +177,6 @@ export const useTeamStore = create<TeamState>((set, get) => ({
 
       if (error) throw error;
 
-      toast({
-        title: "Thành công",
-        description: "Tham gia nhóm thành công!"
-      });
-
-      get().fetchTeams();
       return true;
     } catch (error) {
       console.error('Error joining team:', error);
@@ -133,7 +189,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
     }
   },
 
-  leaveTeam: async (teamId: string) => {
+  leaveTeam: async (teamId) => {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return false;
@@ -141,19 +197,15 @@ export const useTeamStore = create<TeamState>((set, get) => ({
       const { error } = await supabase
         .from('team_members')
         .delete()
-        .match({
-          team_id: teamId,
-          user_id: userData.user.id
-        });
+        .eq('team_id', teamId)
+        .eq('user_id', userData.user.id);
 
       if (error) throw error;
 
-      toast({
-        title: "Thành công",
-        description: "Đã rời khỏi nhóm"
-      });
+      // Update local state
+      const teams = get().teams.filter(team => team.id !== teamId);
+      set({ teams });
 
-      get().fetchTeams();
       return true;
     } catch (error) {
       console.error('Error leaving team:', error);
@@ -166,27 +218,126 @@ export const useTeamStore = create<TeamState>((set, get) => ({
     }
   },
 
-  setCurrentTeam: (team: Team | null) => {
-    set({ currentTeam: team });
-  },
-
-  fetchTeamMembers: async (teamId: string) => {
+  fetchTeamMembers: async (teamId) => {
     try {
       const { data, error } = await supabase
         .from('team_members')
-        .select('*')
-        .eq('team_id', teamId);
+        .select(`
+          *,
+          profiles (
+            display_name,
+            avatar_url
+          )
+        `)
+        .eq('team_id', teamId)
+        .order('joined_at', { ascending: true });
 
       if (error) throw error;
 
-      const members = data?.map(member => ({
+      const members: TeamMember[] = data?.map(member => ({
         ...member,
-        user: { display_name: 'User', avatar_url: null }
+        user: {
+          display_name: member.profiles?.display_name,
+          avatar_url: member.profiles?.avatar_url
+        }
       })) || [];
 
       set({ teamMembers: members });
     } catch (error) {
       console.error('Error fetching team members:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể tải danh sách thành viên",
+        variant: "destructive"
+      });
     }
   },
+
+  inviteMember: async (teamId, email) => {
+    try {
+      // In a real app, you'd send an email invitation
+      // For demo, we'll just show the team ID that can be used to join
+      toast({
+        title: "Mã mời",
+        description: `Chia sẻ mã này để mời thành viên: ${teamId}`,
+      });
+      return true;
+    } catch (error) {
+      console.error('Error inviting member:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể gửi lời mời",
+        variant: "destructive"
+      });
+      return false;
+    }
+  },
+
+  removeMember: async (teamId, userId) => {
+    try {
+      const { error } = await supabase
+        .from('team_members')
+        .delete()
+        .eq('team_id', teamId)
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      // Update local state
+      const teamMembers = get().teamMembers.filter(member => member.user_id !== userId);
+      set({ teamMembers });
+
+      return true;
+    } catch (error) {
+      console.error('Error removing member:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể xóa thành viên",
+        variant: "destructive"
+      });
+      return false;
+    }
+  },
+
+  updateMemberRole: async (teamId, userId, role) => {
+    try {
+      const { error } = await supabase
+        .from('team_members')
+        .update({ role })
+        .eq('team_id', teamId)
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      // Update local state
+      const teamMembers = get().teamMembers.map(member => 
+        member.user_id === userId ? { ...member, role } : member
+      );
+      set({ teamMembers });
+
+      return true;
+    } catch (error) {
+      console.error('Error updating member role:', error);
+      toast({
+        title: "L��i",
+        description: "Không thể cập nhật quyền thành viên",
+        variant: "destructive"
+      });
+      return false;
+    }
+  },
+
+  generateInviteCode: async (teamId) => {
+    try {
+      // For demo, return the team ID as invite code
+      return teamId;
+    } catch (error) {
+      console.error('Error generating invite code:', error);
+      return null;
+    }
+  },
+
+  setCurrentTeam: (team) => {
+    set({ currentTeam: team });
+  }
 }));
