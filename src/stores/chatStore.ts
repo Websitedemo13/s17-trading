@@ -139,7 +139,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         .from('chat_messages')
         .insert({
           team_id: teamId,
-          user_id: userData.user.id,
+          user_id: authUser.id,
           content
         });
 
