@@ -24,7 +24,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import TeamCard from '@/components/TeamCard';
+import TeamCard from '@/components/TeamCard\';\nimport TeamQuickActions from \'@/components/TeamQuickActions';
 import { useTeamStore } from '@/stores/teamStore';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
