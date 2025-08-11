@@ -94,7 +94,7 @@ const ChatAI = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col p-6">
+    <div className="h-[calc(100vh-8rem)] flex flex-col max-w-4xl mx-auto p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">AI Trading Assistant</h1>
         <p className="text-muted-foreground">
@@ -102,8 +102,8 @@ const ChatAI = () => {
         </p>
       </div>
 
-      <Card className="glass-card flex-1 flex flex-col">
-        <CardHeader>
+      <Card className="glass-card flex-1 flex flex-col overflow-hidden">
+        <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2">
             <Bot className="h-5 w-5 text-primary" />
             Chat với AI
@@ -113,9 +113,9 @@ const ChatAI = () => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="flex-1 flex flex-col">
+        <CardContent className="flex-1 flex flex-col min-h-0">
           <ScrollArea className="flex-1 pr-4 mb-4">
-            <div className="space-y-4">
+            <div className="space-y-4 pb-4">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -124,24 +124,24 @@ const ChatAI = () => {
                   }`}
                 >
                   {message.role === 'assistant' && (
-                    <Avatar className="h-8 w-8">
+                    <Avatar className="h-8 w-8 flex-shrink-0">
                       <AvatarFallback className="bg-primary text-primary-foreground">
                         <Bot className="h-4 w-4" />
                       </AvatarFallback>
                     </Avatar>
                   )}
-                  
+
                   <div
-                    className={`max-w-[70%] rounded-lg p-3 ${
+                    className={`max-w-[80%] rounded-2xl p-4 ${
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
+                        : 'bg-muted border'
                     }`}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">
                       {message.content}
                     </p>
-                    <p className="text-xs opacity-70 mt-1">
+                    <p className="text-xs opacity-70 mt-2">
                       {message.timestamp.toLocaleTimeString('vi-VN', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -150,7 +150,7 @@ const ChatAI = () => {
                   </div>
 
                   {message.role === 'user' && (
-                    <Avatar className="h-8 w-8">
+                    <Avatar className="h-8 w-8 flex-shrink-0">
                       <AvatarImage src={user?.user_metadata?.avatar_url} />
                       <AvatarFallback className="bg-secondary text-secondary-foreground">
                         <User className="h-4 w-4" />
@@ -159,18 +159,18 @@ const ChatAI = () => {
                   )}
                 </div>
               ))}
-              
+
               {loading && (
                 <div className="flex gap-3 justify-start">
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-8 w-8 flex-shrink-0">
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       <Bot className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="bg-muted rounded-lg p-3">
+                  <div className="bg-muted border rounded-2xl p-4">
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">AI đang suy nghĩ...</span>
+                      <span className="text-sm">AI đang phân tích...</span>
                     </div>
                   </div>
                 </div>
@@ -180,17 +180,17 @@ const ChatAI = () => {
 
           {/* Suggested Questions */}
           {messages.length <= 1 && (
-            <div className="mb-4">
-              <p className="text-sm font-medium mb-3 text-muted-foreground">Câu hỏi gợi ý:</p>
-              <div className="flex flex-wrap gap-2">
-                {suggestedQuestions.slice(0, 4).map((question, index) => (
+            <div className="mb-4 p-4 bg-accent/20 rounded-lg border">
+              <p className="text-sm font-medium mb-3 text-muted-foreground">💡 Câu hỏi gợi ý:</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {suggestedQuestions.slice(0, 6).map((question, index) => (
                   <Button
                     key={index}
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => handleSuggestedQuestion(question)}
                     disabled={loading}
-                    className="text-xs h-8"
+                    className="text-xs h-auto py-2 px-3 justify-start text-left whitespace-normal"
                   >
                     {question}
                   </Button>
@@ -199,7 +199,7 @@ const ChatAI = () => {
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 pt-2 border-t">
             <Input
               placeholder="Hỏi về thị trường crypto, phân tích kỹ thuật..."
               value={inputMessage}
@@ -208,10 +208,11 @@ const ChatAI = () => {
               disabled={loading}
               className="flex-1"
             />
-            <Button 
+            <Button
               onClick={() => sendMessage()}
               disabled={loading || !inputMessage.trim()}
               size="icon"
+              className="shrink-0"
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
