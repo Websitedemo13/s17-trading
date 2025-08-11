@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuthStore } from '@/stores/authStore';
-import { getAIInsights } from '@/lib/ai';
+import { getChatResponse } from '@/lib/ai';
 import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
