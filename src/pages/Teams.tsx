@@ -298,6 +298,11 @@ const Teams = () => {
         </div>
       </div>
 
+      {/* Quick Actions for Testing */}
+      <div className="fixed bottom-4 right-4 z-40">
+        <TeamQuickActions />
+      </div>
+
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
