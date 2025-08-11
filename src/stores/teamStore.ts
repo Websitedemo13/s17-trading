@@ -421,15 +421,8 @@ export const useTeamStore = create<TeamState>((set, get) => ({
         if (!error) {
           await get().fetchTeams();
           
-          // Create notification
-          await useNotificationStore.getState().createNotification({
-            title: 'Thông tin nhóm được cập nhật',
-            message: 'Thông tin nhóm đã được cập nhật bởi admin',
-            type: 'team_update',
-            team_id: teamId,
-            dismissible: true,
-            metadata: { updateData: data }
-          });
+          // Notification removed to fix circular dependency
+          // TODO: Add notification system integration later
 
           toast({
             title: "Thành công",
@@ -706,7 +699,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
       // For demo, we'll copy the invite link to clipboard
       navigator.clipboard.writeText(inviteLink).then(() => {
         toast({
-          title: "Link mời đã đư���c sao chép",
+          title: "Link mời đã được sao chép",
           description: `Chia sẻ link này để mời ${email} tham gia nhóm`,
         });
       }).catch(() => {
