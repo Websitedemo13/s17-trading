@@ -320,7 +320,19 @@ const Markets = () => {
         <CardContent>
           <div className="h-[400px] w-full border rounded-lg overflow-hidden">
             <iframe
-              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=HOSE%3A${selectedChart}&interval=1&hidesidetoolbar=1&hidetoptoolbar=0&symboledit=1&saveimage=1&toolbarbg=F1F3F6&theme=light&style=1&timezone=Asia%2FHo_Chi_Minh&studies=%5B%5D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=vi_VN&utm_source=cafef.vn&utm_medium=widget&utm_campaign=chart&utm_term=HOSE%3A${selectedChart}`}
+              src={`https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=${
+                selectedChart === 'VNINDEX' ? 'HOSE%3AVNINDEX' :
+                selectedChart === 'HNX' ? 'HNX%3AHNXINDEX' :
+                selectedChart === 'UPCOM' ? 'UPCOM%3AUPCOMINDEX' :
+                selectedChart === 'VN30' ? 'HOSE%3AVN30' :
+                'HOSE%3AVNINDEX'
+              }&interval=1&hidesidetoolbar=1&hidetoptoolbar=0&symboledit=1&saveimage=1&toolbarbg=F1F3F6&theme=light&style=1&timezone=Asia%2FHo_Chi_Minh&studies=%5B%5D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=vi_VN&utm_source=cafef.vn&utm_medium=widget&utm_campaign=chart&utm_term=${
+                selectedChart === 'VNINDEX' ? 'HOSE%3AVNINDEX' :
+                selectedChart === 'HNX' ? 'HNX%3AHNXINDEX' :
+                selectedChart === 'UPCOM' ? 'UPCOM%3AUPCOMINDEX' :
+                selectedChart === 'VN30' ? 'HOSE%3AVN30' :
+                'HOSE%3AVNINDEX'
+              }`}
               width="100%"
               height="100%"
               frameBorder="0"
