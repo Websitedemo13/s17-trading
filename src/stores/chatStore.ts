@@ -161,7 +161,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
   subscribeToMessages: (teamId: string) => {
     const channel = supabase
-      .channel('chat-messages')
+      .channel(`chat-messages-${teamId}`)
       .on(
         'postgres_changes',
         {
@@ -171,11 +171,20 @@ export const useChatStore = create<ChatState>((set, get) => ({
           filter: `team_id=eq.${teamId}`
         },
         (payload) => {
-          console.log('New message:', payload);
-          get().fetchMessages(teamId);
+          console.log('New message received:', payload);
+          // Refresh messages when new message is received
+          get().fetchMessages(teamId).catch(error => {
+            console.error('Error refreshing messages after real-time update:', error);
+          });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log(`Subscribed to chat messages for team: ${teamId}`);
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('Failed to subscribe to chat messages');
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
