@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ChatAI from "./pages/ChatAI";
 import Chat from "./pages/Chat";
+import Settings from "./pages/Settings";
 import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
 import About from "./pages/About";
