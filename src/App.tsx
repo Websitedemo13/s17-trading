@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import ChatAI from "./pages/ChatAI";
 import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
+import TeamDetail from "./pages/TeamDetail";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,14 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Teams />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/teams/:teamId"
+                  element={
+                    <ProtectedRoute>
+                      <TeamDetail />
                     </ProtectedRoute>
                   }
                 />

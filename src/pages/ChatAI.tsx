@@ -30,13 +30,25 @@ const ChatAI = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async () => {
-    if (!inputMessage.trim() || loading) return;
+  const suggestedQuestions = [
+    "Phân tích giá Bitcoin hiện tại",
+    "Ethereum có nên mua vào lúc này?",
+    "Chiến lược DCA là gì?",
+    "Làm sao để quản lý rủi ro trong trading?",
+    "Altcoin nào đáng chú ý trong tháng này?",
+    "Phân tích kỹ thuật RSI và MACD",
+    "Khi nào nên cắt lỗ?",
+    "Xu hướng thị trường tiếp theo"
+  ];
+
+  const sendMessage = async (text?: string) => {
+    const messageText = text || inputMessage;
+    if (!messageText.trim() || loading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputMessage,
+      content: messageText,
       timestamp: new Date()
     };
 
@@ -47,13 +59,13 @@ const ChatAI = () => {
     try {
       const response = await getAIInsights({
         type: 'trading_suggestion',
-        data: { question: inputMessage }
+        data: { question: messageText }
       });
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.analysis,
+        content: response.analysis + '\n\n' + response.suggestions.map(s => `• ${s}`).join('\n'),
         timestamp: new Date()
       };
 
@@ -75,6 +87,10 @@ const ChatAI = () => {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  const handleSuggestedQuestion = (question: string) => {
+    sendMessage(question);
   };
 
   return (
@@ -162,6 +178,27 @@ const ChatAI = () => {
             </div>
           </ScrollArea>
 
+          {/* Suggested Questions */}
+          {messages.length <= 1 && (
+            <div className="mb-4">
+              <p className="text-sm font-medium mb-3 text-muted-foreground">Câu hỏi gợi ý:</p>
+              <div className="flex flex-wrap gap-2">
+                {suggestedQuestions.slice(0, 4).map((question, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleSuggestedQuestion(question)}
+                    disabled={loading}
+                    className="text-xs h-8"
+                  >
+                    {question}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-2">
             <Input
               placeholder="Hỏi về thị trường crypto, phân tích kỹ thuật..."
@@ -172,7 +209,7 @@ const ChatAI = () => {
               className="flex-1"
             />
             <Button 
-              onClick={sendMessage}
+              onClick={() => sendMessage()}
               disabled={loading || !inputMessage.trim()}
               size="icon"
             >
