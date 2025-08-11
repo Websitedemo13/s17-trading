@@ -23,7 +23,27 @@ const ChatAI = () => {
     {
       id: '1',
       role: 'assistant',
-      content: 'Chào bạn! Tôi là AI Assistant của S17 Trading Platform. Tôi có thể giúp bạn phân tích thị trường, đưa ra gợi ý trading, và trả lời các câu hỏi về cryptocurrency. Bạn muốn hỏi gì?',
+      content: `🤖 **Chào mừng đến với S17 AI Trading Assistant!**
+
+Tôi là AI chuyên gia crypto với kiến thức sâu rộng về:
+
+📊 **Phân tích thị trường:**
+• Bitcoin, Ethereum và altcoin analysis
+• Technical analysis (RSI, MACD, Support/Resistance)
+• Market cycle và macro economics
+
+💰 **Chiến lược đầu tư:**
+• Risk management và portfolio allocation
+• DeFi yield farming strategies
+• Trading psychology và emotional control
+
+🎯 **Chủ đề nâng cao:**
+• On-chain analysis và whale watching
+• Layer 2 solutions và cross-chain
+• Regulatory updates và tax implications
+
+**Hãy hỏi tôi bất cứ điều gì về crypto - từ cơ bản đến nâng cao!**
+Bạn có thể chọn câu hỏi gợi ý bên dưới hoặc đặt câu hỏi riêng của bạn.`,
       timestamp: new Date()
     }
   ]);
