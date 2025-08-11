@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,8 @@ const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [validating, setValidating] = useState(true);
+  const [isValidToken, setIsValidToken] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { resetPassword } = useAuthStore();
@@ -36,6 +38,7 @@ const ResetPassword = () => {
 
     // Set session with the tokens from URL
     const setSession = async () => {
+      setValidating(true);
       try {
         const { error } = await supabase.auth.setSession({
           access_token: accessToken,
@@ -50,10 +53,23 @@ const ResetPassword = () => {
             variant: "destructive",
           });
           navigate('/login');
+        } else {
+          setIsValidToken(true);
+          toast({
+            title: "Xác thực thành công",
+            description: "Bạn có thể đặt mật khẩu mới ngay bây giờ.",
+          });
         }
       } catch (error) {
         console.error('Error:', error);
+        toast({
+          title: "Có lỗi xảy ra",
+          description: "Vui lòng thử lại từ email.",
+          variant: "destructive",
+        });
         navigate('/login');
+      } finally {
+        setValidating(false);
       }
     };
 
@@ -106,16 +122,41 @@ const ResetPassword = () => {
     }
   };
 
+  if (validating) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-secondary/10 p-4">
+        <div className="w-full max-w-md animate-scale-in">
+          <Card className="border-primary/20 shadow-elegant bg-background/80 backdrop-blur-md">
+            <CardContent className="pt-6">
+              <div className="text-center space-y-4">
+                <Loader2 className="w-8 h-8 mx-auto animate-spin text-primary" />
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">Đang xác thực...</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Vui lòng chờ trong khi chúng tôi xác thực link reset mật khẩu của bạn.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-secondary/10 p-4">
       <div className="w-full max-w-md animate-scale-in">
         <Card className="border-primary/20 shadow-elegant bg-background/80 backdrop-blur-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Đặt lại mật khẩu
-            </CardTitle>
+            <div className="flex items-center justify-center mb-2">
+              <CheckCircle className="w-6 h-6 text-green-500 mr-2" />
+              <CardTitle className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                Đặt lại mật khẩu
+              </CardTitle>
+            </div>
             <CardDescription className="text-muted-foreground">
-              Nhập mật khẩu mới cho tài khoản của bạn
+              Link xác thực hợp lệ. Nhập mật khẩu mới cho tài khoản của bạn.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -130,8 +171,9 @@ const ResetPassword = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Nhập mật khẩu mới"
+                    placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
                     required
+                    disabled={!isValidToken}
                     className="pr-10 border-primary/20 focus:border-primary"
                   />
                   <button
@@ -156,6 +198,7 @@ const ResetPassword = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Nhập lại mật khẩu mới"
                     required
+                    disabled={!isValidToken}
                     className="pr-10 border-primary/20 focus:border-primary"
                   />
                   <button
@@ -170,18 +213,28 @@ const ResetPassword = () => {
 
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-primary hover:shadow-glow transition-all duration-300"
+                disabled={loading || !isValidToken || !password || !confirmPassword}
+                className="w-full bg-gradient-primary hover:shadow-glow transition-all duration-300 disabled:opacity-50"
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Đang cập nhật...
+                    Đang cập nhật mật khẩu...
                   </>
                 ) : (
-                  'Đặt lại mật khẩu'
+                  'Cập nhật mật khẩu mới'
                 )}
               </Button>
+
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="text-sm text-primary hover:text-primary/80 transition-colors"
+                >
+                  Quay lại đăng nhập
+                </button>
+              </div>
             </form>
           </CardContent>
         </Card>
