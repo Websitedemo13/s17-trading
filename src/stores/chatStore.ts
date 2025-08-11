@@ -24,7 +24,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
         throw new Error('Người dùng chưa đăng nhập');
       }
 
-      // Check if user is member of the team
+      // Check if team exists and user is a member
+      const { data: teamData, error: teamError } = await supabase
+        .from('teams')
+        .select('id, name')
+        .eq('id', teamId)
+        .single();
+
+      if (teamError || !teamData) {
+        throw new Error('Nhóm không tồn tại hoặc đã bị xóa');
+      }
+
       const { data: memberData, error: memberError } = await supabase
         .from('team_members')
         .select('*')
@@ -33,7 +43,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
         .single();
 
       if (memberError || !memberData) {
-        throw new Error('Bạn không có quyền truy cập nhóm này');
+        throw new Error(`Bạn không có quyền truy cập nhóm "${teamData.name}"`);
       }
 
       // Fetch messages
