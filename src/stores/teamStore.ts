@@ -43,23 +43,43 @@ const loadFromStorage = (userId: string, key: string) => {
 };
 
 const getCurrentUser = () => {
-  // Get current user from auth store or create a mock user
-  const authData = JSON.parse(localStorage.getItem('auth-storage') || '{}');
-  const user = authData?.state?.user;
+  // Try to get current user from various auth store formats
+  try {
+    // Try zustand auth store format
+    const authData = JSON.parse(localStorage.getItem('auth-storage') || '{}');
+    let user = authData?.state?.user;
 
-  if (user) {
-    return {
-      id: user.id,
-      email: user.email,
-      display_name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'User'
-    };
+    // If not found, try direct user storage
+    if (!user) {
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      if (userData.id) user = userData;
+    }
+
+    // If still not found, check if admin user is logged in
+    if (!user) {
+      const adminData = JSON.parse(localStorage.getItem('admin-storage') || '{}');
+      if (adminData?.state?.user) {
+        user = adminData.state.user;
+      }
+    }
+
+    if (user && user.id) {
+      return {
+        id: user.id,
+        email: user.email || 'admin@example.com',
+        display_name: user.user_metadata?.display_name || user.display_name || user.email?.split('@')[0] || 'Admin User'
+      };
+    }
+  } catch (error) {
+    console.warn('Error getting current user:', error);
   }
 
-  // Fallback mock user for demo
+  // Create a consistent demo user for testing
+  const demoUserId = 'demo-user-admin';
   return {
-    id: 'demo-user-' + Date.now(),
-    email: 'demo@example.com',
-    display_name: 'Demo User'
+    id: demoUserId,
+    email: 'admin@s17trading.com',
+    display_name: 'Admin User'
   };
 };
 
@@ -400,7 +420,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
       console.error('Error leaving team:', error);
       toast({
         title: "Lỗi",
-        description: "Không thể rời khỏi nhóm",
+        description: "Không th�� rời khỏi nhóm",
         variant: "destructive"
       });
       return false;
