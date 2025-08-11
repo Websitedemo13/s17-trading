@@ -53,6 +53,7 @@ import {
 
 const Teams = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { teams, loading, fetchTeams, createTeam, joinTeam } = useTeamStore();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showJoinDialog, setShowJoinDialog] = useState(false);
@@ -170,7 +171,7 @@ const Teams = () => {
               <DialogHeader>
                 <DialogTitle>Tham gia nhóm existing</DialogTitle>
                 <DialogDescription>
-                  Nhập mã mời để tham gia một nhóm đã có
+                  Nhập mã mời để tham gia một nhóm ��ã có
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
@@ -438,7 +439,7 @@ const Teams = () => {
                           )}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-red-600">
-                            Rời nhóm
+                            R���i nhóm
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
