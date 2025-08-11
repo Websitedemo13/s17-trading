@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => ({
   preview: {
     host: "0.0.0.0",
     port: parseInt(process.env.PORT || "3000"),
+    allowedHosts: ["s17-trading.onrender.com"],
   },
   plugins: [
     react(),
