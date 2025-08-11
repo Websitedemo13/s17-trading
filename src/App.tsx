@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import ChatAI from "./pages/ChatAI";
 import ResetPassword from "./pages/ResetPassword";
 import Index from "./pages/Index";
+import About from "./pages/About";
 import TeamDetail from "./pages/TeamDetail";
 
 const queryClient = new QueryClient();
