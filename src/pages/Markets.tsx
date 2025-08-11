@@ -324,7 +324,7 @@ const Markets = () => {
               width="100%"
               height="100%"
               frameBorder="0"
-              allowTransparency
+              allowtransparency="true"
               scrolling="no"
               className="rounded-lg"
             />
@@ -375,7 +375,7 @@ const Markets = () => {
               <div className="text-2xl font-bold text-orange-500">
                 ${(marketStats.crypto.totalMarketCap / 1e12).toFixed(2)}T
               </div>
-              <p className="text-xs text-muted-foreground">Tổng v���n hóa</p>
+              <p className="text-xs text-muted-foreground">Tổng vốn hóa</p>
               <div className="text-xs text-muted-foreground mt-1">
                 BTC Dominance: {((marketStats.crypto.btcDominance / marketStats.crypto.totalMarketCap) * 100).toFixed(1)}%
               </div>
