@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
 import MarketStats from "@/components/MarketStats";
 import CryptoChart from "@/components/CryptoChart";
 import PortfolioCard from "@/components/PortfolioCard";
