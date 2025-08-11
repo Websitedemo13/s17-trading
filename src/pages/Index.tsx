@@ -54,7 +54,7 @@ const Index = () => {
           </div>
           
           {/* Dashboard Preview */}
-          <div className="max-w-7xl mx-auto animate-slide-up animate-delay-600">
+          <div id="dashboard-preview" className="max-w-7xl mx-auto animate-slide-up animate-delay-600">
             <header className="mb-12 text-center">
               <h2 className="text-4xl font-display font-bold mb-4 text-gradient">
                 Dashboard Overview
