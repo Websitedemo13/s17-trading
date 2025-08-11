@@ -364,11 +364,98 @@ export const FileUpload = ({
 
         {/* Preview Dialog */}
         <Dialog open={showPreview} onOpenChange={setShowPreview}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-4xl max-h-[80vh]">
             <DialogHeader>
               <DialogTitle>File Preview</DialogTitle>
             </DialogHeader>
-            {/* Preview content would go here */}
+            <div className="space-y-4 max-h-[60vh] overflow-auto">
+              {uploads.map((upload, index) => (
+                <div key={index} className="border rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <FileIcon type={getFileType(upload.file)} />
+                    <div className="flex-1">
+                      <h4 className="font-medium">{upload.file.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {formatFileSize(upload.file.size)} • {upload.file.type}
+                      </p>
+                    </div>
+                    <Badge variant={
+                      upload.status === 'completed' ? 'secondary' :
+                      upload.status === 'error' ? 'destructive' : 'default'
+                    }>
+                      {upload.status === 'uploading' ? 'Đang tải' :
+                       upload.status === 'completed' ? 'Hoàn thành' : 'Lỗi'}
+                    </Badge>
+                  </div>
+
+                  {/* Image Preview */}
+                  {getFileType(upload.file) === 'image' && upload.status === 'completed' && (
+                    <div className="bg-muted rounded-lg p-4 flex justify-center">
+                      <img
+                        src={upload.url || URL.createObjectURL(upload.file)}
+                        alt={upload.file.name}
+                        className="max-w-full max-h-64 object-contain rounded"
+                      />
+                    </div>
+                  )}
+
+                  {/* Video Preview */}
+                  {getFileType(upload.file) === 'video' && upload.status === 'completed' && (
+                    <div className="bg-muted rounded-lg p-4">
+                      <video
+                        controls
+                        className="w-full max-h-64 rounded"
+                        src={upload.url || URL.createObjectURL(upload.file)}
+                      >
+                        Trình duyệt không hỗ trợ video
+                      </video>
+                    </div>
+                  )}
+
+                  {/* Audio Preview */}
+                  {getFileType(upload.file) === 'audio' && upload.status === 'completed' && (
+                    <div className="bg-muted rounded-lg p-4">
+                      <audio
+                        controls
+                        className="w-full"
+                        src={upload.url || URL.createObjectURL(upload.file)}
+                      >
+                        Trình duyệt không hỗ trợ audio
+                      </audio>
+                    </div>
+                  )}
+
+                  {/* Text Preview for documents */}
+                  {getFileType(upload.file) === 'document' && upload.file.type === 'text/plain' && (
+                    <div className="bg-muted rounded-lg p-4 max-h-32 overflow-auto">
+                      <pre className="text-sm whitespace-pre-wrap">
+                        {/* Text content would be loaded here */}
+                        <span className="text-muted-foreground">Preview not available</span>
+                      </pre>
+                    </div>
+                  )}
+
+                  {/* Upload Progress */}
+                  {upload.status === 'uploading' && (
+                    <div className="space-y-2">
+                      <Progress value={upload.progress} />
+                      <p className="text-sm text-muted-foreground text-center">
+                        Đang tải lên... {upload.progress}%
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Error Message */}
+                  {upload.status === 'error' && (
+                    <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3">
+                      <p className="text-sm text-destructive">
+                        {upload.error || 'Có lỗi xảy ra khi tải file'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </DialogContent>
         </Dialog>
       </div>
