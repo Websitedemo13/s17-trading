@@ -63,7 +63,7 @@ const AdminDashboard = () => {
     if (!newPostTitle.trim() || !newPostContent.trim()) {
       toast({
         title: "Lỗi",
-        description: "Vui lòng nhập đầy đủ tiêu đề và nội dung",
+        description: "Vui lòng nhập đầy đủ tiêu đề v�� nội dung",
         variant: "destructive"
       });
       return;
@@ -381,7 +381,7 @@ const AdminDashboard = () => {
                 Quản lý người dùng
               </CardTitle>
               <CardDescription>
-                Tổng cộng {users.length} người dùng trong hệ thống
+                Tổng cộng {users.length} người d��ng trong hệ thống
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -420,8 +420,32 @@ const AdminDashboard = () => {
                         )}
                         {user.isActive ? 'Hoạt động' : 'Bị khóa'}
                       </Badge>
-                      <Button variant="outline" size="sm">
-                        Chi tiết
+                      {user.isActive ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleUserAction(user.id, 'deactivate')}
+                          disabled={loading}
+                        >
+                          Khóa
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleUserAction(user.id, 'activate')}
+                          disabled={loading}
+                        >
+                          Kích hoạt
+                        </Button>
+                      )}
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleUserAction(user.id, 'delete')}
+                        disabled={loading}
+                      >
+                        Xóa
                       </Button>
                     </div>
                   </div>
