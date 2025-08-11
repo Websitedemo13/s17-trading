@@ -17,8 +17,51 @@ interface TeamState {
   removeMember: (teamId: string, userId: string) => Promise<boolean>;
   updateMemberRole: (teamId: string, userId: string, role: 'admin' | 'member') => Promise<boolean>;
   generateInviteCode: (teamId: string) => Promise<string | null>;
+  generateInviteLink: (teamId: string) => string;
   setCurrentTeam: (team: Team | null) => void;
 }
+
+// Helper functions for localStorage fallback
+const getStorageKey = (userId: string, key: string) => `team_${userId}_${key}`;
+
+const saveToStorage = (userId: string, key: string, data: any) => {
+  try {
+    localStorage.setItem(getStorageKey(userId, key), JSON.stringify(data));
+  } catch (error) {
+    console.warn('Failed to save to localStorage:', error);
+  }
+};
+
+const loadFromStorage = (userId: string, key: string) => {
+  try {
+    const data = localStorage.getItem(getStorageKey(userId, key));
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.warn('Failed to load from localStorage:', error);
+    return null;
+  }
+};
+
+const getCurrentUser = () => {
+  // Get current user from auth store or create a mock user
+  const authData = JSON.parse(localStorage.getItem('auth-storage') || '{}');
+  const user = authData?.state?.user;
+
+  if (user) {
+    return {
+      id: user.id,
+      email: user.email,
+      display_name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'User'
+    };
+  }
+
+  // Fallback mock user for demo
+  return {
+    id: 'demo-user-' + Date.now(),
+    email: 'demo@example.com',
+    display_name: 'Demo User'
+  };
+};
 
 export const useTeamStore = create<TeamState>((set, get) => ({
   teams: [],
