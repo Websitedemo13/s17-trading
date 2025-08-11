@@ -42,8 +42,8 @@ const Settings = () => {
   
   const [displayName, setDisplayName] = useState(user?.user_metadata?.display_name || '');
   const [email] = useState(user?.email || '');
-  const [phone, setPhone] = useState('');
-  const [bio, setBio] = useState('');
+  const [phone, setPhone] = useState(user?.user_metadata?.phone || '');
+  const [bio, setBio] = useState(user?.user_metadata?.bio || '');
   const [notifications, setNotifications] = useState({
     email: true,
     push: true,
@@ -564,7 +564,7 @@ const Settings = () => {
                       <DialogTitle>Điều khoản sử dụng</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 text-sm">
-                      <p><strong>1. Chấp nhận điều kho���n</strong></p>
+                      <p><strong>1. Chấp nhận điều khoản</strong></p>
                       <p>Bằng việc sử dụng S17 Trading Platform, bạn đồng ý tuân thủ các điều khoản và điều kiện được nêu dưới đây.</p>
                       
                       <p><strong>2. Sử dụng dịch vụ</strong></p>
@@ -604,7 +604,7 @@ const Settings = () => {
                       <p>Chúng tôi không chia sẻ thông tin cá nhân với bên thứ ba trừ khi được pháp luật yêu cầu.</p>
                       
                       <p><strong>Bảo mật dữ liệu</strong></p>
-                      <p>Chúng tôi áp dụng các biện pháp bảo mật hàng đầu đ�� bảo vệ dữ liệu của bạn.</p>
+                      <p>Chúng tôi áp dụng các biện pháp bảo mật hàng đầu để bảo vệ dữ liệu của bạn.</p>
                     </div>
                   </DialogContent>
                 </Dialog>
