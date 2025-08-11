@@ -50,22 +50,33 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
       // Get unique user IDs from messages
       const userIds = [...new Set(messagesData?.map(m => m.user_id) || [])];
+      let profilesMap = new Map();
 
-      // Fetch user profiles for all users in the chat
-      const { data: profilesData } = await supabase
-        .from('profiles')
-        .select('id, display_name, avatar_url')
-        .in('id', userIds);
+      // Try to fetch user profiles, fallback if profiles table doesn't exist
+      if (userIds.length > 0) {
+        try {
+          const { data: profilesData, error: profilesError } = await supabase
+            .from('profiles')
+            .select('id, display_name, avatar_url')
+            .in('id', userIds);
 
-      // Create a map of user profiles
-      const profilesMap = new Map(
-        profilesData?.map(profile => [profile.id, profile]) || []
-      );
+          if (!profilesError && profilesData) {
+            profilesMap = new Map(
+              profilesData.map(profile => [profile.id, profile])
+            );
+          }
+        } catch (profileError) {
+          console.log('Profiles table not available, using fallback user data');
+        }
+      }
 
-      // Combine messages with user data
+      // Combine messages with user data (fallback to Anonymous if no profile found)
       const messages = messagesData?.map(message => ({
         ...message,
-        user: profilesMap.get(message.user_id) || { display_name: 'Anonymous', avatar_url: null }
+        user: profilesMap.get(message.user_id) || {
+          display_name: 'Anonymous',
+          avatar_url: null
+        }
       })) || [];
 
       set({ messages });
