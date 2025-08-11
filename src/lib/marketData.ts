@@ -296,52 +296,7 @@ class MarketDataService {
         console.warn('Using fallback crypto data due to API unavailability');
       }
 
-      // Fallback crypto data when API fails
-      const fallbackCrypto: CryptoData[] = [
-        {
-          id: 'bitcoin',
-          symbol: 'BTC',
-          name: 'Bitcoin',
-          price: 43500 + (Math.random() - 0.5) * 2000,
-          change24h: (Math.random() - 0.5) * 1000,
-          changePercent24h: (Math.random() - 0.5) * 5,
-          volume24h: 28000000000 + Math.random() * 5000000000,
-          marketCap: 850000000000,
-          rank: 1,
-          supply: 19500000,
-          maxSupply: 21000000,
-          lastUpdate: new Date().toISOString()
-        },
-        {
-          id: 'ethereum',
-          symbol: 'ETH',
-          name: 'Ethereum',
-          price: 2650 + (Math.random() - 0.5) * 200,
-          change24h: (Math.random() - 0.5) * 100,
-          changePercent24h: (Math.random() - 0.5) * 4,
-          volume24h: 15000000000 + Math.random() * 3000000000,
-          marketCap: 320000000000,
-          rank: 2,
-          supply: 120500000,
-          lastUpdate: new Date().toISOString()
-        },
-        {
-          id: 'binancecoin',
-          symbol: 'BNB',
-          name: 'BNB',
-          price: 320 + (Math.random() - 0.5) * 20,
-          change24h: (Math.random() - 0.5) * 15,
-          changePercent24h: (Math.random() - 0.5) * 3,
-          volume24h: 1200000000 + Math.random() * 300000000,
-          marketCap: 48000000000,
-          rank: 3,
-          supply: 150000000,
-          maxSupply: 200000000,
-          lastUpdate: new Date().toISOString()
-        }
-      ];
-
-      return fallbackCrypto;
+      return generateDynamicCrypto();
     }
   }
 
