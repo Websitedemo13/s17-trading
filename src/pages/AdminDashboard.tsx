@@ -599,32 +599,7 @@ const AdminDashboard = () => {
 
         {/* Blog Management Tab */}
         <TabsContent value="blog" className="space-y-6">
-          {/* Create New Post */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-green-600" />
-                Tạo bài viết mới
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Input
-                placeholder="Tiêu đề bài viết..."
-                value={newPostTitle}
-                onChange={(e) => setNewPostTitle(e.target.value)}
-              />
-              <Textarea
-                placeholder="Nội dung bài viết..."
-                value={newPostContent}
-                onChange={(e) => setNewPostContent(e.target.value)}
-                rows={4}
-              />
-              <Button onClick={handleCreatePost} disabled={blogLoading}>
-                <FileText className="h-4 w-4 mr-2" />
-                Tạo bài viết
-              </Button>
-            </CardContent>
-          </Card>
+          <AdminBlogManager />
 
           {/* Blog Statistics */}
           <Card>
