@@ -536,6 +536,11 @@ export const useTeamStore = create<TeamState>((set, get) => ({
     }
   },
 
+  generateInviteLink: (teamId) => {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/teams?invite=${teamId}`;
+  },
+
   setCurrentTeam: (team) => {
     set({ currentTeam: team });
   }
