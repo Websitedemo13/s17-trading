@@ -668,7 +668,7 @@ const AdminDashboard = () => {
                     <Button variant="outline" className="w-full justify-start">
                       <Shield className="h-4 w-4 mr-2" />
                       Security scan
-                    </Button>
+                    </Button> 
                   </div>
                 </div>
               </div>
