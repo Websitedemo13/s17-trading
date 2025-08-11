@@ -31,14 +31,26 @@ const ChatAI = () => {
   const [loading, setLoading] = useState(false);
 
   const suggestedQuestions = [
-    "Phân tích giá Bitcoin hiện tại",
-    "Ethereum có nên mua vào lúc này?",
-    "Chiến lược DCA là gì?",
-    "Làm sao để quản lý rủi ro trong trading?",
-    "Altcoin nào đáng chú ý trong tháng này?",
-    "Phân tích kỹ thuật RSI và MACD",
-    "Khi nào nên cắt lỗ?",
-    "Xu hướng thị trường tiếp theo"
+    "Phân tích Bitcoin halving 2024 và tác động đến giá",
+    "Ethereum staking có đáng làm không?",
+    "DeFi yield farming strategy nào tốt nhất?",
+    "Cách quản lý rủi ro crypto hiệu quả",
+    "Altcoin AI và Gaming có tiềm năng?",
+    "Trading psychology - kiểm soát cảm xúc",
+    "Technical analysis cho crypto: RSI, MACD",
+    "Fed policy ảnh hưởng crypto như thế nào?",
+    "Layer 2 Ethereum: Arbitrum vs Optimism",
+    "NFT và GameFi có còn hót?",
+    "Regulatory crypto ở Việt Nam",
+    "Portfolio allocation: BTC/ETH/Alts ratio",
+    "Market cycle analysis - bull vs bear",
+    "On-chain analysis và whale watching",
+    "Cross-chain bridges và risks",
+    "Meme coins có nên đầu tư?",
+    "Dollar cost averaging vs lump sum",
+    "Tax implications của crypto trading",
+    "Hardware wallet nào tốt nhất?",
+    "Centralized vs Decentralized exchanges"
   ];
 
   const sendMessage = async (text?: string) => {
