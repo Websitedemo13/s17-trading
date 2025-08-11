@@ -70,11 +70,44 @@ const Settings = () => {
     { id: 'yellow', name: 'Vàng', color: 'bg-yellow-500', value: 'hsl(50, 100%, 60%)' }
   ];
 
-  const handleSaveProfile = () => {
-    toast({
-      title: "Thành công",
-      description: "Đã cập nhật thông tin cá nhân"
-    });
+  const handleSaveProfile = async () => {
+    try {
+      if (!user) return;
+
+      // Update user metadata in Supabase auth
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          display_name: displayName,
+          phone: phone,
+          bio: bio
+        }
+      });
+
+      if (error) throw error;
+
+      // Update profile table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          display_name: displayName,
+          updated_at: new Date().toISOString()
+        });
+
+      if (profileError) throw profileError;
+
+      toast({
+        title: "Thành công",
+        description: "Đã cập nhật thông tin cá nhân"
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể cập nhật thông tin",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleSaveBugReport = () => {
@@ -129,7 +162,7 @@ const Settings = () => {
         <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <SettingsIcon className="h-4 w-4" />
-            H��� sơ
+            Hồ sơ
           </TabsTrigger>
           <TabsTrigger value="appearance" className="flex items-center gap-2">
             <Palette className="h-4 w-4" />
@@ -449,7 +482,7 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                   Nền tảng giao dịch cryptocurrency hiện đại với AI hỗ trợ, 
-                  chat nhóm và qu���n lý portfolio thông minh.
+                  chat nhóm và quản lý portfolio thông minh.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
