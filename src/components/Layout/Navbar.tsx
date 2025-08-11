@@ -15,6 +15,7 @@ import { LogOut, User, Settings, Crown } from 'lucide-react';
 const Navbar = () => {
   const location = useLocation();
   const { user, signOut } = useAuthStore();
+  const { isAdmin } = useAdminStore();
 
   const isActive = (path: string) => {
     return location.pathname === path;
