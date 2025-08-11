@@ -251,56 +251,120 @@ export const useTeamStore = create<TeamState>((set, get) => ({
 
   joinTeam: async (inviteCode) => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return false;
+      const currentUser = getCurrentUser();
 
-      // For demo purposes, treat inviteCode as team ID
-      // In production, you'd have a proper invite system
-      const teamId = inviteCode;
+      // Try Supabase first, fallback to localStorage
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          const teamId = inviteCode;
 
-      // Check if user is already a member
-      const { data: existingMember } = await supabase
-        .from('team_members')
-        .select('id')
-        .eq('team_id', teamId)
-        .eq('user_id', userData.user.id)
-        .single();
+          // Check if user is already a member
+          const { data: existingMember } = await supabase
+            .from('team_members')
+            .select('id')
+            .eq('team_id', teamId)
+            .eq('user_id', userData.user.id)
+            .single();
 
-      if (existingMember) {
-        toast({
-          title: "Thông báo",
-          description: "Bạn đã là thành viên của nhóm này",
-          variant: "default"
-        });
-        return false;
+          if (existingMember) {
+            toast({
+              title: "Thông báo",
+              description: "Bạn đã là thành viên của nhóm này",
+            });
+            return false;
+          }
+
+          // Verify team exists
+          const { data: team } = await supabase
+            .from('teams')
+            .select('id, name')
+            .eq('id', teamId)
+            .single();
+
+          if (team) {
+            // Join team
+            const { error } = await supabase
+              .from('team_members')
+              .insert({
+                team_id: teamId,
+                user_id: userData.user.id,
+                role: 'member'
+              });
+
+            if (!error) {
+              await get().fetchTeams();
+              toast({
+                title: "Thành công",
+                description: `Đã tham gia nhóm "${team.name}"!`,
+              });
+              return true;
+            }
+          }
+        }
+      } catch (supabaseError) {
+        console.log('Supabase not available, using localStorage fallback');
       }
 
-      // Verify team exists
-      const { data: team } = await supabase
-        .from('teams')
-        .select('id, name')
-        .eq('id', teamId)
-        .single();
+      // Fallback to localStorage
+      const globalTeams = JSON.parse(localStorage.getItem('global_teams') || '[]');
+      const team = globalTeams.find((t: any) => t.id === inviteCode);
 
       if (!team) {
         toast({
           title: "Lỗi",
-          description: "Nhóm không tồn tại",
+          description: "Mã mời không hợp lệ hoặc nhóm không tồn tại",
           variant: "destructive"
         });
         return false;
       }
 
-      // Join team
-      const { error } = await supabase
-        .from('team_members')
-        .insert({
-          team_id: teamId,
-          user_id: userData.user.id,
-          role: 'member'
+      // Check if already a member
+      const isAlreadyMember = team.members?.some((m: any) => m.user_id === currentUser.id);
+      if (isAlreadyMember) {
+        toast({
+          title: "Thông báo",
+          description: "Bạn đã là thành viên của nhóm này",
         });
+        return false;
+      }
 
-      if (error) throw error;
+      // Add user to team
+      if (!team.members) team.members = [];
+      team.members.push({
+        id: 'member_' + Date.now(),
+        team_id: team.id,
+        user_id: currentUser.id,
+        role: 'member',
+        joined_at: new Date().toISOString(),
+        user: {
+          display_name: currentUser.display_name,
+          avatar_url: ''
+        }
+      });
+
+      // Update member count
+      team.member_count = team.members.length;
+
+      // Save back to global teams
+      const updatedGlobalTeams = globalTeams.map((t: any) => t.id === team.id ? team : t);
+      localStorage.setItem('global_teams', JSON.stringify(updatedGlobalTeams));
+
+      // Add to user's teams with member role
+      const userTeam = { ...team, role: 'member' };
+      delete userTeam.members; // Don't store members list in user's teams
+
+      const userTeams = loadFromStorage(currentUser.id, 'teams') || [];
+      userTeams.push(userTeam);
+      saveToStorage(currentUser.id, 'teams', userTeams);
+
+      // Update local state
+      await get().fetchTeams();
+
+      toast({
+        title: "Thành công",
+        description: `Đã tham gia nhóm "${team.name}"!`,
+      });
 
       return true;
     } catch (error) {
