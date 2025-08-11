@@ -57,6 +57,63 @@ const AdminDashboard = () => {
     setUsers(userData);
   };
 
+  const handleCreatePost = async () => {
+    if (!newPostTitle.trim() || !newPostContent.trim()) {
+      toast({
+        title: "Lỗi",
+        description: "Vui lòng nhập đầy đủ tiêu đề và nội dung",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const success = await createPost({
+      title: newPostTitle,
+      content: newPostContent,
+      author: adminUser?.email || 'admin',
+      status: 'draft',
+      slug: newPostTitle.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now()
+    });
+
+    if (success) {
+      setNewPostTitle('');
+      setNewPostContent('');
+    }
+  };
+
+  const handleUpdatePost = async () => {
+    if (!editingPost) return;
+
+    const success = await updatePost(editingPost.id, {
+      title: editingPost.title,
+      content: editingPost.content
+    });
+
+    if (success) {
+      setEditingPost(null);
+    }
+  };
+
+  const handleUserAction = async (userId: string, action: 'activate' | 'deactivate' | 'delete') => {
+    let success = false;
+
+    switch (action) {
+      case 'activate':
+        success = await updateUserStatus(userId, true);
+        break;
+      case 'deactivate':
+        success = await updateUserStatus(userId, false);
+        break;
+      case 'delete':
+        success = await deleteUser(userId);
+        break;
+    }
+
+    if (success) {
+      loadUsers(); // Reload users after action
+    }
+  };
+
   // Redirect if not admin
   if (!isAdmin || !adminUser) {
     return <Navigate to="/dashboard" replace />;
