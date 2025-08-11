@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { useAdminStore } from '@/stores/adminStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useBlogStore } from '@/stores/blogStore';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, 
   MessageSquare, 
