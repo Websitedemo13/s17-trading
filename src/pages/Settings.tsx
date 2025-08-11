@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useAuthStore } from '@/stores/authStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Settings as SettingsIcon, 
   Palette, 
@@ -555,7 +556,7 @@ const Settings = () => {
                       <p>Chúng tôi chỉ thu thập thông tin cần thiết để cung cấp dịch vụ tốt nhất.</p>
                       
                       <p><strong>Sử dụng thông tin</strong></p>
-                      <p>Thông tin của bạn được sử dụng để cải thiện trải nghiệm và bảo mật tài khoản.</p>
+                      <p>Thông tin c��a bạn được sử dụng để cải thiện trải nghiệm và bảo mật tài khoản.</p>
                       
                       <p><strong>Chia sẻ thông tin</strong></p>
                       <p>Chúng tôi không chia sẻ thông tin cá nhân với bên thứ ba trừ khi được pháp luật yêu cầu.</p>
