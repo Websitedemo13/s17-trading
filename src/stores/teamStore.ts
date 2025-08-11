@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '@/integrations/supabase/client';
 import { Team, TeamMember } from '@/types';
 import { toast } from '@/hooks/use-toast';
-import { useNotificationStore } from './notificationStore';
+// Removed notification store import to fix circular dependency
 
 interface TeamState {
   teams: Team[];
