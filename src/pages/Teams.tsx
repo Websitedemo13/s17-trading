@@ -463,9 +463,9 @@ const Teams = () => {
                                 <Settings className="h-4 w-4 mr-2" />
                                 Cài đặt
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleShareTeam(team.id, team.name)}>
                                 <Share2 className="h-4 w-4 mr-2" />
-                                Chia sẻ mã mời
+                                Chia sẻ link mời
                               </DropdownMenuItem>
                             </>
                           )}
@@ -517,7 +517,7 @@ const Teams = () => {
                 <p className="text-muted-foreground mb-4">
                   {searchQuery
                     ? 'Thử điều chỉnh từ khóa tìm kiếm hoặc bộ lọc'
-                    : 'Hãy tạo nhóm đầu tiên để bắt đầu kết nối với cộng đồng trader'}
+                    : 'Hãy tạo nhóm đ��u tiên để bắt đầu kết nối với cộng đồng trader'}
                 </p>
                 {!searchQuery && (
                   <Button onClick={() => setShowCreateDialog(true)}>
