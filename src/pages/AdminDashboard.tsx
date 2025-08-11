@@ -51,6 +51,55 @@ const AdminDashboard = () => {
       fetchStats();
       loadUsers();
       fetchPosts();
+
+      // Set up real-time updates
+      const statsInterval = setInterval(() => {
+        fetchStats();
+      }, 30000); // Update stats every 30 seconds
+
+      const usersInterval = setInterval(() => {
+        loadUsers();
+      }, 60000); // Update users every minute
+
+      // Subscribe to blog posts changes
+      const blogSubscription = supabase
+        .channel('blog-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'blog_posts'
+          },
+          () => {
+            fetchPosts();
+          }
+        )
+        .subscribe();
+
+      // Subscribe to profile changes
+      const profileSubscription = supabase
+        .channel('profile-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'profiles'
+          },
+          () => {
+            loadUsers();
+            fetchStats();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        clearInterval(statsInterval);
+        clearInterval(usersInterval);
+        supabase.removeChannel(blogSubscription);
+        supabase.removeChannel(profileSubscription);
+      };
     }
   }, [isAdmin, fetchStats, fetchPosts]);
 
@@ -63,7 +112,7 @@ const AdminDashboard = () => {
     if (!newPostTitle.trim() || !newPostContent.trim()) {
       toast({
         title: "Lỗi",
-        description: "Vui lòng nhập đầy đủ tiêu đề v�� nội dung",
+        description: "Vui lòng nhập đầy đủ tiêu đề và nội dung",
         variant: "destructive"
       });
       return;
@@ -381,7 +430,7 @@ const AdminDashboard = () => {
                 Quản lý người dùng
               </CardTitle>
               <CardDescription>
-                Tổng cộng {users.length} người d��ng trong hệ thống
+                Tổng cộng {users.length} người dùng trong hệ thống
               </CardDescription>
             </CardHeader>
             <CardContent>
