@@ -48,8 +48,9 @@ const AdminDashboard = () => {
     if (isAdmin) {
       fetchStats();
       loadUsers();
+      fetchPosts();
     }
-  }, [isAdmin, fetchStats]);
+  }, [isAdmin, fetchStats, fetchPosts]);
 
   const loadUsers = async () => {
     const userData = await getAllUsers();
@@ -212,7 +213,7 @@ const AdminDashboard = () => {
                   onClick={() => setActiveTab('users')}
                 />
                 <QuickActionCard
-                  title="Đào t��o AI"
+                  title="Đào tạo AI"
                   description="Training dataset và model"
                   icon={Brain}
                   color="purple"
