@@ -11,6 +11,7 @@ import { useAdminStore } from '@/stores/adminStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useBlogStore } from '@/stores/blogStore';
 import { supabase } from '@/integrations/supabase/client';
+import AdminBlogManager from '@/components/AdminBlogManager';
 import { 
   Users, 
   MessageSquare, 
@@ -329,7 +330,7 @@ const AdminDashboard = () => {
                   onClick={() => setActiveTab('ai')}
                 />
                 <QuickActionCard
-                  title="Quản lý blog"
+                  title="Qu���n lý blog"
                   description="CRUD bài viết và danh mục"
                   icon={FileText}
                   color="green"
@@ -414,7 +415,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <span className="text-sm">Bài viết mới được xuất bản (3 giờ trước)</span>
+                    <span className="text-sm">Bài viết m��i được xuất bản (3 giờ trước)</span>
                   </div>
                 </div>
               </CardContent>
