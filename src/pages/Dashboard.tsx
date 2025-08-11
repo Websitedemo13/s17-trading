@@ -22,23 +22,23 @@ const Dashboard = () => {
   }, [fetchCryptoData, fetchMarketStats]);
 
   return (
-    <div className="space-y-8 p-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">
+    <div className="space-y-4 sm:space-y-6 lg:space-y-8 p-3 sm:p-4 lg:p-6">
+      <div className="text-center sm:text-left">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">Dashboard</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Tổng quan thị trường tiền điện tử và phân tích AI
         </p>
       </div>
 
       <MarketStats />
-      
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 space-y-6">
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           <CryptoChart />
           <CryptoList />
         </div>
-        
-        <div className="space-y-6">
+
+        <div className="space-y-4 sm:space-y-6">
           <AIInsights />
         </div>
       </div>
