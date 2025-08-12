@@ -1,6 +1,6 @@
 import { useEffect, Suspense, lazy } from 'react';
 import OptimizedMarketStats from '@/components/OptimizedMarketStats';
-import SimpleBitcoinChart from '@/components/SimpleBitcoinChart';
+import BitcoinPriceSection from '@/components/BitcoinPriceSection';
 import LazyLoadWrapper from '@/components/LazyLoadWrapper';
 import { useMarketStore } from '@/stores/marketStore';
 
