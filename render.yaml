@@ -1,18 +1,39 @@
 services:
   - type: web
     name: s17-trading-dashboard
-    env: node
+    runtime: node
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm run preview
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: VITE_SUPABASE_URL
-        sync: false
-      - key: VITE_SUPABASE_ANON_KEY
-        sync: false
+    region: singapore
+    buildCommand: pnpm install && pnpm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: origin-when-cross-origin
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_SUPABASE_URL
+        fromService:
+          type: pserv
+          name: supabase-url
+          property: connectionString
+      - key: VITE_SUPABASE_ANON_KEY
+        fromService:
+          type: pserv 
+          name: supabase-anon-key
+          property: connectionString
