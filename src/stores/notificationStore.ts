@@ -203,7 +203,11 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       });
 
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error fetching notifications:', {
+        message: errorMessage,
+        error
+      });
       set({ loading: false });
     }
   },
