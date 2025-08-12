@@ -1,22 +1,26 @@
-import { useEffect } from 'react';
-import MarketStats from '@/components/MarketStats';
-import CryptoChart from '@/components/CryptoChart';
-import CryptoList from '@/components/CryptoList';
-import AIInsights from '@/components/AIInsights';
+import { useEffect, Suspense, lazy } from 'react';
+import OptimizedMarketStats from '@/components/OptimizedMarketStats';
+import BitcoinPriceSection from '@/components/BitcoinPriceSection';
+import LazyLoadWrapper from '@/components/LazyLoadWrapper';
 import { useMarketStore } from '@/stores/marketStore';
+
+// Lazy load non-critical components
+const CryptoList = lazy(() => import('@/components/CryptoList'));
+const AIInsights = lazy(() => import('@/components/AIInsights'));
 
 const Dashboard = () => {
   const { fetchCryptoData, fetchMarketStats } = useMarketStore();
 
   useEffect(() => {
+    // Initial load
     fetchCryptoData();
     fetchMarketStats();
-    
-    // Auto refresh every 30 seconds
+
+    // Auto refresh every 2 minutes (reduced frequency to be less aggressive)
     const interval = setInterval(() => {
       fetchCryptoData();
       fetchMarketStats();
-    }, 30000);
+    }, 120000); // 2 minutes instead of 30 seconds
 
     return () => clearInterval(interval);
   }, [fetchCryptoData, fetchMarketStats]);
@@ -30,12 +34,30 @@ const Dashboard = () => {
         </p>
       </div>
 
-      <MarketStats />
+      <OptimizedMarketStats />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-          <CryptoChart />
-          <CryptoList />
+          <BitcoinPriceSection />
+
+          <LazyLoadWrapper delay={800}>
+            <Suspense fallback={
+              <div className="glass-card p-6 rounded-lg animate-pulse">
+                <div className="h-6 bg-muted rounded w-40 mb-4"></div>
+                <div className="space-y-3">
+                  {[1,2,3,4,5].map(i => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="w-8 h-8 bg-muted rounded-full"></div>
+                      <div className="flex-1 h-4 bg-muted rounded"></div>
+                      <div className="w-20 h-4 bg-muted rounded"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            }>
+              <CryptoList />
+            </Suspense>
+          </LazyLoadWrapper>
         </div>
 
         <div className="space-y-4 sm:space-y-6">

@@ -287,6 +287,9 @@ export const useBlogStore = create<BlogState>((set, get) => ({
         console.log('Could not load user blog interactions from localStorage');
       }
 
+      // Import enhanced blog content
+      const { enhancedBlogPosts } = await import('./enhancedBlogContent');
+
       // Fallback to comprehensive mock data
       const mockCategories: BlogCategory[] = [
         {
@@ -1572,7 +1575,7 @@ Giao điểm của Trí tuệ Nhân tạo (AI) và công nghệ Blockchain đạ
 - **Market Cap**: $1.5B
 - **Use Case**: Blockchain data indexing, API services
 - **Growth Potential**: Cao - infrastructure blockchain thiết yếu
-- **Investment Thesis**: Google của Web3 cho data
+- **Investment Thesis**: Google c���a Web3 cho data
 
 ## Chiến lược Đầu tư và Phân tích
 
@@ -1786,7 +1789,10 @@ Tương lai thuộc về những ai đặt mình tại giao điểm của nhữn
         }
       ];
 
-      set({ posts: mockPosts, categories: mockCategories });
+      // Combine original mock posts with enhanced posts
+      const allPosts = [...mockPosts, ...enhancedBlogPosts];
+
+      set({ posts: allPosts, categories: mockCategories });
     } catch (error) {
       console.error('Error fetching posts:', error);
       toast({

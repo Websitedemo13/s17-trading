@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { useAdminStore } from "@/stores/adminStore";
 import { useThemeStore } from "@/stores/themeStore";
 import { initializeI18n } from "@/stores/i18nStore";
 import Navbar from "@/components/Layout/Navbar";
@@ -59,6 +60,7 @@ const LoadingSpinner = () => (
 
 const App = () => {
   const { initialize, user } = useAuthStore();
+  const { isAdmin } = useAdminStore();
   const { initializeTheme } = useThemeStore();
 
   useEffect(() => {
@@ -104,10 +106,10 @@ const App = () => {
                 <ErrorBoundary>
                   <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
-                <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
+                <Route path="/" element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <Index />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
-                <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+                <Route path="/login" element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <Login />} />
+                <Route path="/register" element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <Register />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route
                   path="/dashboard"
