@@ -26,6 +26,7 @@ import TeamDetail from "./pages/TeamDetail";
 import TeamDashboard from "./pages/TeamDashboard";
 import FloatingNotifications from "@/components/FloatingNotifications";
 import FloatingNotificationSystem from "@/components/FloatingNotificationSystem";
+import { debugSupabase } from "@/utils/debug";
 
 const queryClient = new QueryClient();
 
