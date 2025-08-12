@@ -80,8 +80,17 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
         const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
         console.error('Error fetching notifications:', {
           message: errorMessage,
-          error
+          error: error,
+          details: error instanceof Error ? error.stack : error
         });
+        // Don't show toast for common errors like missing tables
+        if (!(error instanceof Error) || !error.message.includes('relation') && !error.message.includes('does not exist')) {
+          toast({
+            title: "Lỗi",
+            description: `Không thể tải thông báo: ${errorMessage}`,
+            variant: "destructive"
+          });
+        }
       }
     };
 
