@@ -265,6 +265,7 @@ const Blog = () => {
         case 'featured': return 'Nổi bật';
         case 'trending': return 'Thịnh hành';
         case 'premium': return 'Premium';
+        case 'saved': return 'Đã lưu';
         default: return tab;
       }
     } else {
@@ -273,6 +274,7 @@ const Blog = () => {
         case 'featured': return 'Featured';
         case 'trending': return 'Trending';
         case 'premium': return 'Premium';
+        case 'saved': return 'Saved';
         default: return tab;
       }
     }
