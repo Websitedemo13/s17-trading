@@ -106,33 +106,66 @@ export const useMarketStore = create<MarketState>((set) => ({
   },
 
   fetchMarketStats: async () => {
-    try {
-      const response = await fetch(
-        'https://api.coingecko.com/api/v3/global'
-      );
-      const data = await response.json();
-      
-      set({
-        marketStats: {
-          market_cap: data.data?.total_market_cap?.usd || 2100000000000,
-          volume_24h: data.data?.total_volume?.usd || 84200000000,
-          btc_dominance: data.data?.market_cap_percentage?.btc || 42.1,
-          market_cap_change_24h: 2.4,
-          volume_change_24h: 5.1
+    const maxRetries = 2;
+    let attempt = 0;
+
+    const attemptFetch = async (): Promise<void> => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+
+        const response = await fetch(
+          'https://api.coingecko.com/api/v3/global',
+          {
+            signal: controller.signal,
+            headers: {
+              'Accept': 'application/json',
+            }
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      });
-    } catch (error) {
-      console.error('Error fetching market stats:', error);
-      // Fallback data
-      set({
-        marketStats: {
-          market_cap: 2100000000000,
-          volume_24h: 84200000000,
-          btc_dominance: 42.1,
-          market_cap_change_24h: 2.4,
-          volume_change_24h: 5.1
+
+        const data = await response.json();
+
+        set({
+          marketStats: {
+            market_cap: data.data?.total_market_cap?.usd || 2100000000000,
+            volume_24h: data.data?.total_volume?.usd || 84200000000,
+            btc_dominance: data.data?.market_cap_percentage?.btc || 42.1,
+            market_cap_change_24h: 2.4,
+            volume_change_24h: 5.1
+          }
+        });
+      } catch (error) {
+        attempt++;
+        console.warn(`Failed to fetch market stats (attempt ${attempt}):`, error);
+
+        if (attempt < maxRetries) {
+          // Wait before retry with exponential backoff
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 3000);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return attemptFetch();
+        } else {
+          // All retries failed, use fallback data
+          console.warn('Using fallback market stats data');
+          set({
+            marketStats: {
+              market_cap: 2100000000000,
+              volume_24h: 84200000000,
+              btc_dominance: 42.1,
+              market_cap_change_24h: 2.4,
+              volume_change_24h: 5.1
+            }
+          });
         }
-      });
-    }
+      }
+    };
+
+    return attemptFetch();
   },
 }));
