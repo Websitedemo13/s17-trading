@@ -156,6 +156,11 @@ export const BlogPostDetail = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>
+            {typeof post.title === 'string' ? post.title : post.title[currentLanguage]}
+          </DialogTitle>
+        </VisuallyHidden>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
