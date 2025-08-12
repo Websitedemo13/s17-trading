@@ -152,7 +152,7 @@ const EnhancedBlogPostDetail = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[95vh] p-0 overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[95vh] h-[95vh] p-0 overflow-y-auto">
         <VisuallyHidden>
           <DialogTitle>
             {typeof post?.title === 'string' ? post.title : post?.title?.[currentLanguage] || 'Blog Post'}
@@ -382,7 +382,7 @@ const EnhancedBlogPostDetail = ({
                           <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold">1</div>
                           <p className="text-muted-foreground">
                             {currentLanguage === 'vi' 
-                              ? 'Hiểu rõ tâm lý thị trường là chìa khóa thành công trong trading'
+                              ? 'Hi��u rõ tâm lý thị trường là chìa khóa thành công trong trading'
                               : 'Understanding market psychology is key to trading success'
                             }
                           </p>
