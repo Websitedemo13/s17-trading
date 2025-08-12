@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           const isAdminValid = adminStore.checkAdminStatus(email);
 
           if (isAdminValid) {
-            set({ user: mockUser, session: mockSession });
+            set({ user: mockUser, session: mockSession, loading: false });
 
             toast({
               title: "Đăng nhập Admin thành công",
@@ -71,14 +71,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
       }
 
-      // Regular user authentication
-      const { error } = await supabase.auth.signInWithPassword({
+      // Regular user authentication with timeout
+      const authPromise = supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      const { error } = await Promise.race([
+        authPromise,
+        new Promise<{ error: { message: string } }>((_, reject) =>
+          setTimeout(() => reject({ error: { message: 'Timeout kết nối. Vui lòng thử lại.' } }), 10000)
+        )
+      ]);
+
       if (error) {
-        return { error: error.message };
+        // Provide user-friendly error messages
+        const errorMessage = error.message.includes('Invalid login')
+          ? 'Email hoặc mật khẩu không đúng'
+          : error.message.includes('Email not confirmed')
+          ? 'Vui lòng xác thực email trước khi đăng nhập'
+          : error.message.includes('Too many requests')
+          ? 'Quá nhiều lần thử. Vui lòng đợi một chút rồi thử lại'
+          : error.message;
+        return { error: errorMessage };
       }
 
       toast({
@@ -87,8 +102,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
 
       return {};
-    } catch (error) {
-      return { error: "Có lỗi xảy ra khi đăng nhập" };
+    } catch (error: any) {
+      console.error('Sign in error:', error);
+      const errorMessage = error?.error?.message ||
+                          error?.message ||
+                          "Có lỗi xảy ra khi đăng nhập. Vui lòng kiểm tra kết nối mạng.";
+      return { error: errorMessage };
     }
   },
 
@@ -120,8 +139,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
-    await supabase.auth.signOut();
-    set({ user: null, session: null });
+    try {
+      await Promise.race([
+        supabase.auth.signOut(),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Signout timeout')), 5000)
+        )
+      ]);
+    } catch (error) {
+      console.warn('Signout error (non-blocking):', error);
+    }
+
+    // Always clear local state regardless of Supabase response
+    set({ user: null, session: null, loading: false });
+
     toast({
       title: "Đăng xuất thành công",
       description: "Hẹn gặp lại bạn!",
