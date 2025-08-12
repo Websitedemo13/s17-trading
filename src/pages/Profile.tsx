@@ -268,56 +268,7 @@ const Profile = () => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      toast({
-        title: "Lỗi",
-        description: "Kích thước file phải nhỏ hơn 2MB",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/avatar.${fileExt}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(fileName, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          avatar_url: data.publicUrl,
-          updated_at: new Date().toISOString()
-        });
-
-      if (updateError) throw updateError;
-
-      toast({
-        title: "Thành công",
-        description: "Cập nhật ảnh đại diện thành công!"
-      });
-
-      fetchProfile();
-    } catch (error) {
-      console.error('Error uploading avatar:', error);
-      toast({
-        title: "Lỗi",
-        description: "Không thể tải lên ảnh đại diện",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+    await uploadAvatar(user.id, file);
   };
 
   const deleteAccount = async () => {
