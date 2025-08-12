@@ -98,12 +98,14 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
         (payload) => {
           const newNotification = payload.new as FloatingNotification;
           
-          // Only show if notifications are enabled
-          if (userProfile?.notification_settings?.floating_teams) {
+          // Only show if notifications are enabled (default to true if not loaded)
+          const notifyEnabled = userProfile?.notification_settings?.floating_teams ?? true;
+          if (notifyEnabled) {
             setNotifications(prev => [newNotification, ...prev.slice(0, 49)]);
-            
-            // Play sound if enabled
-            if (userProfile?.notification_settings?.sound) {
+
+            // Play sound if enabled (default to true if not loaded)
+            const soundEnabled = userProfile?.notification_settings?.sound ?? true;
+            if (soundEnabled) {
               playNotificationSound();
             }
           }
@@ -187,7 +189,7 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
       
       toast({
         title: "Thành công",
-        description: "Đã đánh dấu tất cả thông báo là đã đọc"
+        description: "Đã đánh d��u tất cả thông báo là đã đọc"
       });
     } catch (error) {
       console.error('Error marking all as read:', error);
