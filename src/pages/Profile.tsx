@@ -1370,6 +1370,11 @@ const Profile = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Activity Tab */}
+        <TabsContent value="activity" className="space-y-6">
+          <ActivityFeed userId={user?.id} limit={50} />
+        </TabsContent>
       </Tabs>
     </div>
   );
