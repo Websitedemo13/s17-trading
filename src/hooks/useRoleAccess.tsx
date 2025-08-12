@@ -38,7 +38,13 @@ export const useRoleAccess = (teamId?: string): RolePermissions & {
 
   useEffect(() => {
     if (user && !userProfile) {
-      fetchUserProfile();
+      fetchUserProfile().catch((error) => {
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error in useRoleAccess fetchUserProfile:', {
+          message: errorMessage,
+          error
+        });
+      });
     }
   }, [user, userProfile, fetchUserProfile]);
 
