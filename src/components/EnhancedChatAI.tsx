@@ -202,7 +202,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 • Target: 78,000 VND (+5.1%)
 • Đa dạng hóa tốt: BĐS + Retail + VinFast
 • VinFast IPO sắp tới có thể unlock value
-• Risk: Nợ cao, VinFast vẫn lỗ
+• Risk: Nợ cao, VinFast vẫn l��
 
 **3. HPG (Hoa Phát Group) - BUY 🟢**
 • Giá hiện tại: 26,800 VND
@@ -370,35 +370,35 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
     <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
       {/* Header */}
       <div className="border-b bg-card/50 backdrop-blur-sm">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between p-2 md:p-3">
+          <div className="flex items-center gap-2">
             <div className="relative">
-              <Avatar className="h-10 w-10 border-2 border-primary/20">
+              <Avatar className="h-8 w-8 border-2 border-primary/20">
                 <AvatarFallback className="bg-gradient-to-br from-primary to-blue-600 text-white">
-                  <Bot className="h-5 w-5" />
+                  <Bot className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
+                <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
               </div>
             </div>
             <div>
-              <h3 className="font-semibold flex items-center gap-2">
+              <h3 className="font-semibold flex items-center gap-2 text-sm">
                 S17 AI Assistant
                 <Badge variant="secondary" className="text-xs">
                   <Sparkles className="h-3 w-3 mr-1" />
                   Pro
                 </Badge>
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Chuyên gia Crypto & Trading AI
               </p>
             </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">
-              <RefreshCw className="h-4 w-4" />
+
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+              <RefreshCw className="h-3 w-3" />
             </Button>
           </div>
         </div>
