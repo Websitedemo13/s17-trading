@@ -281,7 +281,7 @@ export const useBlogStore = create<BlogState>((set, get) => ({
           slug: 'crypto-news',
           description: {
             en: 'Latest cryptocurrency news and updates',
-            vi: 'Tin tức nóng hổi và cập nhật mới nh��t về tiền điện tử'
+            vi: 'Tin tức nóng hổi và cập nhật mới nhất về tiền điện tử'
           },
           color: '#F97316',
           icon: 'Zap',
@@ -460,96 +460,96 @@ Disclaimer: This is not investment advice. Please DYOR and only invest money you
 
 ## Tổng quan về Bitcoin Halving
 
-Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát hành Bitcoin, xảy ra mỗi 210,000 blocks (khoảng 4 năm). Trong sự kiện này, phần thưởng cho miners sẽ bị cắt giảm một nửa, từ đó giảm tốc độ phát hành Bitcoin mới.
+Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát hành Bitcoin, xảy ra mỗi 210,000 blocks (khoảng 4 năm). Trong sự kiện này, phần thưởng cho thợ đào sẽ bị cắt giảm một nửa, từ đó giảm tốc độ phát hành Bitcoin mới.
 
 ## Phân tích Dữ liệu Lịch sử
 
 ### Halving lần 1 (2012): Block 210,000
-- Trước halving: $12.31 (November 2012)
+- Trước halving: $12.31 (Tháng 11/2012)
 - Sau 1 năm: $1,156 (+9,300%)
-- Peak của bull run: $1,156 (November 2013)
+- Đỉnh của đợt tăng: $1,156 (Tháng 11/2013)
 
-### Halving lần 2 (2016): Block 420,000  
-- Trước halving: $663 (July 2016)
+### Halving lần 2 (2016): Block 420,000
+- Trước halving: $663 (Tháng 7/2016)
 - Sau 1 năm: $2,518 (+280%)
-- Peak của bull run: $19,783 (+2,980%) (December 2017)
+- Đỉnh của đợt tăng: $19,783 (+2,980%) (Tháng 12/2017)
 
 ### Halving lần 3 (2020): Block 630,000
-- Trước halving: $8,787 (May 2020)
+- Trước halving: $8,787 (Tháng 5/2020)
 - Sau 1 năm: $57,146 (+550%)
-- Peak của bull run: $69,044 (+685%) (November 2021)
+- Đỉnh của đợt tăng: $69,044 (+685%) (Tháng 11/2021)
 
 ## Yếu tố Ảnh hưởng đến Halving 2024
 
-### 1. Macro Environment
-- Lãi suất Fed: Chính sách tiền tệ mở rộng có thể tạo tailwind cho Bitcoin
-- Lạm phát: Bitcoin được xem như hedge against inflation
-- Geopolitical tensions: Tăng cường nhu cầu safe haven assets
+### 1. Môi trường Kinh tế Vĩ mô
+- Lãi suất Fed: Chính sách tiền tệ mở rộng có thể tạo động lực tích cực cho Bitcoin
+- Lạm phát: Bitcoin được xem như công cụ bảo vệ chống lạm phát
+- Căng thẳng địa chính trị: Tăng cường nhu cầu tài sản trú ẩn an toàn
 
-### 2. Institutional Adoption
+### 2. Việc Áp dụng của Tổ chức
 - Bitcoin ETF: Sự chấp thuận của các ETF như BlackRock IBIT
-- Corporate Treasury: Các công ty như MicroStrategy, Tesla tăng exposure
-- Nation-state adoption: El Salvador và các quốc gia khác
+- Kho bạc Doanh nghiệp: Các công ty như MicroStrategy, Tesla tăng tỷ trọng
+- Áp dụng cấp quốc gia: El Salvador và các quốc gia khác
 
-### 3. Technical Infrastructure
-- Lightning Network: Giải pháp layer 2 tăng khả năng scale
-- Taproot Upgrade: Cải thiện privacy và smart contract capability
-- Mining Efficiency: Sự phát triển của ASIC mới
+### 3. Hạ tầng Kỹ thuật
+- Lightning Network: Giải pháp lớp 2 tăng khả năng mở rộng quy mô
+- Nâng cấp Taproot: Cải thiện quyền riêng tư và khả năng hợp đồng thông minh
+- Hiệu quả Đào: Sự phát triển của ASIC mới
 
 ## Dự đoán Giá sau Halving 2024
 
-### Scenario Lạc quan (Bull Case)
-- Target Price: $150,000 - $200,000
-- Timeline: 12-18 tháng sau halving
-- Drivers: ETF inflows, institutional adoption, retail FOMO
+### Kịch bản Lạc quan
+- Mục tiêu giá: $150,000 - $200,000
+- Thời gian: 12-18 tháng sau halving
+- Động lực: Dòng vốn ETF, áp dụng tổ chức, FOMO từ nhà đầu tư cá nhân
 
-### Scenario Trung tính (Base Case)
-- Target Price: $80,000 - $120,000
-- Timeline: 18-24 tháng sau halving  
-- Drivers: Moderate institutional adoption, steady demand
+### Kịch bản Trung tính
+- Mục tiêu giá: $80,000 - $120,000
+- Thời gian: 18-24 tháng sau halving
+- Động lực: Áp dụng tổ chức vừa phải, nhu cầu ổn định
 
-### Scenario Bi quan (Bear Case)
-- Target Price: $45,000 - $60,000
-- Timeline: Sideways movement kéo dài
-- Risks: Regulatory crackdown, macro headwinds
+### Kịch bản Bi quan
+- Mục tiêu giá: $45,000 - $60,000
+- Thời gian: Chuyển động ngang kéo dài
+- Rủi ro: Đàn áp quy định, gió ngược vĩ mô
 
 ## Chiến lược Đầu tư
 
-### DCA Strategy (Được khuyến nghị)
-- Approach: Đầu tư định kỳ 6-12 tháng trước halving
-- Allocation: 5-10% portfolio cho Bitcoin
-- Exit strategy: Take profit theo từng levels
+### Chiến lược DCA (Được khuyến nghị)
+- Cách tiếp cận: Đầu tư định kỳ 6-12 tháng trước halving
+- Phân bổ: 5-10% danh mục cho Bitcoin
+- Chiến lược thoát: Chốt lời theo từng mức
 
-### Lump Sum Strategy (Rủi ro cao)
-- Timing: 3-6 tháng trước halving
-- Risk Management: Stop loss tại -20%
-- Position sizing: Không quá 15% portfolio
+### Chiến lược Đầu tư Một lần (Rủi ro cao)
+- Thời điểm: 3-6 tháng trước halving
+- Quản lý rủi ro: Cắt lỗ tại -20%
+- Cỡ vị thế: Không quá 15% danh mục
 
-## Risk Management
+## Quản lý Rủi ro
 
-### Potential Risks
-1. Regulatory Risk: SEC crackdown, China bans
-2. Technical Risk: Network bugs, security issues
-3. Market Risk: Macro downturn, recession
-4. Competition Risk: Ethereum, other L1s gaining market share
+### Rủi ro Tiềm ẩn
+1. Rủi ro Quy định: SEC đàn áp, Trung Quốc cấm
+2. Rủi ro Kỹ thuật: Lỗi mạng lưới, vấn đề bảo mật
+3. Rủi ro Thị trường: Suy thoái vĩ mô, recession
+4. Rủi ro Cạnh tranh: Ethereum, các L1 khác chiếm thị phần
 
-### Mitigation Strategies
-- Diversification: Không all-in Bitcoin
-- Stop Loss: Set clear exit rules
-- Research: Theo dõi on-chain metrics
-- Patience: Không FOMO, stick to plan
+### Chiến lược Giảm thiểu
+- Đa dạng hóa: Không đặt tất cả vào Bitcoin
+- Cắt lỗ: Đặt quy tắc thoát rõ ràng
+- Nghiên cứu: Theo dõi chỉ số on-chain
+- Kiên nhẫn: Không FOMO, tuân thủ kế hoạch
 
 ## Kết luận
 
-Bitcoin Halving 2024 có tiềm năng là event bullish mạnh mẽ nhất trong lịch sử Bitcoin. Tuy nhiên, investors cần chuẩn bị tâm lý cho volatility cao và có strategy rõ ràng.
+Bitcoin Halving 2024 có tiềm năng là sự kiện tăng giá mạnh mẽ nhất trong lịch sử Bitcoin. Tuy nhiên, các nhà đầu tư cần chuẩn bị tâm lý cho sự biến động cao và có chiến lược rõ ràng.
 
-Key Takeaways:
-- Halving historically bullish trong dài hạn
-- Institutional adoption là game changer
-- Risk management quan trọng hơn timing
-- DCA approach thường outperform lump sum
+Điểm chính cần ghi nhớ:
+- Halving lịch sử cho thấy xu hướng tăng trong dài hạn
+- Việc áp dụng tổ chức là yếu tố thay đổi cuộc chơi
+- Quản lý rủi ro quan trọng hơn việc chọn thời điểm
+- Phương pháp DCA thường hiệu quả hơn đầu tư một lần
 
-Disclaimer: Đây không phải lời khuyên đầu tư. Hãy DYOR và chỉ invest số tiền bạn có thể mất.`
+Tuyên bố từ chối trách nhiệm: Đây không phải lời khuyên đầu tư. Hãy tự nghiên cứu và chỉ đầu tư số tiền bạn có thể mất.`
           },
           author: {
             id: '1',
@@ -621,7 +621,7 @@ Disclaimer: Đây không phải lời khuyên đầu tư. Hãy DYOR và chỉ in
           },
           excerpt: {
             en: 'Deep dive into VinGroup with multi-dimensional perspective: from business model, competitive advantages to valuation and technical setup. Is VIC the best blue-chip pick in Vietnam stock market?',
-            vi: 'Deep dive vào VinGroup với góc nhìn đa chiều: từ business model, competitive advantages đến valuation và technical setup. Liệu VIC có ph��i là blue-chip pick tốt nhất của TTCK Việt Nam?'
+            vi: 'Deep dive vào VinGroup với góc nhìn đa chiều: từ business model, competitive advantages đến valuation và technical setup. Liệu VIC có phải là blue-chip pick tốt nhất của TTCK Việt Nam?'
           },
           content: {
             en: `# VinGroup (VIC): Comprehensive Analysis of Vietnam's Real Estate Giant
