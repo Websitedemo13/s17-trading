@@ -2,8 +2,8 @@ import EnhancedChatAI from '@/components/EnhancedChatAI';
 
 const ChatAI = () => {
   return (
-    <div className="container-fluid mx-auto p-4 h-[calc(100vh-80px)]">
-      <div className="max-w-[98%] mx-auto h-full">
+    <div className="container-fluid mx-auto p-2 md:p-4 h-[calc(100vh-80px)] overflow-hidden">
+      <div className="max-w-full mx-auto h-full">
         <div className="mb-4 text-center">
           <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary via-primary to-primary/70 bg-clip-text text-transparent">
             S17 AI Trading Assistant
