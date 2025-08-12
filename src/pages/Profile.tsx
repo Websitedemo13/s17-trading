@@ -956,7 +956,7 @@ const Profile = () => {
                       <SelectItem value="USD">USD ($)</SelectItem>
                       <SelectItem value="VND">VND (₫)</SelectItem>
                       <SelectItem value="EUR">EUR (€)</SelectItem>
-                      <SelectItem value="JPY">JPY (��)</SelectItem>
+                      <SelectItem value="JPY">JPY (¥)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1029,7 +1029,7 @@ const Profile = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" onClick={exportData} className="w-full">
+                <Button variant="outline" onClick={handleExportData} className="w-full" disabled={loading}>
                   <Download className="h-4 w-4 mr-2" />
                   Xuất dữ liệu
                 </Button>
