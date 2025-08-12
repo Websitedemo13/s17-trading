@@ -451,11 +451,45 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
         .eq('id', authUser.id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error fetching profile:', error);
+        // Create default profile if doesn't exist
+        if (error.code === 'PGRST116') {
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: authUser.id,
+              display_name: authUser.user_metadata?.display_name || authUser.email?.split('@')[0],
+              account_type: 'basic',
+              max_teams: 5,
+              is_admin: false,
+              notification_settings: {
+                floating_teams: true,
+                sound: true,
+                desktop: true
+              }
+            })
+            .select()
+            .single();
+
+          if (createError) {
+            console.error('Error creating profile:', createError);
+            return;
+          }
+          set({ userProfile: newProfile });
+        }
+        return;
+      }
 
       set({ userProfile: data });
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error fetching user profile:', errorMessage);
+      toast({
+        title: "Lỗi",
+        description: "Không thể tải thông tin người dùng",
+        variant: "destructive"
+      });
     }
   },
 
