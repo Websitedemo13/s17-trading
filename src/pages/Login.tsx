@@ -21,7 +21,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       toast({
         title: "Lỗi",
@@ -32,19 +32,32 @@ const Login = () => {
     }
 
     setLoading(true);
-    const result = await signIn(email, password);
-    
-    if (result.error) {
+
+    try {
+      const result = await signIn(email, password);
+
+      if (result.error) {
+        toast({
+          title: "Đăng nhập thất bại",
+          description: result.error,
+          variant: "destructive"
+        });
+      } else {
+        // Small delay to ensure state is updated before navigation
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: "Đăng nhập thất bại",
-        description: result.error,
+        description: "Có lỗi xảy ra. Vui lòng thử lại.",
         variant: "destructive"
       });
-    } else {
-      navigate('/dashboard');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
