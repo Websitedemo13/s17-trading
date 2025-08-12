@@ -4,6 +4,8 @@ import { X, Check, AlertTriangle, Info, Users, Crown, UserPlus, UserMinus, Setti
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useNotificationStore } from '@/stores/notificationStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useAdminStore } from '@/stores/adminStore';
 import { cn } from '@/lib/utils';
 
 const NotificationIcon = ({ type }: { type: string }) => {
