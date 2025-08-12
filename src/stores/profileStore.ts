@@ -120,6 +120,15 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
   fetchProfile: async (userId: string) => {
     set({ loading: true, error: null });
     try {
+      // First ensure profile exists
+      const { error: ensureError } = await supabase.rpc('ensure_profile_exists', {
+        user_id: userId
+      });
+
+      if (ensureError) {
+        console.warn('Could not ensure profile exists:', ensureError);
+      }
+
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -130,9 +139,41 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         throw error;
       }
 
+      // If no profile found, try to create one
+      if (!data) {
+        const { data: user } = await supabase.auth.getUser();
+        if (user.user) {
+          const { error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: userId,
+              email: user.user.email,
+              display_name: user.user.email?.split('@')[0] || 'User',
+              role: 'user',
+              account_type: 'free',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            });
+
+          if (createError) {
+            console.error('Error creating profile:', createError);
+          } else {
+            // Fetch the newly created profile
+            const { data: newProfile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', userId)
+              .single();
+
+            set({ profile: newProfile, loading: false });
+            return;
+          }
+        }
+      }
+
       set({ profile: data, loading: false });
-      
-      // Log activity
+
+      // Log activity if profile exists
       if (data) {
         get().logActivity(userId, 'profile_viewed', { timestamp: new Date().toISOString() });
       }
@@ -142,7 +183,8 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       console.error('Error fetching profile:', {
         message: errorMessage,
         error: error,
-        details: error instanceof Error ? error.stack : error
+        details: error instanceof Error ? error.stack : error,
+        userId: userId
       });
     }
   },
