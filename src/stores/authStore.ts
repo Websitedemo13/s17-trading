@@ -379,11 +379,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
       } catch (error) {
         console.error('Session initialization failed:', error);
+
+        // Check if current session is admin before clearing
+        const currentState = get();
+        if (currentState.isAdminSession) {
+          console.log('Preserving admin session despite initialization error');
+          set({ loading: false }); // Only update loading
+          return;
+        }
+
         // Set loading to false even if session fetch fails
         set({
           session: null,
           user: null,
-          loading: false
+          loading: false,
+          isAdminSession: false
         });
       }
     };
