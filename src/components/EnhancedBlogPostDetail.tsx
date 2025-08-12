@@ -435,7 +435,7 @@ const EnhancedBlogPostDetail = ({
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="resources" className="flex-1 mt-0">
+              <TabsContent value="resources" className="mt-0 flex-1 overflow-y-auto">
                 <ScrollArea className="h-full">
                   <div className="p-6 space-y-6">
                     <div>
