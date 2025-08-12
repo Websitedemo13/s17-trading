@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useThemeStore } from "@/stores/themeStore";
 import { useEnhancedTeamStore } from "@/stores/enhancedTeamStore";
+import { useProfileStore } from "@/stores/profileStore";
 import Navbar from "@/components/Layout/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Teams from "./pages/Teams";
