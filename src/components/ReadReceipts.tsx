@@ -283,7 +283,11 @@ export const useReadReceipts = (
           await markAsRead(messageId);
           setHasMarkedAsRead(true);
         } catch (error) {
-          console.error('Failed to mark message as read:', error);
+          const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+          console.error('Failed to mark message as read:', {
+            message: errorMessage,
+            error
+          });
         }
       }
     };
