@@ -75,4 +75,6 @@ const CryptoChart = memo(() => {
   );
 });
 
+CryptoChart.displayName = 'CryptoChart';
+
 export default CryptoChart;
