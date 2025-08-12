@@ -13,6 +13,7 @@ import {
 import { FloatingNotification, NOTIFICATION_PRIORITIES } from '@/types/teams';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthStore } from '@/stores/authStore';
+import { useAdminStore } from '@/stores/adminStore';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
