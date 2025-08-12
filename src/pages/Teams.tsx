@@ -27,6 +27,7 @@ import {
 import TeamCard from '@/components/TeamCard';
 import TeamQuickActions from '@/components/TeamQuickActions';
 import { useTeamStore } from '@/stores/teamStore';
+import { useEnhancedTeamStore } from '@/stores/enhancedTeamStore';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import {
@@ -204,7 +205,7 @@ const Teams = () => {
               <DialogHeader>
                 <DialogTitle>Tham gia nhóm existing</DialogTitle>
                 <DialogDescription>
-                  Nhập mã mời để tham gia một nhóm đã có
+                  Nhập mã mời để tham gia một nhóm đ�� có
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
