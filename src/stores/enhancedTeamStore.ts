@@ -156,10 +156,14 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       set({ teams: teamsWithDetails });
     } catch (error) {
-      console.error('Error fetching teams:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error fetching teams:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể tải danh sách nhóm",
+        description: `Không thể tải danh sách nhóm: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
@@ -200,10 +204,14 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       set({ currentTeam: enhancedTeam, teamMembers: data.team_members });
     } catch (error) {
-      console.error('Error fetching team details:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error fetching team details:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể tải thông tin nhóm",
+        description: `Không thể tải thông tin nhóm: ${errorMessage}`,
         variant: "destructive"
       });
     }
@@ -262,10 +270,14 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
       get().fetchTeams();
       return true;
     } catch (error) {
-      console.error('Error creating team:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error creating team:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể tạo nhóm mới",
+        description: `Không thể tạo nhóm mới: ${errorMessage}`,
         variant: "destructive"
       });
       return false;
@@ -427,10 +439,14 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       return true;
     } catch (error) {
-      console.error('Error requesting to join team:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error requesting to join team:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể gửi yêu cầu tham gia",
+        description: `Không thể gửi yêu cầu tham gia: ${errorMessage}`,
         variant: "destructive"
       });
       return false;
@@ -536,10 +552,14 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       return true;
     } catch (error) {
-      console.error('Error requesting account upgrade:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error requesting account upgrade:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể gửi yêu cầu nâng cấp",
+        description: `Không thể gửi yêu cầu nâng cấp: ${errorMessage}`,
         variant: "destructive"
       });
       return false;
@@ -580,7 +600,11 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
         sentInvitations: sent || []
       });
     } catch (error) {
-      console.error('Error fetching invitations:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error fetching invitations:', {
+        message: errorMessage,
+        error
+      });
     }
   },
 
@@ -642,10 +666,14 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
       if (accept) get().fetchTeams();
       return true;
     } catch (error) {
-      console.error('Error responding to invitation:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error responding to invitation:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể xử lý lời mời",
+        description: `Không thể xử lý lời mời: ${errorMessage}`,
         variant: "destructive"
       });
       return false;
