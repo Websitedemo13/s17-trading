@@ -20,13 +20,21 @@ export const getAIInsights = async (request: AIInsightRequest): Promise<AIInsigh
     });
 
     if (error) {
-      console.error('AI Insights Error:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('AI Insights Error:', {
+        message: errorMessage,
+        error
+      });
       throw error;
     }
 
     return data;
   } catch (error) {
-    console.error('Error getting AI insights:', error);
+    const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+    console.error('Error getting AI insights:', {
+      message: errorMessage,
+      error
+    });
     
     // Enhanced AI response system with comprehensive market analysis
     const question = request.data?.question?.toLowerCase() || '';
@@ -784,7 +792,7 @@ Thị trường crypto đang ở giai đoạn thú vị với nhiều catalysts 
 • Active Wallets: 100M+ globally
 • Institutional Adoption: Accelerating rapidly
 
-🏛️ Regulatory Environment:
+���️ Regulatory Environment:
 • United States: ETF approvals breakthrough
 • Europe: MiCA framework provides clarity
 • Asia: Mixed but improving (Japan positive, Singapore hub)
