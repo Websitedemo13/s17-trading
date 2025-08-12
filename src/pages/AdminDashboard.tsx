@@ -168,10 +168,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // Redirect if not admin
-  if (!isAdmin || !adminUser) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  // Admin access is now handled by RoleGuard wrapper
 
   const StatCard = ({ title, value, change, icon: Icon, color = "blue" }: any) => (
     <Card>
@@ -412,7 +409,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span className="text-sm">AI model cập nhật thành công (1 giờ trước)</span>
+                    <span className="text-sm">AI model cập nhật thành công (1 gi�� trước)</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
