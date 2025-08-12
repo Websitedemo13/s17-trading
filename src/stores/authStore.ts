@@ -8,6 +8,7 @@ interface AuthState {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  isAdminSession: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
