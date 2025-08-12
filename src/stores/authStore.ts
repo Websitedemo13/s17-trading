@@ -25,10 +25,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       // Check for admin account first
       if (email === 'quachthanhlong2k3@gmail.com' && password === '13072003') {
-        const adminStore = useAdminStore.getState();
-        const isAdmin = adminStore.checkAdminStatus(email);
-
-        if (isAdmin) {
+        try {
           // For admin, create a mock user session
           const mockUser = {
             id: 'admin-' + email.split('@')[0],
@@ -36,10 +33,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             user_metadata: {
               display_name: 'Super Admin',
               avatar_url: null
-            }
+            },
+            aud: 'authenticated',
+            role: 'authenticated',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
           } as User;
 
-          set({ user: mockUser, session: { user: mockUser } as Session });
+          const mockSession = {
+            user: mockUser,
+            access_token: 'mock-admin-token',
+            token_type: 'bearer',
+            expires_in: 3600,
+            expires_at: Math.floor(Date.now() / 1000) + 3600,
+            refresh_token: 'mock-refresh-token'
+          } as Session;
+
+          // Set admin status in the admin store
+          const adminStore = useAdminStore.getState();
+          adminStore.checkAdminStatus(email);
+
+          set({ user: mockUser, session: mockSession });
 
           toast({
             title: "Đăng nhập Admin thành công",
@@ -47,6 +61,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           });
 
           return {};
+        } catch (error) {
+          console.error('Admin login error:', error);
+          return { error: "Lỗi đăng nhập admin" };
         }
       }
 
