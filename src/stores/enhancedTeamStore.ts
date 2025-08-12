@@ -478,7 +478,17 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
             .single();
 
           if (createError) {
-            console.error('Error creating profile:', createError);
+            console.error('Error creating profile:', {
+              message: createError.message,
+              details: createError.details,
+              hint: createError.hint,
+              code: createError.code
+            });
+            toast({
+              title: "Lỗi",
+              description: `Không thể tạo profile: ${createError.message || 'Unknown error'}`,
+              variant: "destructive"
+            });
             return;
           }
           set({ userProfile: newProfile });
