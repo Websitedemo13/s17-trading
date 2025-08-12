@@ -61,7 +61,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { BlogPost, BlogCategory, useBlogStore } from '@/stores/blogStore';
-import BlogPostDetail from '@/components/BlogPostDetail';
+import EnhancedBlogPostDetail from '@/components/EnhancedBlogPostDetail';
 import BlogPostCard from '@/components/BlogPostCard';
 
 const Blog = () => {
