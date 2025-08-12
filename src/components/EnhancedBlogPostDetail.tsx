@@ -276,7 +276,7 @@ const EnhancedBlogPostDetail = ({
             </div>
 
             {/* Content Tabs */}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="border-b px-6">
                 <TabsList className="w-full justify-start">
                   <TabsTrigger value="content" className="flex items-center gap-2">
