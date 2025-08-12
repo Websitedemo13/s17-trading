@@ -61,10 +61,26 @@ const App = () => {
   const { initializeTheme } = useThemeStore();
 
   useEffect(() => {
-    initialize();
-    initializeTheme();
-    initializeI18n();
-  }, [initialize, initializeTheme]);
+    let unsubscribe: (() => void) | undefined;
+
+    const initializeApp = async () => {
+      try {
+        unsubscribe = initialize();
+        initializeTheme();
+        initializeI18n();
+      } catch (error) {
+        console.error('App initialization error:', error);
+      }
+    };
+
+    initializeApp();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []); // Remove dependencies to prevent infinite loops
 
   return (
     <QueryClientProvider client={queryClient}>
