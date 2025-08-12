@@ -374,25 +374,115 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_type: Database["public"]["Enums"]["account_type"] | null
           avatar_url: string | null
+          backup_codes: string[] | null
+          bio: string | null
+          birth_date: string | null
+          company: string | null
           created_at: string
+          currency: string | null
           display_name: string | null
+          email: string | null
+          email_verified: boolean | null
+          facebook_url: string | null
+          github_url: string | null
           id: string
+          instagram_url: string | null
+          language: string | null
+          last_login_at: string | null
+          linkedin_url: string | null
+          location: string | null
+          notification_email: boolean | null
+          notification_push: boolean | null
+          notification_sms: boolean | null
+          password_changed_at: string | null
+          phone: string | null
+          privacy_activity: boolean | null
+          privacy_portfolio: boolean | null
+          privacy_profile: Database["public"]["Enums"]["privacy_profile"] | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          theme_preference: Database["public"]["Enums"]["theme_preference"] | null
+          timezone: string | null
+          totp_secret: string | null
+          twitter_url: string | null
+          two_factor_enabled: boolean | null
           updated_at: string
+          website: string | null
         }
         Insert: {
+          account_type?: Database["public"]["Enums"]["account_type"] | null
           avatar_url?: string | null
+          backup_codes?: string[] | null
+          bio?: string | null
+          birth_date?: string | null
+          company?: string | null
           created_at?: string
+          currency?: string | null
           display_name?: string | null
+          email?: string | null
+          email_verified?: boolean | null
+          facebook_url?: string | null
+          github_url?: string | null
           id: string
+          instagram_url?: string | null
+          language?: string | null
+          last_login_at?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          notification_email?: boolean | null
+          notification_push?: boolean | null
+          notification_sms?: boolean | null
+          password_changed_at?: string | null
+          phone?: string | null
+          privacy_activity?: boolean | null
+          privacy_portfolio?: boolean | null
+          privacy_profile?: Database["public"]["Enums"]["privacy_profile"] | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          theme_preference?: Database["public"]["Enums"]["theme_preference"] | null
+          timezone?: string | null
+          totp_secret?: string | null
+          twitter_url?: string | null
+          two_factor_enabled?: boolean | null
           updated_at?: string
+          website?: string | null
         }
         Update: {
+          account_type?: Database["public"]["Enums"]["account_type"] | null
           avatar_url?: string | null
+          backup_codes?: string[] | null
+          bio?: string | null
+          birth_date?: string | null
+          company?: string | null
           created_at?: string
+          currency?: string | null
           display_name?: string | null
+          email?: string | null
+          email_verified?: boolean | null
+          facebook_url?: string | null
+          github_url?: string | null
           id?: string
+          instagram_url?: string | null
+          language?: string | null
+          last_login_at?: string | null
+          linkedin_url?: string | null
+          location?: string | null
+          notification_email?: boolean | null
+          notification_push?: boolean | null
+          notification_sms?: boolean | null
+          password_changed_at?: string | null
+          phone?: string | null
+          privacy_activity?: boolean | null
+          privacy_portfolio?: boolean | null
+          privacy_profile?: Database["public"]["Enums"]["privacy_profile"] | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          theme_preference?: Database["public"]["Enums"]["theme_preference"] | null
+          timezone?: string | null
+          totp_secret?: string | null
+          twitter_url?: string | null
+          two_factor_enabled?: boolean | null
           updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }
