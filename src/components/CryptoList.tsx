@@ -117,7 +117,7 @@ const CryptoList = () => {
             </tr>
           </thead>
           <tbody>
-            {cryptos?.map((crypto) => (
+            {displayData?.map((crypto) => (
               <tr key={crypto.symbol} className="border-t border-secondary">
                 <td className="py-3 sm:py-4 pl-3 sm:pl-0">
                   <div className="flex items-center gap-2">
