@@ -99,7 +99,10 @@ const Navbar = () => {
           ))}
         </div>
 
-        <DropdownMenu>
+        <div className="flex items-center gap-3">
+          <FloatingChatToggle compact />
+
+          <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
@@ -140,7 +143,8 @@ const Navbar = () => {
               <span>Đăng xuất</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+          </DropdownMenu>
+        </div>
       </div>
     </nav>
   );
