@@ -57,7 +57,11 @@ export const FloatingChatToggle = ({ className, compact = false }: FloatingChatT
         });
       }
     } catch (error) {
-      console.error('Error toggling setting:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error toggling setting:', {
+        message: errorMessage,
+        error
+      });
     } finally {
       setLoading(false);
     }
