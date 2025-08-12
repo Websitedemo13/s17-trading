@@ -152,7 +152,7 @@ const EnhancedBlogPostDetail = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] p-0 overflow-hidden">
+      <DialogContent className="max-w-6xl max-h-[95vh] p-0 overflow-y-auto">
         <VisuallyHidden>
           <DialogTitle>
             {typeof post?.title === 'string' ? post.title : post?.title?.[currentLanguage] || 'Blog Post'}
