@@ -97,7 +97,7 @@ const quickActions: QuickAction[] = [
   {
     id: '6',
     title: 'Portfolio Review',
-    description: '��ánh giá và tối ưu portfolio',
+    description: 'Đánh giá và tối ưu portfolio',
     icon: DollarSign,
     query: 'Hướng dẫn cách xây dựng portfolio crypto cân bằng cho năm 2024',
     category: 'portfolio'
@@ -172,7 +172,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 
 **Phân tích kỹ thuật:**
 🔸 **Xu hướng ngắn hạn**: Tăng nhẹ, có dấu hiệu điều chỉnh
-🔸 **MA 20/50**: Đang trong uptrend, nhưng cần vượt $97K để confirm
+🔸 **MA 20/50**: ��ang trong uptrend, nhưng cần vượt $97K để confirm
 🔸 **Volume**: Giảm dần, cần volume breakthrough
 🔸 **Fibonacci**: Đang test vùng 0.618 retracement
 
@@ -460,7 +460,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
       </div>
 
       {/* Messages */}
-      <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
+      <ScrollArea ref={scrollAreaRef} className="flex-1 p-2 md:p-4">
         <div className="space-y-4">
           <AnimatePresence mode="popLayout">
             {messages.map((message) => (
