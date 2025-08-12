@@ -254,7 +254,7 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
               size="sm"
               onClick={() => toggleNotifications(true)}
             >
-              Bật
+              B��t
             </Button>
           </div>
         </Card>
@@ -452,38 +452,6 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
         )}
       </AnimatePresence>
 
-      {/* Settings panel */}
-      <AnimatePresence>
-        {notifications.length === 0 && isEnabled && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="mt-4"
-          >
-            <Card className="p-4 bg-muted/50 backdrop-blur-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Bell className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm font-medium">Không có thông báo mới</p>
-                    <p className="text-xs text-muted-foreground">
-                      Thông báo sẽ hiển thị ở đây
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleNotifications(false)}
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
