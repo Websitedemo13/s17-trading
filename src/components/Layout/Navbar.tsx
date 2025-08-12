@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/authStore';
 import { useAdminStore } from '@/stores/adminStore';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,9 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User, Settings, Crown } from 'lucide-react';
+import { LogOut, User, Settings, Crown, Menu, X } from 'lucide-react';
 import { HeaderNotificationSystem } from '@/components/HeaderNotificationSystem';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { useState } from 'react';
 
 const Navbar = () => {
   const location = useLocation();
