@@ -33,6 +33,7 @@ export const useRoleAccess = (teamId?: string): RolePermissions & {
   loading: boolean;
 } => {
   const { user } = useAuthStore();
+  const { isAdmin } = useAdminStore();
   const { userProfile, teams, fetchUserProfile } = useEnhancedTeamStore();
   const [loading, setLoading] = useState(true);
   const [currentTeam, setCurrentTeam] = useState<EnhancedTeam | null>(null);
