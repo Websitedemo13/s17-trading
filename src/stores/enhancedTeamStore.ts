@@ -645,8 +645,44 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
       const authUser = useAuthStore.getState().user;
       if (!authUser) throw new Error('User not authenticated');
 
-      const { userProfile } = get();
-      if (!userProfile) throw new Error('User profile not loaded');
+      let { userProfile } = get();
+
+      // If profile not loaded, try to fetch it first
+      if (!userProfile) {
+        await get().fetchUserProfile();
+        userProfile = get().userProfile;
+
+        // If still no profile, create default settings
+        if (!userProfile) {
+          const defaultSettings = {
+            floating_teams: true,
+            sound: true,
+            desktop: true,
+            ...settings
+          };
+
+          const { error } = await supabase
+            .from('profiles')
+            .upsert({
+              id: authUser.id,
+              notification_settings: defaultSettings,
+              account_type: 'basic',
+              max_teams: 5,
+              is_admin: false
+            });
+
+          if (error) throw error;
+
+          // Fetch the updated profile
+          await get().fetchUserProfile();
+
+          toast({
+            title: "Thành công",
+            description: "Đã cập nhật cài đặt thông báo"
+          });
+          return true;
+        }
+      }
 
       const updatedSettings = {
         ...userProfile.notification_settings,
@@ -655,8 +691,8 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       const { error } = await supabase
         .from('profiles')
-        .update({ 
-          notification_settings: updatedSettings 
+        .update({
+          notification_settings: updatedSettings
         })
         .eq('id', authUser.id);
 
@@ -676,10 +712,11 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       return true;
     } catch (error) {
-      console.error('Error updating notification settings:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error updating notification settings:', errorMessage);
       toast({
         title: "Lỗi",
-        description: "Không thể cập nhật cài đặt",
+        description: "Không thể cập nhật cài đặt thông báo",
         variant: "destructive"
       });
       return false;
