@@ -836,35 +836,51 @@ const Blog = () => {
                 </p>
               </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                <Button 
-                  variant="outline" 
+              <div className="grid grid-cols-3 gap-3">
+                <Button
+                  variant="outline"
                   onClick={() => shareToSocial('facebook', sharePost)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-blue-600 hover:bg-blue-50"
                 >
                   <Facebook className="h-4 w-4" />
                   Facebook
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => shareToSocial('twitter', sharePost)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-sky-500 hover:bg-sky-50"
                 >
                   <Twitter className="h-4 w-4" />
                   Twitter
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => shareToSocial('linkedin', sharePost)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-blue-700 hover:bg-blue-50"
                 >
                   <Linkedin className="h-4 w-4" />
                   LinkedIn
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
+                  onClick={() => shareToSocial('telegram', sharePost)}
+                  className="flex items-center gap-2 text-blue-500 hover:bg-blue-50"
+                >
+                  <Send className="h-4 w-4" />
+                  Telegram
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => shareToSocial('whatsapp', sharePost)}
+                  className="flex items-center gap-2 text-green-600 hover:bg-green-50"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp
+                </Button>
+                <Button
+                  variant="outline"
                   onClick={() => shareToSocial('copy', sharePost)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-gray-600 hover:bg-gray-50"
                 >
                   <Copy className="h-4 w-4" />
                   {currentLanguage === 'vi' ? 'Sao chép' : 'Copy Link'}
