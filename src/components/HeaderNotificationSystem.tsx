@@ -37,9 +37,13 @@ interface HeaderNotificationSystemProps {
 
 export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystemProps) => {
   const { user } = useAuthStore();
+  const { checkAdminStatus } = useAdminStore();
   const [notifications, setNotifications] = useState<FloatingNotification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Check if current user is admin
+  const isAdmin = user?.email ? checkAdminStatus(user.email) : false;
 
   // Fetch notifications
   useEffect(() => {
