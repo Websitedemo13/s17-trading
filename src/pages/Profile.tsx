@@ -92,10 +92,16 @@ interface UserProfile {
 
 const Profile = () => {
   const { user, signOut } = useAuthStore();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const {
+    profile,
+    fetchProfile,
+    updateProfile,
+    uploadAvatar,
+    loading,
+    exportUserData
+  } = useProfileStore();
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
-  const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   // Form states
@@ -1118,7 +1124,7 @@ const Profile = () => {
                   Quản lý dữ liệu
                 </CardTitle>
                 <CardDescription>
-                  Xuất v�� quản lý dữ liệu cá nhân
+                  Xuất và quản lý dữ liệu cá nhân
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
