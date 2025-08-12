@@ -165,7 +165,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
       return `📊 **Phân tích Bitcoin (BTC)**
 
 **Tình hình hiện tại:**
-• Giá: $95,234 (+2.4% 24h)
+�� Giá: $95,234 (+2.4% 24h)
 • Vùng kháng cự: $97,000 - $100,000
 • Vùng hỗ trợ: $92,000 - $90,000
 • RSI: 68 (gần vùng quá mua)
@@ -200,7 +200,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 **2. VIC (VinGroup) - HOLD 🟡**
 • Giá hiện tại: 74,200 VND  
 • Target: 78,000 VND (+5.1%)
-• Đa dạng hóa tốt: BĐS + Retail + VinFast
+• ��a dạng hóa tốt: BĐS + Retail + VinFast
 • VinFast IPO sắp tới có thể unlock value
 • Risk: Nợ cao, VinFast vẫn lỗ
 
@@ -483,9 +483,9 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
                 )}
 
                 <div className={cn(
-                  "max-w-[85%] rounded-2xl p-4 space-y-3",
+                  "max-w-[95%] rounded-2xl p-4 space-y-3",
                   message.role === 'user'
-                    ? 'bg-primary text-primary-foreground ml-12'
+                    ? 'bg-primary text-primary-foreground ml-8'
                     : 'bg-card border border-border/50 shadow-sm'
                 )}>
                   <div className="prose prose-sm max-w-none dark:prose-invert">
