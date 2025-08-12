@@ -301,36 +301,21 @@ const Profile = () => {
     }
   };
 
-  const exportData = async () => {
-    try {
-      const data = {
-        profile,
-        portfolio,
-        exportDate: new Date().toISOString()
-      };
-      
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `profile-data-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      toast({
-        title: "Thành công",
-        description: "Xuất dữ liệu thành công!"
-      });
-    } catch (error) {
-      console.error('Error exporting data:', error);
-      toast({
-        title: "Lỗi",
-        description: "Không thể xuất dữ liệu",
-        variant: "destructive"
-      });
-    }
+  const handleExportData = async () => {
+    if (!user) return;
+
+    const data = await exportUserData(user.id);
+    if (!data) return;
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `profile-data-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const totalPortfolioValue = portfolio.reduce((total, item) => {
