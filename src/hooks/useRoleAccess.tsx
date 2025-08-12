@@ -60,14 +60,6 @@ export const useRoleAccess = (teamId?: string): RolePermissions & {
 
   // System admin permissions - check both database admin flag and admin store
   const isSystemAdmin = userProfile?.is_admin || isAdmin;
-
-  // Debug admin access
-  console.log('useRoleAccess admin check:', {
-    userEmail: user?.email,
-    userProfileAdmin: userProfile?.is_admin,
-    adminStoreAdmin: isAdmin,
-    finalIsSystemAdmin: isSystemAdmin
-  });
   
   // Account info
   const accountType = userProfile?.account_type || 'basic';
