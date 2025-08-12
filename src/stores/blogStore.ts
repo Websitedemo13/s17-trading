@@ -266,6 +266,27 @@ export const useBlogStore = create<BlogState>((set, get) => ({
         console.log('Supabase not available, using mock data');
       }
 
+      // Load user interactions from localStorage
+      try {
+        const savedLikedPosts = localStorage.getItem('likedPosts');
+        const savedBookmarkedPosts = localStorage.getItem('bookmarkedPosts');
+        const savedUserBookmarks = localStorage.getItem('userBookmarks');
+
+        if (savedLikedPosts) {
+          set({ likedPosts: JSON.parse(savedLikedPosts) });
+        }
+
+        if (savedBookmarkedPosts) {
+          set({ bookmarkedPosts: JSON.parse(savedBookmarkedPosts) });
+        }
+
+        if (savedUserBookmarks) {
+          set({ userBookmarks: JSON.parse(savedUserBookmarks) });
+        }
+      } catch (error) {
+        console.log('Could not load user blog interactions from localStorage');
+      }
+
       // Fallback to comprehensive mock data
       const mockCategories: BlogCategory[] = [
         {
@@ -308,7 +329,7 @@ export const useBlogStore = create<BlogState>((set, get) => ({
           id: '3',
           name: {
             en: 'Vietnam Stocks',
-            vi: 'Chứng kho��n Việt Nam'
+            vi: 'Chứng khoán Việt Nam'
           },
           slug: 'vietnam-stocks',
           description: {
@@ -515,7 +536,7 @@ Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát h�
 ### Kịch bản Lạc quan
 - Mục tiêu giá: $150,000 - $200,000
 - Thời gian: 12-18 tháng sau halving
-- Động lực: Dòng vốn ETF, áp dụng tổ chức, FOMO từ nhà đầu tư cá nhân
+- ��ộng lực: Dòng vốn ETF, áp dụng tổ chức, FOMO từ nhà đầu tư cá nhân
 
 ### Kịch bản Trung tính
 - Mục tiêu giá: $80,000 - $120,000
@@ -769,7 +790,7 @@ Key Investment Rationale:
 - Attractive dividend yield for income investors
 
 Risk Disclosure: This analysis is for reference only. Investors should have risk management and only invest within their risk tolerance capacity.`,
-            vi: `# VinGroup (VIC): Ph��n tích Toàn diện Gã khổng lồ Bất động sản Việt Nam
+            vi: `# VinGroup (VIC): Phân tích Toàn diện Gã khổng lồ Bất động sản Việt Nam
 
 ## Tổng quan Công ty
 
@@ -1208,7 +1229,7 @@ DeFi mang lại cơ hội chưa từng có để tạo ra lợi nhuận, nhưng 
 - Bắt đầu với protocols đã được thử nghiệm và chiến lược bảo thủ
 - Không bao giờ đầu tư nhiều hơn khả năng mất
 - Đa dạng hóa là chìa khóa cho thành công dài hạn
-- Cập nhật thông tin về practices bảo mật và rủi ro m��i nổi
+- Cập nhật thông tin về practices bảo mật và rủi ro mới nổi
 - DeFi phát triển nhanh - học tập liên tục là thiết yếu
 
 *Disclaimer: Bài viết này chỉ mang tính giáo dục. Luôn tự nghiên cứu và cân nhắc tham khảo ý kiến cố vấn tài chính trước khi đưa ra quyết định đầu tư.*`
@@ -1283,7 +1304,7 @@ DeFi mang lại cơ hội chưa từng có để tạo ra lợi nhuận, nhưng 
           },
           excerpt: {
             en: 'Explore the convergence of AI and blockchain technology. Discover the most promising AI-powered crypto projects, investment strategies, and future trends in this comprehensive analysis.',
-            vi: 'Khám phá sự hội tụ của công nghệ AI và blockchain. Tìm hiểu các dự án crypto được hỗ trợ bởi AI triển vọng nhất, chiến lược đ���u tư và xu hướng tương lai trong phân tích toàn diện này.'
+            vi: 'Khám phá sự hội tụ của công nghệ AI và blockchain. Tìm hiểu các dự án crypto được hỗ trợ bởi AI triển vọng nhất, chiến lược đầu tư và xu hướng tương lai trong phân tích toàn diện này.'
           },
           content: {
             en: `# AI & Blockchain: The Perfect Storm of Innovation
@@ -1529,7 +1550,7 @@ Giao điểm của Trí tuệ Nhân tạo (AI) và công nghệ Blockchain đạ
 **Focus**: Autonomous economic agents và machine learning
 - **Market Cap**: $1.2B
 - **Use Case**: Smart contracts với AI capabilities
-- **Growth Potential**: Rất Cao - AI agent economy giai đoạn đ���u
+- **Growth Potential**: Rất Cao - AI agent economy giai đoạn đầu
 - **Investment Thesis**: Platform dẫn đầu cho automation được AI điều khiển
 
 ### 3. SingularityNET (AGIX)
