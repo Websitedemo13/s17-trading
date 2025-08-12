@@ -528,11 +528,14 @@ const Blog = () => {
 
         {/* Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 lg:w-96">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto">
             <TabsTrigger value="all">{getTabLabel('all')}</TabsTrigger>
             <TabsTrigger value="featured">{getTabLabel('featured')}</TabsTrigger>
             <TabsTrigger value="trending">{getTabLabel('trending')}</TabsTrigger>
             <TabsTrigger value="premium">{getTabLabel('premium')}</TabsTrigger>
+            <TabsTrigger value="saved">
+              {currentLanguage === 'vi' ? `Đã lưu (${userBookmarks.length})` : `Saved (${userBookmarks.length})`}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value={activeTab} className="space-y-8">
@@ -747,7 +750,7 @@ const Blog = () => {
                   <p className="text-muted-foreground mb-4">
                     {currentLanguage === 'vi'
                       ? (searchTerm 
-                          ? 'Thử điều chỉnh từ khóa tìm kiếm hoặc bộ lọc'
+                          ? 'Thử ��iều chỉnh từ khóa tìm kiếm hoặc bộ lọc'
                           : 'Các bài viết sẽ được cập nhật sớm'
                         )
                       : (searchTerm
