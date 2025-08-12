@@ -149,32 +149,32 @@ const Blog = () => {
     .sort((a, b) => (b.metrics.likes + b.metrics.comments_count) - (a.metrics.likes + a.metrics.comments_count))
     .slice(0, 5);
 
-  const toggleBookmark = (postId: string) => {
+  const toggleBookmark = useCallback((postId: string) => {
     if (bookmarkedPosts.includes(postId)) {
       unbookmarkPost(postId);
     } else {
       bookmarkPost(postId);
     }
-  };
+  }, [bookmarkedPosts, unbookmarkPost, bookmarkPost]);
 
-  const toggleLike = (postId: string) => {
+  const toggleLike = useCallback((postId: string) => {
     if (likedPosts.includes(postId)) {
       unlikePost(postId);
     } else {
       likePost(postId);
     }
-  };
+  }, [likedPosts, unlikePost, likePost]);
 
-  const handlePostClick = (post: BlogPost) => {
+  const handlePostClick = useCallback((post: BlogPost) => {
     setSelectedPost(post);
     setShowPostDetail(true);
     incrementViews(post.id);
-  };
+  }, [incrementViews]);
 
-  const handleShare = (post: BlogPost) => {
+  const handleShare = useCallback((post: BlogPost) => {
     setSharePost(post);
     setShowShareDialog(true);
-  };
+  }, []);
 
   const shareToSocial = (platform: string, post: BlogPost) => {
     const url = `${window.location.origin}/blog/${post.id}`;
@@ -329,7 +329,7 @@ const Blog = () => {
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             {currentLanguage === 'vi'
-              ? 'Khám phá những phân tích sâu sắc, chiến lược đầu tư và tin tức thị trường từ các chuyên gia hàng đầu'
+              ? 'Khám phá những phân tích sâu sắc, chiến lược đ���u tư và tin tức thị trường từ các chuyên gia hàng đầu'
               : 'Discover deep insights, investment strategies and market news from leading experts'
             }
           </p>
