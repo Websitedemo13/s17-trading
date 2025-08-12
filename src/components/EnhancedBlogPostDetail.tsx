@@ -167,9 +167,9 @@ const EnhancedBlogPostDetail = ({
           />
         </div>
 
-        <div className="flex min-h-full">
+        <div className="flex flex-col h-full">
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 overflow-y-auto">
             {/* Header */}
             <div className="border-b bg-card/50 backdrop-blur-sm p-6">
               <div className="flex items-start justify-between mb-4">
@@ -382,7 +382,7 @@ const EnhancedBlogPostDetail = ({
                           <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold">1</div>
                           <p className="text-muted-foreground">
                             {currentLanguage === 'vi' 
-                              ? 'Hi��u rõ tâm lý thị trường là chìa khóa thành công trong trading'
+                              ? 'Hiểu rõ tâm lý thị trường là chìa khóa thành công trong trading'
                               : 'Understanding market psychology is key to trading success'
                             }
                           </p>
