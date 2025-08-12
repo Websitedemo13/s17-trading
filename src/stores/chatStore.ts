@@ -188,7 +188,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
           console.log('New message received:', payload);
           // Refresh messages when new message is received
           get().fetchMessages(teamId).catch(error => {
-            console.error('Error refreshing messages after real-time update:', error);
+            const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+            console.error('Error refreshing messages after real-time update:', {
+              message: errorMessage,
+              error
+            });
           });
         }
       )
