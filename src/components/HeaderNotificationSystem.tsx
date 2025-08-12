@@ -79,7 +79,17 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
           setNotifications([]);
           return;
         }
-        setNotifications(data || []);
+        // Filter notifications based on admin status
+        const filteredData = (data || []).filter(notification => {
+          // System/error notifications only for admins
+          const systemNotificationTypes = ['error', 'warning', 'info', 'system'];
+          if (systemNotificationTypes.includes(notification.type)) {
+            return isAdmin;
+          }
+          // User-specific notifications for all users
+          return true;
+        });
+        setNotifications(filteredData);
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
         console.error('Error fetching notifications:', {
