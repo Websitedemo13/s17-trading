@@ -176,7 +176,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 🔸 **Volume**: Giảm dần, cần volume breakthrough
 🔸 **Fibonacci**: Đang test vùng 0.618 retracement
 
-**Dự đoán tuần tới:**
+**Dự đoán tu���n tới:**
 📈 **Kịch bản tích cực** (60%): Test $100K nếu vượt $97K
 📊 **Kịch bản trung tính** (30%): Sideway $92K-$97K
 📉 **Kịch bản tiêu cực** (10%): Về test $88K-$90K
@@ -256,7 +256,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
     if (query.toLowerCase().includes('risk') || query.toLowerCase().includes('quản lý rủi ro')) {
       return `🛡️ **Risk Management Masterclass**
 
-**📏 Position Sizing (Quan trọng nhất)**
+**📏 Position Sizing (Quan trọng nh���t)**
 • 2% rule: Không rủi ro >2% account mỗi trade
 • Kelly Criterion cho size optimization
 • Portfolio correlation analysis
@@ -405,7 +405,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
       </div>
 
       {/* Quick Actions */}
-      <div className="border-b bg-muted/20 p-4">
+      <div className="border-b bg-muted/20 p-2 md:p-4">
         <div className="mb-3">
           <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
             <Zap className="h-4 w-4 text-primary" />
