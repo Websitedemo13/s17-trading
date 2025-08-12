@@ -599,7 +599,7 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
         if (!canJoin) {
           toast({
-            title: "Giới hạn nhóm",
+            title: "Giới h��n nhóm",
             description: "Bạn đã đạt giới hạn số lượng nhóm. Hãy nâng cấp tài khoản để tham gia thêm nhóm.",
             variant: "destructive"
           });
@@ -735,11 +735,25 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       return true;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('Error updating notification settings:', errorMessage);
+      let errorMessage = 'Unknown error';
+
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = (error as any).message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
+      console.error('Error updating notification settings:', {
+        error,
+        errorMessage,
+        type: typeof error
+      });
+
       toast({
         title: "Lỗi",
-        description: "Không thể cập nhật cài đặt thông báo",
+        description: `Không thể cập nhật cài đặt thông báo: ${errorMessage}`,
         variant: "destructive"
       });
       return false;
