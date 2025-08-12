@@ -141,56 +141,34 @@ const Profile = () => {
     }
   }, [user, fetchProfile]);
 
-  const fetchProfile = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (error && error.code !== 'PGRST116') {
-        throw error;
-      }
-
-      const profileData = data || {};
-      setProfile(profileData);
-      
-      // Set form states
-      setDisplayName(profileData.display_name || '');
-      setBio(profileData.bio || '');
-      setPhone(profileData.phone || '');
-      setLocation(profileData.location || '');
-      setBirthDate(profileData.birth_date || '');
-      setCompany(profileData.company || '');
-      setWebsite(profileData.website || '');
-      setGithubUrl(profileData.github_url || '');
-      setTwitterUrl(profileData.twitter_url || '');
-      setLinkedinUrl(profileData.linkedin_url || '');
-      setFacebookUrl(profileData.facebook_url || '');
-      setInstagramUrl(profileData.instagram_url || '');
-      setNotificationEmail(profileData.notification_email ?? true);
-      setNotificationPush(profileData.notification_push ?? true);
-      setNotificationSms(profileData.notification_sms ?? false);
-      setThemePreference(profileData.theme_preference || 'system');
-      setLanguage(profileData.language || 'vi');
-      setTimezone(profileData.timezone || 'Asia/Ho_Chi_Minh');
-      setCurrency(profileData.currency || 'USD');
-      setPrivacyProfile(profileData.privacy_profile || 'public');
-      setPrivacyPortfolio(profileData.privacy_portfolio ?? false);
-      setPrivacyActivity(profileData.privacy_activity ?? false);
-      setTwoFactorEnabled(profileData.two_factor_enabled ?? false);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      toast({
-        title: "Lỗi",
-        description: "Không thể tải thông tin profile",
-        variant: "destructive"
-      });
+  // Update form states when profile changes
+  useEffect(() => {
+    if (profile) {
+      setDisplayName(profile.display_name || '');
+      setBio(profile.bio || '');
+      setPhone(profile.phone || '');
+      setLocation(profile.location || '');
+      setBirthDate(profile.birth_date || '');
+      setCompany(profile.company || '');
+      setWebsite(profile.website || '');
+      setGithubUrl(profile.github_url || '');
+      setTwitterUrl(profile.twitter_url || '');
+      setLinkedinUrl(profile.linkedin_url || '');
+      setFacebookUrl(profile.facebook_url || '');
+      setInstagramUrl(profile.instagram_url || '');
+      setNotificationEmail(profile.notification_email ?? true);
+      setNotificationPush(profile.notification_push ?? true);
+      setNotificationSms(profile.notification_sms ?? false);
+      setThemePreference(profile.theme_preference || 'system');
+      setLanguage(profile.language || 'vi');
+      setTimezone(profile.timezone || 'Asia/Ho_Chi_Minh');
+      setCurrency(profile.currency || 'USD');
+      setPrivacyProfile(profile.privacy_profile || 'public');
+      setPrivacyPortfolio(profile.privacy_portfolio ?? false);
+      setPrivacyActivity(profile.privacy_activity ?? false);
+      setTwoFactorEnabled(profile.two_factor_enabled ?? false);
     }
-  };
+  }, [profile]);
 
   const fetchPortfolio = async () => {
     if (!user) return;
@@ -268,7 +246,7 @@ const Profile = () => {
     if (newPassword !== confirmPassword) {
       toast({
         title: "Lỗi",
-        description: "Mật khẩu xác nhận không khớp",
+        description: "Mật khẩu xác nhận không kh��p",
         variant: "destructive"
       });
       return;
@@ -423,7 +401,7 @@ const Profile = () => {
       console.error('Error exporting data:', error);
       toast({
         title: "Lỗi",
-        description: "Không thể xuất dữ liệu",
+        description: "Không thể xu��t dữ liệu",
         variant: "destructive"
       });
     }
@@ -459,7 +437,7 @@ const Profile = () => {
           Hồ sơ cá nhân
         </h1>
         <p className="text-muted-foreground text-lg">
-          Quản lý thông tin cá nhân, cài đặt và bảo mật tài khoản
+          Quản lý thông tin cá nhân, cài đặt và b��o mật tài khoản
         </p>
       </div>
 
@@ -1197,7 +1175,7 @@ const Profile = () => {
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Nhập m��t khẩu mới"
+                    placeholder="Nhập mật khẩu mới"
                   />
                 </div>
                 <div className="space-y-2">
