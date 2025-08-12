@@ -223,7 +223,11 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <RoleGuard
+      requireAdmin={true}
+      fallback={<Navigate to="/dashboard" replace />}
+    >
+      <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -674,7 +678,8 @@ const AdminDashboard = () => {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </RoleGuard>
   );
 };
 
