@@ -26,7 +26,7 @@ import {
   Linkedin,
   Send,
   Download,
-  Print,
+  Printer,
   BookOpen,
   Target,
   Zap,
