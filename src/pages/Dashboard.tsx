@@ -39,7 +39,25 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           <CryptoChart />
-          <CryptoList />
+
+          <LazyLoadWrapper delay={800}>
+            <Suspense fallback={
+              <div className="glass-card p-6 rounded-lg animate-pulse">
+                <div className="h-6 bg-muted rounded w-40 mb-4"></div>
+                <div className="space-y-3">
+                  {[1,2,3,4,5].map(i => (
+                    <div key={i} className="flex items-center gap-4">
+                      <div className="w-8 h-8 bg-muted rounded-full"></div>
+                      <div className="flex-1 h-4 bg-muted rounded"></div>
+                      <div className="w-20 h-4 bg-muted rounded"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            }>
+              <CryptoList />
+            </Suspense>
+          </LazyLoadWrapper>
         </div>
 
         <div className="space-y-4 sm:space-y-6">
