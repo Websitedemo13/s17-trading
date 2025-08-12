@@ -58,7 +58,11 @@ export const debugSupabase = {
       });
       return user;
     } catch (error) {
-      console.error('Error getting current user:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error getting current user:', {
+        message: errorMessage,
+        error
+      });
       return null;
     }
   }
