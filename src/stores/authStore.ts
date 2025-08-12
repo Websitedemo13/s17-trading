@@ -51,16 +51,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
           // Set admin status in the admin store
           const adminStore = useAdminStore.getState();
-          adminStore.checkAdminStatus(email);
+          const isAdminValid = adminStore.checkAdminStatus(email);
 
-          set({ user: mockUser, session: mockSession });
+          if (isAdminValid) {
+            set({ user: mockUser, session: mockSession });
 
-          toast({
-            title: "Đăng nhập Admin thành công",
-            description: "Chào mừng Super Admin!",
-          });
+            toast({
+              title: "Đăng nhập Admin thành công",
+              description: "Chào mừng Super Admin!",
+            });
 
-          return {};
+            return {};
+          } else {
+            return { error: "Tài khoản admin không hợp lệ" };
+          }
         } catch (error) {
           console.error('Admin login error:', error);
           return { error: "Lỗi đăng nhập admin" };
