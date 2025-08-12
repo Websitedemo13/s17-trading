@@ -165,7 +165,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
       return `📊 **Phân tích Bitcoin (BTC)**
 
 **Tình hình hiện tại:**
-�� Giá: $95,234 (+2.4% 24h)
+• Giá: $95,234 (+2.4% 24h)
 • Vùng kháng cự: $97,000 - $100,000
 • Vùng hỗ trợ: $92,000 - $90,000
 • RSI: 68 (gần vùng quá mua)
@@ -200,7 +200,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 **2. VIC (VinGroup) - HOLD 🟡**
 • Giá hiện tại: 74,200 VND  
 • Target: 78,000 VND (+5.1%)
-• ��a dạng hóa tốt: BĐS + Retail + VinFast
+• Đa dạng hóa tốt: BĐS + Retail + VinFast
 • VinFast IPO sắp tới có thể unlock value
 • Risk: Nợ cao, VinFast vẫn lỗ
 
@@ -212,7 +212,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 • Catalyst: Dự án Dung Quất 2 hoạt động
 
 **💡 Chiến lược đầu tư:**
-🔸 Phân bổ: 40% VCB, 35% VIC, 25% HPG
+�� Phân bổ: 40% VCB, 35% VIC, 25% HPG
 🔸 Thời gian: 6-12 tháng
 🔸 Stop loss: -15% portfolio level`;
     }
@@ -297,7 +297,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
     // Default sophisticated response
     return `🤖 **AI Analysis Complete**
 
-Cảm ơn bạn đã hỏi! Tôi đã phân tích câu hỏi của bạn và đây là insights từ database gồm hơn 10,000 báo cáo nghiên cứu và real-time market data.
+Cảm ơn bạn đã hỏi! Tôi đã phân tích câu h���i của bạn và đây là insights từ database gồm hơn 10,000 báo cáo nghiên cứu và real-time market data.
 
 **💡 Key Insights:**
 • Thị trường hiện tại đang trong giai đoạn consolidation
@@ -427,7 +427,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
           </Tabs>
         </div>
         
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
           {filteredActions.map((action) => (
             <motion.div
               key={action.id}
