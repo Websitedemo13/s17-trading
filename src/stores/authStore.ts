@@ -218,7 +218,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       toast({
         title: "Đổi mật khẩu thành công",
-        description: "Mật khẩu của bạn đã đ��ợc cập nhật.",
+        description: "Mật khẩu của bạn đã được cập nhật.",
       });
 
       return {};
@@ -369,7 +369,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         // Check if current session is admin before clearing
         const currentState = get();
         if (currentState.isAdminSession) {
-          console.log('Preserving admin session despite initialization error');
           set({ loading: false }); // Only update loading
           return;
         }
