@@ -161,10 +161,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   initialize: () => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         console.log('Auth state changed:', event, session);
-        set({ 
-          session, 
+
+        // If user signed in, ensure profile exists
+        if (event === 'SIGNED_IN' && session?.user) {
+          try {
+            await supabase.rpc('ensure_profile_exists', {
+              user_id: session.user.id,
+              user_email: session.user.email
+            });
+          } catch (error) {
+            console.warn('Could not ensure profile exists:', error);
+          }
+        }
+
+        set({
+          session,
           user: session?.user ?? null,
           loading: false
         });
@@ -172,9 +185,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     );
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      set({ 
-        session, 
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      // If user is already signed in, ensure profile exists
+      if (session?.user) {
+        try {
+          await supabase.rpc('ensure_profile_exists', {
+            user_id: session.user.id,
+            user_email: session.user.email
+          });
+        } catch (error) {
+          console.warn('Could not ensure profile exists:', error);
+        }
+      }
+
+      set({
+        session,
         user: session?.user ?? null,
         loading: false
       });
