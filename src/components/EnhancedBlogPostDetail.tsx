@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { BlogPost } from '@/stores/blogStore';
 import { cn } from '@/lib/utils';
+import '@/styles/blog-dialog.css';
 
 interface EnhancedBlogPostDetailProps {
   post: BlogPost | null;
