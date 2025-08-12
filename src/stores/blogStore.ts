@@ -147,7 +147,10 @@ interface BlogState {
   analytics: BlogAnalytics | null;
   loading: boolean;
   currentLanguage: 'en' | 'vi';
-  
+  likedPosts: string[];
+  bookmarkedPosts: string[];
+  userBookmarks: BlogPost[];
+
   // Language
   setLanguage: (lang: 'en' | 'vi') => void;
   
@@ -180,6 +183,14 @@ interface BlogState {
   bulkUpdatePosts: (postIds: string[], updates: Partial<BlogPost>) => Promise<boolean>;
   bulkDeletePosts: (postIds: string[]) => Promise<boolean>;
   
+  // User interactions
+  likePost: (postId: string) => Promise<boolean>;
+  unlikePost: (postId: string) => Promise<boolean>;
+  bookmarkPost: (postId: string) => Promise<boolean>;
+  unbookmarkPost: (postId: string) => Promise<boolean>;
+  fetchUserBookmarks: () => Promise<void>;
+  incrementViews: (postId: string) => Promise<void>;
+
   // SEO and optimization
   generateSlug: (title: string, language: 'en' | 'vi') => string;
   optimizeImage: (imageUrl: string) => Promise<string>;
@@ -533,7 +544,7 @@ Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát h�
 3. Rủi ro Thị trường: Suy thoái vĩ mô, recession
 4. Rủi ro Cạnh tranh: Ethereum, các L1 khác chiếm thị phần
 
-### Chiến lược Giảm thiểu
+### Chiến lược Giảm thi��u
 - Đa dạng hóa: Không đặt tất cả vào Bitcoin
 - Cắt lỗ: Đặt quy tắc thoát rõ ràng
 - Nghiên cứu: Theo dõi chỉ số on-chain
@@ -759,7 +770,7 @@ Risk Disclosure: This analysis is for reference only. Investors should have risk
 
 ## Tổng quan Công ty
 
-VinGroup (VIC) là tập đoàn đa ngành hàng đầu Việt Nam với mô hình kinh doanh đa dạng từ bất động sản, bán lẻ, ô tô đến công nghệ. Với vốn hóa thị trường hơn $15 tỷ USD, VIC là một trong những cổ phiếu blue-chip lớn nh��t trên HOSE.
+VinGroup (VIC) là tập đoàn đa ngành hàng đầu Việt Nam với m�� hình kinh doanh đa dạng từ bất động sản, bán lẻ, ô tô đến công nghệ. Với vốn hóa thị trường hơn $15 tỷ USD, VIC là một trong những cổ phiếu blue-chip lớn nh��t trên HOSE.
 
 ## Business Segments Analysis
 
