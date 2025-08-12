@@ -106,10 +106,10 @@ const App = () => {
                 <ErrorBoundary>
                   <Suspense fallback={<LoadingSpinner />}>
                     <Routes>
-                <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
+                <Route path="/" element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <Index />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
-                <Route path="/register" element={user ? <Navigate to="/dashboard" replace /> : <Register />} />
+                <Route path="/login" element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <Login />} />
+                <Route path="/register" element={user ? <Navigate to={isAdmin ? "/admin" : "/dashboard"} replace /> : <Register />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route
                   path="/dashboard"
