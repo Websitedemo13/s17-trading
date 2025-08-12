@@ -28,7 +28,11 @@ const AIInsights = () => {
       setInsights(result);
       setQuestion('');
     } catch (error) {
-      console.error('Error getting AI insights:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error getting AI insights:', {
+        message: errorMessage,
+        error
+      });
     } finally {
       setLoading(false);
     }
