@@ -287,6 +287,9 @@ export const useBlogStore = create<BlogState>((set, get) => ({
         console.log('Could not load user blog interactions from localStorage');
       }
 
+      // Import enhanced blog content
+      const { enhancedBlogPosts } = await import('./enhancedBlogContent');
+
       // Fallback to comprehensive mock data
       const mockCategories: BlogCategory[] = [
         {
@@ -581,7 +584,7 @@ Bitcoin Halving 2024 có tiềm năng là sự kiện tăng giá mạnh mẽ nh�
 Điểm chính cần ghi nhớ:
 - Halving lịch sử cho thấy xu hướng tăng trong dài hạn
 - Việc áp dụng tổ chức là yếu tố thay đổi cuộc chơi
-- Quản lý rủi ro quan trọng hơn việc chọn thời điểm
+- Quản lý rủi ro quan trọng hơn vi���c chọn thời điểm
 - Phương pháp DCA thường hiệu quả hơn đầu tư một lần
 
 Tuyên bố từ chối trách nhiệm: Đây không phải lời khuyên đầu tư. Hãy tự nghiên cứu và chỉ đầu tư số tiền bạn có thể mất.`
@@ -1162,7 +1165,7 @@ Hệ sinh thái Tài chính Phi tập trung (DeFi) đã phát triển mạnh m�
 - **Euler**: Lending không cần phép cho long-tail assets
 
 ### DEX & AMM
-- **Uniswap V4**: Hooks và custom pools
+- **Uniswap V4**: Hooks v�� custom pools
 - **Curve Finance**: Giao dịch stable assets
 - **Balancer**: Pools đa tài sản và logic tùy chỉnh
 
@@ -1223,7 +1226,7 @@ DeFi đang chuyển từ thử nghiệm sang cơ sở hạ tầng cấp tổ ch�
 
 ## Kết luận
 
-DeFi mang lại cơ hội chưa từng có để tạo ra lợi nhuận, nhưng đòi hỏi quản lý rủi ro tinh vi và giáo dục liên tục. Thành công trong DeFi đến từ việc hiểu các protocol cơ bản, đa dạng hóa rủi ro và giữ khả năng thích ứng với đổi mới nhanh chóng.
+DeFi mang lại cơ hội chưa từng có để tạo ra lợi nhuận, nhưng đòi hỏi quản lý rủi ro tinh vi và giáo dục liên tục. Thành công trong DeFi đến từ việc hi���u các protocol cơ bản, đa dạng hóa rủi ro và giữ khả năng thích ứng với đổi mới nhanh chóng.
 
 **Điểm chính cần nhớ:**
 - Bắt đầu với protocols đã được thử nghiệm và chiến lược bảo thủ
