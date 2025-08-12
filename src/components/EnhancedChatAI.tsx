@@ -172,7 +172,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 
 **Phân tích kỹ thuật:**
 🔸 **Xu hướng ngắn hạn**: Tăng nhẹ, có dấu hiệu điều chỉnh
-🔸 **MA 20/50**: ��ang trong uptrend, nhưng cần vượt $97K để confirm
+🔸 **MA 20/50**: Đang trong uptrend, nhưng cần vượt $97K để confirm
 🔸 **Volume**: Giảm dần, cần volume breakthrough
 🔸 **Fibonacci**: Đang test vùng 0.618 retracement
 
@@ -578,7 +578,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
       </ScrollArea>
 
       {/* Input */}
-      <div className="border-t bg-card/50 backdrop-blur-sm p-4">
+      <div className="border-t bg-card/50 backdrop-blur-sm p-2 md:p-4">
         <div className="flex items-end gap-2">
           <div className="flex-1">
             <div className="relative">
