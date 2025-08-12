@@ -136,10 +136,10 @@ const Profile = () => {
 
   useEffect(() => {
     if (user) {
-      fetchProfile();
+      fetchProfile(user.id);
       fetchPortfolio();
     }
-  }, [user]);
+  }, [user, fetchProfile]);
 
   const fetchProfile = async () => {
     if (!user) return;
@@ -1197,7 +1197,7 @@ const Profile = () => {
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Nhập mật khẩu mới"
+                    placeholder="Nhập m��t khẩu mới"
                   />
                 </div>
                 <div className="space-y-2">
