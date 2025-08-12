@@ -5,6 +5,7 @@
 @tailwind utilities;
 
 @import './styles/profile.css';
+@import './styles/responsive.css';
 
 :root {
   /* Beautiful color palette */
