@@ -97,7 +97,7 @@ const quickActions: QuickAction[] = [
   {
     id: '6',
     title: 'Portfolio Review',
-    description: 'Đánh giá và tối ưu portfolio',
+    description: 'Đánh gi�� và tối ưu portfolio',
     icon: DollarSign,
     query: 'Hướng dẫn cách xây dựng portfolio crypto cân bằng cho năm 2024',
     category: 'portfolio'
@@ -434,7 +434,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
                     : 'bg-card border border-border/50 shadow-sm'
                 )}>
                   <div className="prose prose-sm max-w-none dark:prose-invert">
-                    <div className="whitespace-pre-wrap leading-7 text-sm break-words">
+                    <div className="whitespace-pre-wrap leading-6 text-sm break-words overflow-wrap-anywhere">
                       {message.content}
                     </div>
                   </div>
