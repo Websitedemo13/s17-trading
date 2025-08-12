@@ -62,6 +62,7 @@ import {
 } from 'lucide-react';
 import { BlogPost, BlogCategory, useBlogStore } from '@/stores/blogStore';
 import BlogPostDetail from '@/components/BlogPostDetail';
+import BlogPostCard from '@/components/BlogPostCard';
 
 const Blog = () => {
   const {
@@ -329,7 +330,7 @@ const Blog = () => {
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             {currentLanguage === 'vi'
-              ? 'Khám phá những phân tích sâu sắc, chiến lược đ���u tư và tin tức thị trường từ các chuyên gia hàng đầu'
+              ? 'Khám phá những phân tích sâu sắc, chiến lược đầu tư và tin tức thị trường từ các chuyên gia hàng đầu'
               : 'Discover deep insights, investment strategies and market news from leading experts'
             }
           </p>
