@@ -60,7 +60,13 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      fetchUserProfile();
+      fetchUserProfile().catch((error) => {
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error in App fetchUserProfile:', {
+          message: errorMessage,
+          error
+        });
+      });
 
       // Debug table existence in development
       if (process.env.NODE_ENV === 'development') {
