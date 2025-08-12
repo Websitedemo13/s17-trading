@@ -120,13 +120,13 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
   fetchProfile: async (userId: string) => {
     set({ loading: true, error: null });
     try {
-      // First ensure profile exists
-      const { error: ensureError } = await supabase.rpc('ensure_profile_exists', {
-        user_id: userId
-      });
-
-      if (ensureError) {
-        console.warn('Could not ensure profile exists:', ensureError);
+      // Try to ensure profile exists, but don't fail if RPC doesn't exist
+      try {
+        await supabase.rpc('ensure_profile_exists', {
+          user_id: userId
+        });
+      } catch (rpcError) {
+        console.warn('RPC ensure_profile_exists not available, will handle manually:', rpcError);
       }
 
       const { data, error } = await supabase
