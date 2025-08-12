@@ -97,7 +97,14 @@ const CryptoList = () => {
 
   return (
     <div className="glass-card rounded-lg p-3 sm:p-4 lg:p-6 animate-fade-in">
-      <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">Top Cryptocurrencies</h2>
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold">Top Cryptocurrencies</h2>
+        {error && (
+          <span className="text-xs text-orange-500 bg-orange-100 px-2 py-1 rounded">
+            Using cached data
+          </span>
+        )}
+      </div>
       <div className="overflow-x-auto -mx-3 sm:mx-0">
         <table className="w-full min-w-[480px] sm:min-w-0">
           <thead>
