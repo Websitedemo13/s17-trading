@@ -56,7 +56,11 @@ export const MessageThread = ({
       await onSendReply(replyContent);
       setReplyContent('');
     } catch (error) {
-      console.error('Failed to send reply:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Failed to send reply:', {
+        message: errorMessage,
+        error
+      });
     } finally {
       setIsLoading(false);
     }
