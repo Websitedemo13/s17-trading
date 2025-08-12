@@ -25,7 +25,6 @@ import About from "./pages/About";
 import TeamDetail from "./pages/TeamDetail";
 import TeamDashboard from "./pages/TeamDashboard";
 import FloatingNotifications from "@/components/FloatingNotifications";
-import FloatingNotificationSystem from "@/components/FloatingNotificationSystem";
 import { debugSupabase } from "@/utils/debug";
 
 const queryClient = new QueryClient();
@@ -82,8 +81,6 @@ const App = () => {
               {/* Original floating notifications for general app notifications */}
               <FloatingNotifications />
               
-              {/* Enhanced floating notification system for teams */}
-              {user && <FloatingNotificationSystem />}
               
               <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
