@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User, Settings, Crown } from 'lucide-react';
-import { FloatingChatToggle } from '@/components/FloatingChatToggle';
+import { HeaderNotificationSystem } from '@/components/HeaderNotificationSystem';
 
 const Navbar = () => {
   const location = useLocation();
@@ -100,7 +100,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <FloatingChatToggle compact />
+          <HeaderNotificationSystem />
 
           <DropdownMenu>
           <DropdownMenuTrigger asChild>
