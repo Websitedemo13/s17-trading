@@ -70,7 +70,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
         }
         setNotifications(data || []);
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error fetching notifications:', {
+          message: errorMessage,
+          error
+        });
         setNotifications([]);
       } finally {
         setLoading(false);
@@ -114,7 +118,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
 
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
     } catch (error) {
-      console.error('Error dismissing notification:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error dismissing notification:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
@@ -131,7 +139,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       );
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error marking notification as read:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
@@ -154,7 +166,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
         description: "Đã đánh dấu tất cả thông báo là đã đọc"
       });
     } catch (error) {
-      console.error('Error marking all as read:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error marking all as read:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
@@ -178,7 +194,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
         description: "Đã xóa tất cả thông báo"
       });
     } catch (error) {
-      console.error('Error clearing notifications:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error clearing notifications:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
