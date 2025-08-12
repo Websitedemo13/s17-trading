@@ -50,7 +50,8 @@ import {
   Activity,
   BarChart3,
   Target,
-  MessageSquare
+  MessageSquare,
+  Loader2
 } from 'lucide-react';
 
 const Teams = () => {
