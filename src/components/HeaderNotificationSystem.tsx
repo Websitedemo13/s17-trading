@@ -220,26 +220,50 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
           variant="ghost"
           size="sm"
           className={cn(
-            "relative h-10 w-10 rounded-full transition-all duration-200",
-            "hover:bg-accent hover:scale-105",
-            unreadCount > 0 && "text-primary",
+            "relative h-10 w-10 rounded-full transition-all duration-300 group",
+            "hover:bg-gradient-to-br hover:from-primary/10 hover:to-accent/20 hover:scale-110",
+            "active:scale-95",
+            unreadCount > 0 && "text-primary bg-gradient-to-br from-primary/5 to-accent/10",
             className
           )}
         >
           {unreadCount > 0 ? (
-            <BellRing className="h-5 w-5 animate-pulse" />
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <BellRing className="h-5 w-5 text-primary group-hover:animate-pulse" />
+            </motion.div>
           ) : (
-            <Bell className="h-5 w-5" />
+            <Bell className="h-5 w-5 group-hover:text-primary transition-colors" />
           )}
-          
+
           {unreadCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </Badge>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1"
+            >
+              <Badge className="h-5 w-5 p-0 flex items-center justify-center text-xs bg-gradient-to-br from-primary to-primary/80 shadow-lg animate-pulse">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </Badge>
+            </motion.div>
           )}
-          
+
           {priorityNotifications.length > 0 && (
-            <div className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-orange-500 rounded-full animate-pulse" />
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-0.5 -right-0.5 h-3 w-3 bg-gradient-to-br from-orange-400 to-red-500 rounded-full shadow-lg"
+            >
+              <div className="h-full w-full bg-orange-500 rounded-full animate-ping opacity-75" />
+            </motion.div>
+          )}
+
+          {/* Ring effect for new notifications */}
+          {unreadCount > 0 && (
+            <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping opacity-30" />
           )}
         </Button>
       </DropdownMenuTrigger>
