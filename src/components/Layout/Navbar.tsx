@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User, Settings, Crown } from 'lucide-react';
+import { FloatingChatToggle } from '@/components/FloatingChatToggle';
 
 const Navbar = () => {
   const location = useLocation();
