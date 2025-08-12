@@ -153,6 +153,11 @@ const EnhancedBlogPostDetail = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl max-h-[90vh] p-0 overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>
+            {typeof post?.title === 'string' ? post.title : post?.title?.[currentLanguage] || 'Blog Post'}
+          </DialogTitle>
+        </VisuallyHidden>
         {/* Reading Progress Bar */}
         <div className="absolute top-0 left-0 h-1 bg-primary/20 w-full z-50">
           <motion.div
