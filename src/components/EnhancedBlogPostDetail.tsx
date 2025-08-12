@@ -294,7 +294,7 @@ const EnhancedBlogPostDetail = ({
                 </TabsList>
               </div>
 
-              <TabsContent value="content" className="flex-1 mt-0">
+              <TabsContent value="content" className="mt-0">
                 <ScrollArea className="h-full" onScrollCapture={handleScroll}>
                   <div className="p-6">
                     {/* Featured Image */}
