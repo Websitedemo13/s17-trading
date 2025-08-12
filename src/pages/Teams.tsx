@@ -57,11 +57,15 @@ const Teams = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { teams, loading, fetchTeams, createTeam, joinTeam, generateInviteLink } = useTeamStore();
+  const { requestToJoinTeam, processing } = useEnhancedTeamStore();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showJoinDialog, setShowJoinDialog] = useState(false);
+  const [showRequestDialog, setShowRequestDialog] = useState(false);
+  const [selectedTeamForRequest, setSelectedTeamForRequest] = useState<string | null>(null);
   const [newTeamName, setNewTeamName] = useState('');
   const [newTeamDescription, setNewTeamDescription] = useState('');
   const [inviteCode, setInviteCode] = useState('');
+  const [requestMessage, setRequestMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'my-teams' | 'admin'>('all');
   const [sortBy, setSortBy] = useState<'name' | 'members' | 'recent'>('recent');
@@ -205,7 +209,7 @@ const Teams = () => {
               <DialogHeader>
                 <DialogTitle>Tham gia nhóm existing</DialogTitle>
                 <DialogDescription>
-                  Nhập mã mời để tham gia một nhóm đ�� có
+                  Nhập mã mời để tham gia một nhóm đã có
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
