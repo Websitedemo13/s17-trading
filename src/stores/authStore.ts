@@ -13,7 +13,7 @@ interface AuthState {
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<{ error?: string }>;
   resetPassword: (password: string) => Promise<{ error?: string }>;
-  initialize: () => void;
+  initialize: () => (() => void) | undefined;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
