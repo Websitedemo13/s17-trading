@@ -359,7 +359,7 @@ export const useBlogStore = create<BlogState>((set, get) => ({
           },
           excerpt: {
             en: 'The upcoming Bitcoin Halving could be the strongest catalyst for the next bull market. We analyze data from the previous 3 halvings and make predictions for 2024.',
-            vi: 'Sự kiện Bitcoin Halving sắp tới có thể là chất xúc tác mạnh mẽ nh���t cho thị trường tăng giá tiếp theo. Chúng tôi sẽ phân tích dữ liệu từ 3 lần halving trước đó và đưa ra dự đoán cho năm 2024.'
+            vi: 'Sự kiện Bitcoin Halving sắp tới có thể là chất xúc tác mạnh mẽ nhất cho thị trường tăng giá tiếp theo. Chúng tôi sẽ phân tích dữ liệu từ 3 lần halving trước đó và đưa ra dự đoán cho năm 2024.'
           },
           content: {
             en: `# Bitcoin Halving 2024: Golden Opportunity or Investment Trap?
@@ -558,7 +558,7 @@ Tuyên bố từ chối trách nhiệm: Đây không phải lời khuyên đầu
             role: 'Crypto Research Director',
             bio: {
               en: 'Blockchain analysis expert with 8+ years of experience. Former investment fund analyst with 100+ published crypto research papers.',
-              vi: 'Chuyên gia phân tích blockchain với 8+ năm kinh nghiệm. Từng làm việc tại các quỹ đầu tư lớn và publish 100+ bài nghiên cứu về crypto.'
+              vi: 'Chuyên gia phân tích blockchain với 8+ năm kinh nghiệm. Từng làm việc tại các quỹ đầu tư lớn và publish 100+ b��i nghiên cứu về crypto.'
             },
             verified: true
           },
@@ -755,11 +755,11 @@ Key Investment Rationale:
 - Attractive dividend yield for income investors
 
 Risk Disclosure: This analysis is for reference only. Investors should have risk management and only invest within their risk tolerance capacity.`,
-            vi: `# VinGroup (VIC): Phân tích Toàn diện Giant Bất động sản Việt Nam
+            vi: `# VinGroup (VIC): Phân tích Toàn diện Gã khổng lồ Bất động sản Việt Nam
 
-## Company Overview
+## Tổng quan Công ty
 
-VinGroup (VIC) là tập đoàn đa ngành hàng đầu Việt Nam với business model đa dạng từ bất động sản, retail, automotive đến technology. Với market cap hơn $15 tỷ USD, VIC là một trong những blue-chip lớn nhất trên HOSE.
+VinGroup (VIC) là tập đoàn đa ngành hàng đầu Việt Nam với mô hình kinh doanh đa dạng từ bất động sản, bán lẻ, ô tô đến công nghệ. Với vốn hóa thị trường hơn $15 tỷ USD, VIC là một trong những cổ phiếu blue-chip lớn nh��t trên HOSE.
 
 ## Business Segments Analysis
 
