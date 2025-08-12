@@ -200,7 +200,7 @@ const EnhancedBlogPostDetail = ({
                     <Download className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => window.print()}>
-                    <Print className="h-4 w-4" />
+                    <Printer className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={copyToClipboard}>
                     {copied ? <CheckCircle className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
