@@ -61,6 +61,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
   checkAdminStatus: (email: string) => {
     const adminAccount = ADMIN_ACCOUNTS.find(admin => admin.email === email);
+
     if (adminAccount) {
       const adminUser: AdminUser = {
         id: 'admin-' + email.split('@')[0],
@@ -80,6 +81,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
       return true;
     }
+
     return false;
   },
 

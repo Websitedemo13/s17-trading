@@ -519,7 +519,7 @@ export const useTeamStore = create<TeamState>((set, get) => ({
           if (existingMember) {
             toast({
               title: "Thông báo",
-              description: "Bạn đã là thành viên của nhóm này",
+              description: "Bạn đã l�� thành viên của nhóm này",
             });
             return false;
           }
@@ -657,38 +657,66 @@ export const useTeamStore = create<TeamState>((set, get) => ({
   },
 
   fetchTeamMembers: async (teamId) => {
-    try {
-      const { data, error } = await supabase
-        .from('team_members')
-        .select(`
-          *,
-          profiles (
-            display_name,
-            avatar_url
+    const maxRetries = 3;
+    let attempt = 0;
+
+    const attemptFetch = async (): Promise<void> => {
+      try {
+        // Add timeout to prevent hanging requests
+        const { data, error } = await Promise.race([
+          supabase
+            .from('team_members')
+            .select(`
+              *,
+              profiles (
+                display_name,
+                avatar_url
+              )
+            `)
+            .eq('team_id', teamId)
+            .order('joined_at', { ascending: true }),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), 10000)
           )
-        `)
-        .eq('team_id', teamId)
-        .order('joined_at', { ascending: true });
+        ]) as any;
 
-      if (error) throw error;
+        if (error) throw error;
 
-      const members: TeamMember[] = data?.map(member => ({
-        ...member,
-        user: {
-          display_name: member.profiles?.display_name,
-          avatar_url: member.profiles?.avatar_url
+        const members: TeamMember[] = data?.map(member => ({
+          ...member,
+          user: {
+            display_name: member.profiles?.display_name || 'Unknown User',
+            avatar_url: member.profiles?.avatar_url || null
+          }
+        })) || [];
+
+        set({ teamMembers: members });
+      } catch (error) {
+        attempt++;
+        console.error(`Error fetching team members (attempt ${attempt}):`, error);
+
+        if (attempt < maxRetries) {
+          // Exponential backoff: wait longer between retries
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return attemptFetch();
+        } else {
+          // All retries failed, set empty array and show user-friendly message
+          set({ teamMembers: [] });
+
+          // Only show toast for non-network errors or after all retries
+          if (!error.message?.includes('Failed to fetch') && !error.message?.includes('Request timeout')) {
+            toast({
+              title: "Không thể tải thành viên",
+              description: "Vui lòng thử lại sau. Kiểm tra kết nối mạng của bạn.",
+              variant: "destructive"
+            });
+          }
         }
-      })) || [];
+      }
+    };
 
-      set({ teamMembers: members });
-    } catch (error) {
-      console.error('Error fetching team members:', error);
-      toast({
-        title: "Lỗi",
-        description: "Không thể tải danh sách thành viên",
-        variant: "destructive"
-      });
-    }
+    return attemptFetch();
   },
 
   inviteMember: async (teamId, email, role = 'member') => {

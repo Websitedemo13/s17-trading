@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/authStore';
+import { useAdminStore } from '@/stores/adminStore';
 import { useEnhancedTeamStore } from '@/stores/enhancedTeamStore';
 import { EnhancedTeam } from '@/types/teams';
 
@@ -32,6 +33,7 @@ export const useRoleAccess = (teamId?: string): RolePermissions & {
   loading: boolean;
 } => {
   const { user } = useAuthStore();
+  const { isAdmin } = useAdminStore();
   const { userProfile, teams, fetchUserProfile } = useEnhancedTeamStore();
   const [loading, setLoading] = useState(true);
   const [currentTeam, setCurrentTeam] = useState<EnhancedTeam | null>(null);
@@ -56,8 +58,8 @@ export const useRoleAccess = (teamId?: string): RolePermissions & {
     setLoading(false);
   }, [teamId, teams]);
 
-  // System admin permissions
-  const isSystemAdmin = userProfile?.is_admin || false;
+  // System admin permissions - check both database admin flag and admin store
+  const isSystemAdmin = userProfile?.is_admin || isAdmin;
   
   // Account info
   const accountType = userProfile?.account_type || 'basic';

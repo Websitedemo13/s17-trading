@@ -8,18 +8,20 @@ interface AuthState {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  isAdminSession: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   forgotPassword: (email: string) => Promise<{ error?: string }>;
   resetPassword: (password: string) => Promise<{ error?: string }>;
-  initialize: () => void;
+  initialize: () => (() => void) | undefined;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   session: null,
   loading: true,
+  isAdminSession: false,
 
   signIn: async (email: string, password: string) => {
     try {
@@ -54,8 +56,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           const isAdminValid = adminStore.checkAdminStatus(email);
 
           if (isAdminValid) {
-            // Set user state first
-            set({ user: mockUser, session: mockSession, loading: false });
+            // Set user state first with admin flag
+            set({
+              user: mockUser,
+              session: mockSession,
+              loading: false,
+              isAdminSession: true
+            });
 
             // Delay toast to ensure state is updated
             setTimeout(() => {
@@ -155,7 +162,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     // Always clear local state regardless of Supabase response
-    set({ user: null, session: null, loading: false });
+    set({ user: null, session: null, loading: false, isAdminSession: false });
+
+    // Clear admin state if admin is logging out
+    const adminStore = useAdminStore.getState();
+    if (adminStore.isAdmin) {
+      adminStore.clearAdmin();
+    }
 
     toast({
       title: "Đăng xuất thành công",
@@ -177,7 +190,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       toast({
         title: "Email đã được gửi",
-        description: "Vui lòng kiểm tra email để reset mật khẩu.",
+        description: "Vui l��ng kiểm tra email để reset mật khẩu.",
       });
 
       return {};
@@ -218,13 +231,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session);
+
+        // Check if current session is admin to prevent override
+        const currentState = get();
+        const isCurrentAdminSession = currentState.isAdminSession;
+
+        // Don't override admin session with null session
+        if (isCurrentAdminSession && !session) {
+          return;
+        }
 
         // Update auth state immediately to prevent UI freezing
         set({
           session,
           user: session?.user ?? null,
-          loading: false
+          loading: false,
+          isAdminSession: false // Reset admin flag for regular auth
         });
 
         // If user signed in, try to ensure profile exists (non-blocking)
@@ -287,11 +309,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           )
         ]);
 
+        // Check if current session is admin to prevent override
+        const currentState = get();
+        const isCurrentAdminSession = currentState.isAdminSession;
+
+        if (isCurrentAdminSession) {
+          set({ loading: false }); // Only update loading
+          return;
+        }
+
         // Update state immediately
         set({
           session,
           user: session?.user ?? null,
-          loading: false
+          loading: false,
+          isAdminSession: false // Reset admin flag for regular auth
         });
 
         // Handle profile creation in background if needed
@@ -333,11 +365,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
       } catch (error) {
         console.error('Session initialization failed:', error);
+
+        // Check if current session is admin before clearing
+        const currentState = get();
+        if (currentState.isAdminSession) {
+          set({ loading: false }); // Only update loading
+          return;
+        }
+
         // Set loading to false even if session fetch fails
         set({
           session: null,
           user: null,
-          loading: false
+          loading: false,
+          isAdminSession: false
         });
       }
     };

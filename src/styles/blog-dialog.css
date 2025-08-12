@@ -1,0 +1,62 @@
+/* Blog Dialog Scroll Fixes */
+.blog-dialog-content {
+  max-height: 95vh !important;
+  height: 95vh !important;
+  overflow-y: auto !important;
+}
+
+.blog-dialog-tabs {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.blog-dialog-tabs-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  margin-top: 0 !important;
+}
+
+.blog-dialog-scroll-area {
+  height: auto !important;
+  max-height: none !important;
+}
+
+/* Ensure proper scrolling in all tabs */
+.blog-dialog-content .prose {
+  max-width: none !important;
+}
+
+.blog-dialog-content .prose h1,
+.blog-dialog-content .prose h2,
+.blog-dialog-content .prose h3,
+.blog-dialog-content .prose h4,
+.blog-dialog-content .prose h5,
+.blog-dialog-content .prose h6 {
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.blog-dialog-content .prose p {
+  margin-bottom: 1rem !important;
+  line-height: 1.7 !important;
+}
+
+.blog-dialog-content .prose ul,
+.blog-dialog-content .prose ol {
+  margin-bottom: 1rem !important;
+  padding-left: 1.5rem !important;
+}
+
+.blog-dialog-content .prose li {
+  margin-bottom: 0.5rem !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .blog-dialog-content {
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+    height: 90vh !important;
+  }
+}

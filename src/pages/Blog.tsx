@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -61,7 +61,8 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { BlogPost, BlogCategory, useBlogStore } from '@/stores/blogStore';
-import BlogPostDetail from '@/components/BlogPostDetail';
+import EnhancedBlogPostDetail from '@/components/EnhancedBlogPostDetail';
+import BlogPostCard from '@/components/BlogPostCard';
 
 const Blog = () => {
   const {
@@ -94,6 +95,7 @@ const Blog = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(6);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -102,16 +104,19 @@ const Blog = () => {
   }, []);
 
   const filteredAndSortedPosts = useMemo(() => {
-    let filtered = posts.filter(post => {
+    if (posts.length === 0) return [];
+
+    const filtered = posts.filter(post => {
       if (post.status !== 'published') return false;
-      
-      const matchesSearch = 
-        post.title[currentLanguage].toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.excerpt[currentLanguage].toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = !searchTerm ||
+        post.title[currentLanguage].toLowerCase().includes(searchLower) ||
+        post.excerpt[currentLanguage].toLowerCase().includes(searchLower) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchLower));
+
       const matchesCategory = selectedCategory === 'all' || post.category.id === selectedCategory;
-      
+
       const matchesTab = activeTab === 'all' ||
         (activeTab === 'featured' && post.featured) ||
         (activeTab === 'trending' && post.trending) ||
@@ -123,19 +128,14 @@ const Blog = () => {
 
     switch (sortBy) {
       case 'popular':
-        filtered.sort((a, b) => b.metrics.views - a.metrics.views);
-        break;
+        return filtered.sort((a, b) => b.metrics.views - a.metrics.views);
       case 'trending':
-        filtered.sort((a, b) => (b.metrics.likes + b.metrics.comments_count + b.metrics.shares) - (a.metrics.likes + a.metrics.comments_count + a.metrics.shares));
-        break;
+        return filtered.sort((a, b) => (b.metrics.likes + b.metrics.comments_count + b.metrics.shares) - (a.metrics.likes + a.metrics.comments_count + a.metrics.shares));
       case 'latest':
       default:
-        filtered.sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime());
-        break;
+        return filtered.sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime());
     }
-
-    return filtered;
-  }, [posts, searchTerm, selectedCategory, sortBy, currentLanguage, activeTab]);
+  }, [posts, searchTerm, selectedCategory, sortBy, currentLanguage, activeTab, bookmarkedPosts]);
 
   const paginatedPosts = filteredAndSortedPosts.slice(
     (currentPage - 1) * postsPerPage,
@@ -150,32 +150,32 @@ const Blog = () => {
     .sort((a, b) => (b.metrics.likes + b.metrics.comments_count) - (a.metrics.likes + a.metrics.comments_count))
     .slice(0, 5);
 
-  const toggleBookmark = (postId: string) => {
+  const toggleBookmark = useCallback((postId: string) => {
     if (bookmarkedPosts.includes(postId)) {
       unbookmarkPost(postId);
     } else {
       bookmarkPost(postId);
     }
-  };
+  }, [bookmarkedPosts, unbookmarkPost, bookmarkPost]);
 
-  const toggleLike = (postId: string) => {
+  const toggleLike = useCallback((postId: string) => {
     if (likedPosts.includes(postId)) {
       unlikePost(postId);
     } else {
       likePost(postId);
     }
-  };
+  }, [likedPosts, unlikePost, likePost]);
 
-  const handlePostClick = (post: BlogPost) => {
+  const handlePostClick = useCallback((post: BlogPost) => {
     setSelectedPost(post);
     setShowPostDetail(true);
     incrementViews(post.id);
-  };
+  }, [incrementViews]);
 
-  const handleShare = (post: BlogPost) => {
+  const handleShare = useCallback((post: BlogPost) => {
     setSharePost(post);
     setShowShareDialog(true);
-  };
+  }, []);
 
   const shareToSocial = (platform: string, post: BlogPost) => {
     const url = `${window.location.origin}/blog/${post.id}`;
@@ -547,147 +547,17 @@ const Blog = () => {
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {paginatedPosts.map((post) => (
-                    <Card
+                    <BlogPostCard
                       key={post.id}
-                      className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-card to-card/50"
-                      onClick={() => handlePostClick(post)}
-                    >
-                      <div className="relative">
-                        {post.media.featured_image && (
-                          <div className="relative h-48 overflow-hidden">
-                            <img 
-                              src={post.media.featured_image} 
-                              alt={post.title[currentLanguage]}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                            <div className="absolute top-3 left-3 flex gap-2">
-                              {post.featured && (
-                                <Badge className="bg-yellow-500 text-black text-xs">
-                                  <Star className="h-3 w-3 mr-1" />
-                                  {currentLanguage === 'vi' ? 'Nổi bật' : 'Featured'}
-                                </Badge>
-                              )}
-                              {post.trending && (
-                                <Badge className="bg-orange-500 text-white text-xs">
-                                  <TrendingUp className="h-3 w-3 mr-1" />
-                                  {currentLanguage === 'vi' ? 'Hot' : 'Trending'}
-                                </Badge>
-                              )}
-                              {post.premium && (
-                                <Badge className="bg-purple-500 text-white text-xs">
-                                  <Award className="h-3 w-3 mr-1" />
-                                  Premium
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="absolute bottom-3 right-3">
-                              <Badge variant="secondary" className="text-xs">
-                                <Clock className="h-3 w-3 mr-1" />
-                                {post.metrics.read_time[currentLanguage]} {currentLanguage === 'vi' ? 'phút' : 'min'}
-                              </Badge>
-                            </div>
-                          </div>
-                        )}
-                        
-                        <CardContent className="p-6">
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-2">
-                              <Badge 
-                                style={{ 
-                                  backgroundColor: post.category.color + '20', 
-                                  color: post.category.color,
-                                  border: `1px solid ${post.category.color}30`
-                                }}
-                                className="text-xs"
-                              >
-                                {post.category.name[currentLanguage]}
-                              </Badge>
-                              <Badge className={`text-white text-xs ${getDifficultyColor(post.difficulty)}`}>
-                                {getDifficultyText(post.difficulty)}
-                              </Badge>
-                            </div>
-                            
-                            <h3 className="text-xl font-bold line-clamp-2 group-hover:text-primary transition-colors">
-                              {post.title[currentLanguage]}
-                            </h3>
-                            
-                            <p className="text-muted-foreground line-clamp-3 text-sm">
-                              {post.excerpt[currentLanguage]}
-                            </p>
-                            
-                            <div className="flex flex-wrap gap-1">
-                              {post.tags.slice(0, 3).map(tag => (
-                                <Badge key={tag} variant="outline" className="text-xs">
-                                  #{tag}
-                                </Badge>
-                              ))}
-                              {post.tags.length > 3 && (
-                                <Badge variant="outline" className="text-xs">
-                                  +{post.tags.length - 3}
-                                </Badge>
-                              )}
-                            </div>
-                            
-                            <Separator />
-                            
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Avatar className="h-8 w-8">
-                                  <AvatarImage src={post.author.avatar} />
-                                  <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <div className="font-medium text-sm">{post.author.name}</div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {formatDate(post.published_at!)}
-                                  </div>
-                                </div>
-                              </div>
-                              
-                              <div className="flex items-center gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleLike(post.id);
-                                  }}
-                                  className="h-8 w-8 p-0"
-                                >
-                                  <Heart className={`h-4 w-4 ${likedPosts.includes(post.id) ? 'fill-red-500 text-red-500' : ''}`} />
-                                </Button>
-                                <span className="text-sm">{formatNumber(post.metrics.likes)}</span>
-                                
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleBookmark(post.id);
-                                  }}
-                                  className="h-8 w-8 p-0"
-                                >
-                                  <Bookmark className={`h-4 w-4 ${bookmarkedPosts.includes(post.id) ? 'fill-primary text-primary' : ''}`} />
-                                </Button>
-                                
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleShare(post);
-                                  }}
-                                  className="h-8 w-8 p-0"
-                                >
-                                  <Share2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </div>
-                    </Card>
+                      post={post}
+                      currentLanguage={currentLanguage}
+                      likedPosts={likedPosts}
+                      bookmarkedPosts={bookmarkedPosts}
+                      onPostClick={handlePostClick}
+                      onToggleLike={toggleLike}
+                      onToggleBookmark={toggleBookmark}
+                      onShare={handleShare}
+                    />
                   ))}
                 </div>
 
@@ -891,8 +761,8 @@ const Blog = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Blog Post Detail Dialog */}
-      <BlogPostDetail
+      {/* Enhanced Blog Post Detail Dialog */}
+      <EnhancedBlogPostDetail
         post={selectedPost}
         open={showPostDetail}
         onOpenChange={setShowPostDetail}

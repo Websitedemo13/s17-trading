@@ -1,49 +1,78 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  preview: {
-    host: "0.0.0.0",
-    port: parseInt(process.env.PORT || "3000"),
-    allowedHosts: ["s17-trading.onrender.com"],
-  },
-  plugins: [
-    react(),
-  ],
+export default defineConfig({
+  plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": resolve(__dirname, "./src"),
     },
   },
+  // Performance optimizations
   build: {
-    outDir: "dist",
-    sourcemap: mode === "development",
-    target: "esnext",
+    target: 'esnext',
+    minify: 'terser',
+    sourcemap: false, // Disable source maps in production for smaller bundle
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom"],
-          router: ["react-router-dom"],
-          ui: [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-tooltip",
-            "@radix-ui/react-toast"
-          ],
-          supabase: ["@supabase/supabase-js"],
-          charts: ["recharts", "react-tradingview-widget"],
-          utils: ["clsx", "tailwind-merge", "date-fns"],
-          stores: ["zustand"],
-          query: ["@tanstack/react-query"],
+          // Separate vendor chunks for better caching
+          'react-vendor': ['react', 'react-dom'],
+          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
+          'chart-vendor': ['recharts', 'react-tradingview-widget'],
+          'supabase-vendor': ['@supabase/supabase-js'],
+          'query-vendor': ['@tanstack/react-query'],
+          'router-vendor': ['react-router-dom'],
+          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          'utils': ['clsx', 'tailwind-merge', 'class-variance-authority'],
         },
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
+          return `js/${facadeModuleId}-[hash].js`;
+        }
+      }
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log in production
+        drop_debugger: true,
       },
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1000, // Increase chunk size warning limit
   },
-}));
+  // Dev server optimizations
+  server: {
+    port: 8080,
+    host: true,
+    fs: {
+      strict: false
+    }
+  },
+  // CSS optimizations
+  css: {
+    devSourcemap: false, // Disable CSS source maps in development for faster builds
+  },
+  // Dependency optimization
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      'zustand',
+      'lucide-react',
+    ],
+    exclude: [
+      'react-tradingview-widget' // Exclude heavy widgets from pre-bundling
+    ]
+  },
+  // ESBuild optimizations
+  esbuild: {
+    target: 'esnext',
+    minifyIdentifiers: true,
+    minifySyntax: true,
+    minifyWhitespace: true,
+  }
+})
