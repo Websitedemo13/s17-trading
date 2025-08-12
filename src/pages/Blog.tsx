@@ -761,8 +761,8 @@ const Blog = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Blog Post Detail Dialog */}
-      <BlogPostDetail
+      {/* Enhanced Blog Post Detail Dialog */}
+      <EnhancedBlogPostDetail
         post={selectedPost}
         open={showPostDetail}
         onOpenChange={setShowPostDetail}
