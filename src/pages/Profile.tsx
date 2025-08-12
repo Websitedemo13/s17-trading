@@ -11,20 +11,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuthStore } from '@/stores/authStore';
+import { useProfileStore } from '@/stores/profileStore';
 import { supabase } from '@/integrations/supabase/client';
 import { Portfolio } from '@/types';
-import { 
-  Pencil, 
-  Wallet, 
-  TrendingUp, 
-  TrendingDown, 
-  Settings, 
-  User, 
-  Shield, 
-  Bell, 
-  Palette, 
-  Globe, 
+import ActivityFeed from '@/components/ActivityFeed';
+import SettingsDialog from '@/components/SettingsDialog';
+import {
+  Pencil,
+  Wallet,
+  TrendingUp,
+  TrendingDown,
+  Settings,
+  User,
+  Shield,
+  Bell,
+  Palette,
+  Globe,
   Camera,
   Save,
   Eye,
@@ -48,7 +52,10 @@ import {
   Twitter,
   Linkedin,
   Facebook,
-  Instagram
+  Instagram,
+  Activity,
+  Edit3,
+  MoreHorizontal
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -370,7 +377,7 @@ const Profile = () => {
       
       toast({
         title: "Thành công",
-        description: "Tài kho���n đã được xóa thành công",
+        description: "Tài khoản đã được xóa thành công",
       });
     } catch (error) {
       console.error('Error deleting account:', error);
@@ -1111,7 +1118,7 @@ const Profile = () => {
                   Quản lý dữ liệu
                 </CardTitle>
                 <CardDescription>
-                  Xuất và quản lý dữ liệu cá nhân
+                  Xuất v�� quản lý dữ liệu cá nhân
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
