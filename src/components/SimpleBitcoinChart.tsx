@@ -47,9 +47,8 @@ const SimpleBitcoinChart = memo(() => {
   const isPositive = priceChange >= 0;
 
   return (
-    <div className="glass-card p-3 sm:p-4 lg:p-6 rounded-lg animate-fade-in">
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h2 className="text-lg sm:text-xl font-semibold">Bitcoin Price</h2>
+    <div className="w-full h-full">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           {isPositive ? (
             <TrendingUp className="h-5 w-5 text-success" />
