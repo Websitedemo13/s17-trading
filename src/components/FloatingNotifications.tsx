@@ -96,7 +96,7 @@ const FloatingNotifications = () => {
   return (
     <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
       <AnimatePresence>
-        {floatingNotifications.map((notification) => (
+        {filteredNotifications.map((notification) => (
           <motion.div
             key={notification.id}
             initial={{ opacity: 0, x: 300, scale: 0.8 }}
