@@ -35,6 +35,69 @@ export interface ChatMessage {
   user_id: string;
   content: string;
   created_at: string;
+  message_type?: 'text' | 'file' | 'image' | 'system';
+  reply_to?: string;
+  edited_at?: string;
+  is_pinned?: boolean;
+  metadata?: Record<string, any>;
+  user?: {
+    display_name?: string;
+    avatar_url?: string;
+  };
+  reactions?: MessageReaction[];
+  attachments?: MessageAttachment[];
+  read_receipts?: MessageReadReceipt[];
+  reply_message?: ChatMessage;
+}
+
+export interface MessageReaction {
+  id: string;
+  message_id: string;
+  user_id: string;
+  emoji: string;
+  created_at: string;
+  user?: {
+    display_name?: string;
+    avatar_url?: string;
+  };
+}
+
+export interface MessageAttachment {
+  id: string;
+  message_id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string;
+  file_size: number;
+  mime_type?: string;
+  created_at: string;
+}
+
+export interface TypingIndicator {
+  id: string;
+  team_id: string;
+  user_id: string;
+  is_typing: boolean;
+  updated_at: string;
+  user?: {
+    display_name?: string;
+    avatar_url?: string;
+  };
+}
+
+export interface UserPresence {
+  id: string;
+  user_id: string;
+  status: 'online' | 'away' | 'busy' | 'offline';
+  last_seen: string;
+  updated_at: string;
+}
+
+export interface MessageReadReceipt {
+  id: string;
+  message_id: string;
+  user_id: string;
+  read_at: string;
   user?: {
     display_name?: string;
     avatar_url?: string;

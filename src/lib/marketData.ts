@@ -1,0 +1,446 @@
+interface MarketAsset {
+  symbol: string;
+  name: string;
+  type: 'crypto' | 'stock';
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: number;
+  marketCap?: number;
+  lastUpdate: string;
+  exchange?: string;
+  sector?: string;
+}
+
+interface StockData {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: number;
+  high: number;
+  low: number;
+  open: number;
+  previousClose: number;
+  marketCap: number;
+  pe: number;
+  eps: number;
+  exchange: string;
+  sector: string;
+  lastUpdate: string;
+}
+
+interface CryptoData {
+  id: string;
+  symbol: string;
+  name: string;
+  price: number;
+  change24h: number;
+  changePercent24h: number;
+  volume24h: number;
+  marketCap: number;
+  rank: number;
+  supply: number;
+  maxSupply?: number;
+  lastUpdate: string;
+}
+
+class MarketDataService {
+  private wsConnections: Map<string, WebSocket> = new Map();
+  private priceCache: Map<string, MarketAsset> = new Map();
+  private updateCallbacks: Map<string, Function[]> = new Map();
+
+  // Vietnamese stocks from CafeF and other sources
+  async getVietnamStocks(): Promise<StockData[]> {
+    try {
+      // Mock API call to CafeF or other Vietnamese stock APIs
+      // In production, you'd call actual APIs like:
+      // - CafeF API
+      // - VietStock API
+      // - SSI API
+      // - HOSE/HNX official APIs
+      
+      // Generate realistic dynamic stock data
+      const basePrice = 42500;
+      const variation = (Math.random() - 0.5) * 2000; // ±1000 VND variation
+      const currentPrice = basePrice + variation;
+      const change = variation;
+      const changePercent = (change / basePrice) * 100;
+
+      const dynamicStocks: StockData[] = [
+        {
+          symbol: 'VIC',
+          name: 'Tập đoàn Vingroup',
+          price: Math.round(currentPrice),
+          change: Math.round(change),
+          changePercent: Math.round(changePercent * 100) / 100,
+          volume: Math.floor(Math.random() * 2000000 + 1500000),
+          high: Math.round(currentPrice + Math.abs(variation) * 0.5),
+          low: Math.round(currentPrice - Math.abs(variation) * 0.5),
+          open: Math.round(basePrice + (Math.random() - 0.5) * 500),
+          previousClose: basePrice,
+          marketCap: 195000000000000,
+          pe: 15.2,
+          eps: 2800,
+          exchange: 'HOSE',
+          sector: 'Bất động sản',
+          lastUpdate: new Date().toISOString()
+        },
+        {
+          symbol: 'VCB',
+          name: 'Ngân hàng TMCP Ngoại thương Việt Nam',
+          price: Math.round(82300 + (Math.random() - 0.5) * 1500),
+          change: Math.round((Math.random() - 0.5) * 800),
+          changePercent: Math.round((Math.random() - 0.5) * 2 * 100) / 100,
+          volume: Math.floor(Math.random() * 2000000 + 1500000),
+          high: 83500,
+          low: 81900,
+          open: 83000,
+          previousClose: 83000,
+          marketCap: 418000000000000,
+          pe: 10.8,
+          eps: 7620,
+          exchange: 'HOSE',
+          sector: 'Ngân h��ng',
+          lastUpdate: new Date().toISOString()
+        },
+        {
+          symbol: 'VHM',
+          name: 'Công ty CP Vinhomes',
+          price: Math.round(55200 + (Math.random() - 0.5) * 1200),
+          change: Math.round((Math.random() - 0.5) * 1000),
+          changePercent: Math.round((Math.random() - 0.5) * 3 * 100) / 100,
+          volume: Math.floor(Math.random() * 3000000 + 2000000),
+          high: 55800,
+          low: 53800,
+          open: 54000,
+          previousClose: 54000,
+          marketCap: 158000000000000,
+          pe: 12.5,
+          eps: 4416,
+          exchange: 'HOSE',
+          sector: 'Bất động sản',
+          lastUpdate: new Date().toISOString()
+        },
+        {
+          symbol: 'TCB',
+          name: 'Ngân hàng TMCP Kỹ thương Việt Nam',
+          price: Math.round(23450 + (Math.random() - 0.5) * 500),
+          change: Math.round((Math.random() - 0.5) * 300),
+          changePercent: Math.round((Math.random() - 0.5) * 2 * 100) / 100,
+          volume: Math.floor(Math.random() * 4000000 + 3000000),
+          high: 23700,
+          low: 23200,
+          open: 23300,
+          previousClose: 23300,
+          marketCap: 75000000000000,
+          pe: 6.8,
+          eps: 3450,
+          exchange: 'HOSE',
+          sector: 'Ngân hàng',
+          lastUpdate: new Date().toISOString()
+        },
+        {
+          symbol: 'MSN',
+          name: 'Công ty CP Tập đoàn Masan',
+          price: Math.round(68500 + (Math.random() - 0.5) * 1000),
+          change: Math.round((Math.random() - 0.5) * 600),
+          changePercent: Math.round((Math.random() - 0.5) * 2.5 * 100) / 100,
+          volume: Math.floor(Math.random() * 2000000 + 1000000),
+          high: 69200,
+          low: 67800,
+          open: 69000,
+          previousClose: 69000,
+          marketCap: 158000000000000,
+          pe: 18.5,
+          eps: 3703,
+          exchange: 'HOSE',
+          sector: 'Hàng tiêu dùng',
+          lastUpdate: new Date().toISOString()
+        }
+      ];
+
+      return dynamicStocks;
+    } catch (error) {
+      console.error('Error fetching Vietnam stocks:', error);
+      return [];
+    }
+  }
+
+  // Enhanced crypto data with realistic simulation
+  async getCryptoData(): Promise<CryptoData[]> {
+    // Use dynamic simulated data to avoid external API dependency
+    // This ensures the app always works reliably
+    const baseData = [
+      {
+        id: 'bitcoin',
+        symbol: 'BTC',
+        name: 'Bitcoin',
+        basePrice: 43500,
+        marketCap: 850000000000,
+        rank: 1,
+        supply: 19500000,
+        maxSupply: 21000000
+      },
+      {
+        id: 'ethereum',
+        symbol: 'ETH',
+        name: 'Ethereum',
+        basePrice: 2650,
+        marketCap: 320000000000,
+        rank: 2,
+        supply: 120500000,
+        maxSupply: undefined
+      },
+      {
+        id: 'binancecoin',
+        symbol: 'BNB',
+        name: 'BNB',
+        basePrice: 320,
+        marketCap: 48000000000,
+        rank: 3,
+        supply: 150000000,
+        maxSupply: 200000000
+      },
+      {
+        id: 'solana',
+        symbol: 'SOL',
+        name: 'Solana',
+        basePrice: 95,
+        marketCap: 45000000000,
+        rank: 4,
+        supply: 470000000,
+        maxSupply: undefined
+      },
+      {
+        id: 'ripple',
+        symbol: 'XRP',
+        name: 'XRP',
+        basePrice: 0.52,
+        marketCap: 30000000000,
+        rank: 5,
+        supply: 58000000000,
+        maxSupply: 100000000000
+      },
+      {
+        id: 'cardano',
+        symbol: 'ADA',
+        name: 'Cardano',
+        basePrice: 0.42,
+        marketCap: 15000000000,
+        rank: 6,
+        supply: 35000000000,
+        maxSupply: 45000000000
+      },
+      {
+        id: 'dogecoin',
+        symbol: 'DOGE',
+        name: 'Dogecoin',
+        basePrice: 0.08,
+        marketCap: 12000000000,
+        rank: 7,
+        supply: 140000000000,
+        maxSupply: undefined
+      },
+      {
+        id: 'polygon',
+        symbol: 'MATIC',
+        name: 'Polygon',
+        basePrice: 0.85,
+        marketCap: 8000000000,
+        rank: 8,
+        supply: 9300000000,
+        maxSupply: 10000000000
+      }
+    ];
+
+    return baseData.map(coin => {
+      const priceVariation = (Math.random() - 0.5) * 0.05; // ±2.5% variation
+      const price = coin.basePrice * (1 + priceVariation);
+      const change24h = coin.basePrice * priceVariation;
+      const changePercent24h = priceVariation * 100;
+
+      return {
+        id: coin.id,
+        symbol: coin.symbol,
+        name: coin.name,
+        price: Math.round(price * 100) / 100,
+        change24h: Math.round(change24h * 100) / 100,
+        changePercent24h: Math.round(changePercent24h * 100) / 100,
+        volume24h: Math.floor(Math.random() * 5000000000 + 1000000000),
+        marketCap: coin.marketCap * (1 + priceVariation),
+        rank: coin.rank,
+        supply: coin.supply,
+        maxSupply: coin.maxSupply,
+        lastUpdate: new Date().toISOString()
+      };
+    });
+  }
+
+  // Combined market data
+  async getAllMarketData(): Promise<MarketAsset[]> {
+    try {
+      const [stocks, crypto] = await Promise.all([
+        this.getVietnamStocks(),
+        this.getCryptoData()
+      ]);
+
+      const stockAssets: MarketAsset[] = stocks.map(stock => ({
+        symbol: stock.symbol,
+        name: stock.name,
+        type: 'stock' as const,
+        price: stock.price,
+        change: stock.change,
+        changePercent: stock.changePercent,
+        volume: stock.volume,
+        marketCap: stock.marketCap,
+        lastUpdate: stock.lastUpdate,
+        exchange: stock.exchange,
+        sector: stock.sector
+      }));
+
+      const cryptoAssets: MarketAsset[] = crypto.slice(0, 20).map(coin => ({
+        symbol: coin.symbol,
+        name: coin.name,
+        type: 'crypto' as const,
+        price: coin.price,
+        change: coin.change24h,
+        changePercent: coin.changePercent24h,
+        volume: coin.volume24h,
+        marketCap: coin.marketCap,
+        lastUpdate: coin.lastUpdate
+      }));
+
+      return [...stockAssets, ...cryptoAssets];
+    } catch (error) {
+      console.error('Error fetching market data:', error);
+      return [];
+    }
+  }
+
+  // Real-time price updates
+  subscribeToPrice(symbol: string, callback: (data: MarketAsset) => void): () => void {
+    if (!this.updateCallbacks.has(symbol)) {
+      this.updateCallbacks.set(symbol, []);
+    }
+    
+    this.updateCallbacks.get(symbol)!.push(callback);
+
+    // Start real-time updates if not already started
+    this.startRealTimeUpdates(symbol);
+
+    // Return unsubscribe function
+    return () => {
+      const callbacks = this.updateCallbacks.get(symbol) || [];
+      const index = callbacks.indexOf(callback);
+      if (index > -1) {
+        callbacks.splice(index, 1);
+      }
+      
+      if (callbacks.length === 0) {
+        this.stopRealTimeUpdates(symbol);
+      }
+    };
+  }
+
+  private startRealTimeUpdates(symbol: string) {
+    if (this.wsConnections.has(symbol)) {
+      return; // Already connected
+    }
+
+    // Simulate real-time updates with intervals
+    // In production, use WebSocket connections to exchanges
+    const interval = setInterval(async () => {
+      try {
+        const marketData = await this.getAllMarketData();
+        const asset = marketData.find(item => item.symbol === symbol);
+        
+        if (asset) {
+          // Add small random variation to simulate real-time changes
+          const variation = (Math.random() - 0.5) * 0.02; // ±1% variation
+          asset.price = asset.price * (1 + variation);
+          asset.change = asset.change + (asset.price * variation);
+          asset.changePercent = (asset.change / (asset.price - asset.change)) * 100;
+          asset.lastUpdate = new Date().toISOString();
+
+          this.priceCache.set(symbol, asset);
+          
+          // Notify all subscribers
+          const callbacks = this.updateCallbacks.get(symbol) || [];
+          callbacks.forEach(callback => callback(asset));
+        }
+      } catch (error) {
+        console.error(`Error updating ${symbol}:`, error);
+      }
+    }, 5000); // Update every 5 seconds
+
+    // Store interval reference as a mock WebSocket
+    this.wsConnections.set(symbol, { close: () => clearInterval(interval) } as any);
+  }
+
+  private stopRealTimeUpdates(symbol: string) {
+    const ws = this.wsConnections.get(symbol);
+    if (ws) {
+      ws.close();
+      this.wsConnections.delete(symbol);
+    }
+  }
+
+  // Get specific asset data
+  async getAssetData(symbol: string, type: 'crypto' | 'stock'): Promise<MarketAsset | null> {
+    try {
+      const allData = await this.getAllMarketData();
+      return allData.find(asset => asset.symbol === symbol && asset.type === type) || null;
+    } catch (error) {
+      console.error(`Error fetching ${symbol} data:`, error);
+      return null;
+    }
+  }
+
+  // Market statistics
+  async getMarketStats() {
+    try {
+      const [stocks, crypto] = await Promise.all([
+        this.getVietnamStocks(),
+        this.getCryptoData()
+      ]);
+
+      const stockStats = {
+        totalValue: stocks.reduce((sum, stock) => sum + stock.marketCap, 0),
+        gainers: stocks.filter(stock => stock.changePercent > 0).length,
+        losers: stocks.filter(stock => stock.changePercent < 0).length,
+        unchanged: stocks.filter(stock => stock.changePercent === 0).length,
+        totalVolume: stocks.reduce((sum, stock) => sum + stock.volume, 0)
+      };
+
+      const cryptoStats = {
+        totalMarketCap: crypto.reduce((sum, coin) => sum + coin.marketCap, 0),
+        totalVolume: crypto.reduce((sum, coin) => sum + coin.volume24h, 0),
+        gainers: crypto.filter(coin => coin.changePercent24h > 0).length,
+        losers: crypto.filter(coin => coin.changePercent24h < 0).length,
+        btcDominance: crypto.find(coin => coin.symbol === 'BTC')?.marketCap || 0
+      };
+
+      return {
+        stocks: stockStats,
+        crypto: cryptoStats,
+        lastUpdate: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error fetching market stats:', error);
+      return null;
+    }
+  }
+
+  // Cleanup all connections
+  dispose() {
+    this.wsConnections.forEach(ws => ws.close());
+    this.wsConnections.clear();
+    this.updateCallbacks.clear();
+    this.priceCache.clear();
+  }
+}
+
+export const marketDataService = new MarketDataService();
+export type { MarketAsset, StockData, CryptoData };

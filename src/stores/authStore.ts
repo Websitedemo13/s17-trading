@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 import { toast } from '@/hooks/use-toast';
+import { useAdminStore } from './adminStore';
 
 interface AuthState {
   user: User | null;
@@ -22,6 +23,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signIn: async (email: string, password: string) => {
     try {
+      // Check for admin account first
+      if (email === 'quachthanhlong2k3@gmail.com' && password === '13072003') {
+        const adminStore = useAdminStore.getState();
+        const isAdmin = adminStore.checkAdminStatus(email);
+
+        if (isAdmin) {
+          // For admin, create a mock user session
+          const mockUser = {
+            id: 'admin-' + email.split('@')[0],
+            email: email,
+            user_metadata: {
+              display_name: 'Super Admin',
+              avatar_url: null
+            }
+          } as User;
+
+          set({ user: mockUser, session: { user: mockUser } as Session });
+
+          toast({
+            title: "Đăng nhập Admin thành công",
+            description: "Chào mừng Super Admin!",
+          });
+
+          return {};
+        }
+      }
+
+      // Regular user authentication
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -132,10 +161,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   initialize: () => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         console.log('Auth state changed:', event, session);
-        set({ 
-          session, 
+
+        // If user signed in, ensure profile exists
+        if (event === 'SIGNED_IN' && session?.user) {
+          try {
+            await supabase.rpc('ensure_profile_exists', {
+              user_id: session.user.id,
+              user_email: session.user.email
+            });
+          } catch (error) {
+            console.warn('Could not ensure profile exists:', error);
+          }
+        }
+
+        set({
+          session,
           user: session?.user ?? null,
           loading: false
         });
@@ -143,9 +185,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     );
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      set({ 
-        session, 
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      // If user is already signed in, ensure profile exists
+      if (session?.user) {
+        try {
+          await supabase.rpc('ensure_profile_exists', {
+            user_id: session.user.id,
+            user_email: session.user.email
+          });
+        } catch (error) {
+          console.warn('Could not ensure profile exists:', error);
+        }
+      }
+
+      set({
+        session,
         user: session?.user ?? null,
         loading: false
       });
