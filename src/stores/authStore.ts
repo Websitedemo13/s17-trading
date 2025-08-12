@@ -62,8 +62,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           });
 
           if (isAdminValid) {
-            // Set user state first
-            set({ user: mockUser, session: mockSession, loading: false });
+            // Set user state first with admin flag
+            set({
+              user: mockUser,
+              session: mockSession,
+              loading: false,
+              isAdminSession: true
+            });
 
             console.log('Admin user set successfully:', {
               user: mockUser,
