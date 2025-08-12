@@ -4,6 +4,9 @@ import { toast } from '@/hooks/use-toast';
 
 interface UserProfile {
   id: string;
+  role?: 'user' | 'admin' | 'premium';
+  account_type?: 'free' | 'premium' | 'enterprise';
+  email?: string;
   display_name?: string;
   avatar_url?: string;
   bio?: string;
@@ -29,6 +32,10 @@ interface UserProfile {
   privacy_activity?: boolean;
   two_factor_enabled?: boolean;
   email_verified?: boolean;
+  totp_secret?: string;
+  backup_codes?: string[];
+  last_login_at?: string;
+  password_changed_at?: string;
   created_at?: string;
   updated_at?: string;
 }
