@@ -367,7 +367,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
   };
 
   return (
-    <div className="flex flex-col h-full max-h-[800px] bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="flex flex-col h-full min-h-[600px] bg-gradient-to-br from-background via-background to-muted/20">
       {/* Header */}
       <div className="border-b bg-card/50 backdrop-blur-sm">
         <div className="flex items-center justify-between p-4">
