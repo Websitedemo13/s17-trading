@@ -67,7 +67,11 @@ export const ChatIntegration = () => {
           };
         }
       } catch (error) {
-        console.error('Failed to initialize chat:', error);
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Failed to initialize chat:', {
+          message: errorMessage,
+          error
+        });
         toast({
           title: "Chat Error",
           description: "Failed to initialize chat features",
