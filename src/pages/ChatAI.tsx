@@ -161,14 +161,18 @@ Tôi là AI chuyên gia crypto với khả năng phân tích thị trường rea
 • On-chain analysis và whale tracking
 • Market sentiment và news impact
 
-**Hãy hỏi tôi bất cứ điều gì về crypto - từ cơ bản đến nâng cao!**`,
+**Hãy h��i tôi bất cứ điều gì về crypto - từ cơ bản đến nâng cao!**`,
           timestamp: new Date(),
           marketData: data.slice(0, 8)
         };
 
         setMessages([welcomeMessage]);
       } catch (error) {
-        console.error('Error initializing chat:', error);
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error initializing chat:', {
+          message: errorMessage,
+          error
+        });
       }
     };
 
