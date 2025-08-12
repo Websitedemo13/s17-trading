@@ -33,7 +33,13 @@ export const FloatingChatToggle = ({ className, compact = false }: FloatingChatT
 
   useEffect(() => {
     if (user && !userProfile) {
-      fetchUserProfile();
+      fetchUserProfile().catch((error) => {
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error in FloatingChatToggle fetchUserProfile:', {
+          message: errorMessage,
+          error
+        });
+      });
     }
   }, [user, userProfile, fetchUserProfile]);
 
