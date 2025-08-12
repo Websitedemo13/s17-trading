@@ -177,31 +177,39 @@ const Blog = () => {
   };
 
   const shareToSocial = (platform: string, post: BlogPost) => {
-    const url = `${window.location.origin}/blog/${post.slug[currentLanguage]}`;
-    const text = `${post.title[currentLanguage]} - ${post.excerpt[currentLanguage]}`;
-    
+    const url = `${window.location.origin}/blog/${post.id}`;
+    const text = `${post.title[currentLanguage]} - ${post.excerpt[currentLanguage]} #S17Trading #CryptoNews`;
+    const hashtags = post.tags.slice(0, 3).join(',');
+
     let shareUrl = '';
-    
+
     switch (platform) {
       case 'facebook':
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
         break;
       case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=${encodeURIComponent(hashtags)}`;
         break;
       case 'linkedin':
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&title=${encodeURIComponent(post.title[currentLanguage])}&summary=${encodeURIComponent(post.excerpt[currentLanguage])}`;
+        break;
+      case 'telegram':
+        shareUrl = `https://telegram.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        break;
+      case 'whatsapp':
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
         break;
       case 'copy':
-        navigator.clipboard.writeText(url);
+        const shareText = `${post.title[currentLanguage]}\n\n${post.excerpt[currentLanguage]}\n\nĐọc thêm: ${url}`;
+        navigator.clipboard.writeText(shareText);
         toast({
           title: "Đã sao chép link",
-          description: "Link bài viết đã được sao chép vào clipboard"
+          description: "Nội dung chia sẻ đã được sao chép vào clipboard"
         });
         setShowShareDialog(false);
         return;
     }
-    
+
     if (shareUrl) {
       window.open(shareUrl, '_blank', 'width=600,height=400');
       setShowShareDialog(false);
