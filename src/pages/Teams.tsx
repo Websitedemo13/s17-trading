@@ -121,6 +121,22 @@ const Teams = () => {
     }
   };
 
+  const handleRequestToJoin = (teamId: string) => {
+    setSelectedTeamForRequest(teamId);
+    setShowRequestDialog(true);
+  };
+
+  const handleSubmitJoinRequest = async () => {
+    if (!selectedTeamForRequest) return;
+
+    const success = await requestToJoinTeam(selectedTeamForRequest, requestMessage);
+    if (success) {
+      setShowRequestDialog(false);
+      setSelectedTeamForRequest(null);
+      setRequestMessage('');
+    }
+  };
+
   const filteredAndSortedTeams = (() => {
     let filtered = teams.filter(team => {
       const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -478,7 +494,7 @@ const Teams = () => {
                           )}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-red-600">
-                            Rời nhóm
+                            R��i nhóm
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
