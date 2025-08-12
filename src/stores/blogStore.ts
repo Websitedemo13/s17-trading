@@ -359,7 +359,7 @@ export const useBlogStore = create<BlogState>((set, get) => ({
           },
           excerpt: {
             en: 'The upcoming Bitcoin Halving could be the strongest catalyst for the next bull market. We analyze data from the previous 3 halvings and make predictions for 2024.',
-            vi: 'Sự kiện Bitcoin Halving sắp tới có thể là chất xúc tác mạnh mẽ nhất cho thị trường tăng giá tiếp theo. Chúng tôi sẽ phân tích dữ liệu từ 3 lần halving trước đó và đưa ra dự đoán cho năm 2024.'
+            vi: 'Sự kiện Bitcoin Halving sắp tới có thể là chất xúc tác mạnh mẽ nh���t cho thị trường tăng giá tiếp theo. Chúng tôi sẽ phân tích dữ liệu từ 3 lần halving trước đó và đưa ra dự đoán cho năm 2024.'
           },
           content: {
             en: `# Bitcoin Halving 2024: Golden Opportunity or Investment Trap?
@@ -621,7 +621,7 @@ Tuyên bố từ chối trách nhiệm: Đây không phải lời khuyên đầu
           },
           excerpt: {
             en: 'Deep dive into VinGroup with multi-dimensional perspective: from business model, competitive advantages to valuation and technical setup. Is VIC the best blue-chip pick in Vietnam stock market?',
-            vi: 'Deep dive vào VinGroup với góc nhìn đa chiều: từ business model, competitive advantages đến valuation và technical setup. Liệu VIC có phải là blue-chip pick tốt nhất của TTCK Việt Nam?'
+            vi: 'Phân tích sâu VinGroup với góc nhìn đa chiều: từ mô hình kinh doanh, lợi thế cạnh tranh đến định giá và thiết lập kỹ thuật. Liệu VIC có phải là lựa chọn blue-chip tốt nhất của thị trường chứng khoán Việt Nam?'
           },
           content: {
             en: `# VinGroup (VIC): Comprehensive Analysis of Vietnam's Real Estate Giant
