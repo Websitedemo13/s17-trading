@@ -49,43 +49,22 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Loading component
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
+
 const App = () => {
   const { initialize, user } = useAuthStore();
   const { initializeTheme } = useThemeStore();
-  const { fetchUserProfile } = useEnhancedTeamStore();
-  const { fetchProfile } = useProfileStore();
 
   useEffect(() => {
     initialize();
     initializeTheme();
     initializeI18n();
   }, [initialize, initializeTheme]);
-
-  useEffect(() => {
-    if (user) {
-      fetchUserProfile().catch((error) => {
-        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
-        console.error('Error in App fetchUserProfile:', {
-          message: errorMessage,
-          error
-        });
-      });
-
-      // Initialize profile store
-      fetchProfile(user.id).catch((error) => {
-        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
-        console.error('Error initializing profile store:', {
-          message: errorMessage,
-          error
-        });
-      });
-
-      // Debug table existence in development
-      if (process.env.NODE_ENV === 'development') {
-        debugSupabase.checkAllTables();
-      }
-    }
-  }, [user, fetchUserProfile, fetchProfile]);
 
   return (
     <QueryClientProvider client={queryClient}>
