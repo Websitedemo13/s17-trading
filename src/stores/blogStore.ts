@@ -223,6 +223,9 @@ export const useBlogStore = create<BlogState>((set, get) => ({
   analytics: null,
   loading: false,
   currentLanguage: 'vi',
+  likedPosts: [],
+  bookmarkedPosts: [],
+  userBookmarks: [],
 
   setLanguage: (lang) => {
     set({ currentLanguage: lang });
@@ -478,7 +481,7 @@ Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát h�
 ### Halving lần 1 (2012): Block 210,000
 - Trước halving: $12.31 (Tháng 11/2012)
 - Sau 1 năm: $1,156 (+9,300%)
-- Đỉnh của đợt tăng: $1,156 (Tháng 11/2013)
+- Đỉnh của đợt t��ng: $1,156 (Tháng 11/2013)
 
 ### Halving lần 2 (2016): Block 420,000
 - Trước halving: $663 (Tháng 7/2016)
@@ -544,7 +547,7 @@ Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát h�
 3. Rủi ro Thị trường: Suy thoái vĩ mô, recession
 4. Rủi ro Cạnh tranh: Ethereum, các L1 khác chiếm thị phần
 
-### Chiến lược Giảm thi��u
+### Chiến lược Giảm thiểu
 - Đa dạng hóa: Không đặt tất cả vào Bitcoin
 - Cắt lỗ: Đặt quy tắc thoát rõ ràng
 - Nghiên cứu: Theo dõi chỉ số on-chain
@@ -569,7 +572,7 @@ Tuyên bố từ chối trách nhiệm: Đây không phải lời khuyên đầu
             role: 'Crypto Research Director',
             bio: {
               en: 'Blockchain analysis expert with 8+ years of experience. Former investment fund analyst with 100+ published crypto research papers.',
-              vi: 'Chuyên gia phân tích blockchain với 8+ năm kinh nghiệm. Từng làm việc tại các quỹ đầu tư lớn và publish 100+ b��i nghiên cứu về crypto.'
+              vi: 'Chuyên gia phân tích blockchain với 8+ năm kinh nghiệm. T���ng làm việc tại các quỹ đầu tư lớn và publish 100+ b��i nghiên cứu về crypto.'
             },
             verified: true
           },
@@ -770,7 +773,7 @@ Risk Disclosure: This analysis is for reference only. Investors should have risk
 
 ## Tổng quan Công ty
 
-VinGroup (VIC) là tập đoàn đa ngành hàng đầu Việt Nam với m�� hình kinh doanh đa dạng từ bất động sản, bán lẻ, ô tô đến công nghệ. Với vốn hóa thị trường hơn $15 tỷ USD, VIC là một trong những cổ phiếu blue-chip lớn nh��t trên HOSE.
+VinGroup (VIC) là tập đoàn đa ngành hàng đầu Việt Nam với mô hình kinh doanh đa dạng từ bất động sản, bán lẻ, ô tô đến công nghệ. Với vốn hóa thị trường hơn $15 tỷ USD, VIC là một trong những cổ phiếu blue-chip lớn nh��t trên HOSE.
 
 ## Business Segments Analysis
 
