@@ -118,8 +118,11 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
 
   // Update enabled state from user profile
   useEffect(() => {
-    if (userProfile) {
-      setIsEnabled(userProfile.notification_settings.floating_teams);
+    if (userProfile && userProfile.notification_settings) {
+      setIsEnabled(userProfile.notification_settings.floating_teams ?? true);
+    } else {
+      // Default to enabled if profile not loaded yet
+      setIsEnabled(true);
     }
   }, [userProfile]);
 
