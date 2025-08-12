@@ -353,7 +353,7 @@ const Profile = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto p-1">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto p-1">
           <TabsTrigger value="overview" className="flex items-center gap-2 py-3">
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Tổng quan</span>
@@ -373,6 +373,10 @@ const Profile = () => {
           <TabsTrigger value="portfolio" className="flex items-center gap-2 py-3">
             <Wallet className="h-4 w-4" />
             <span className="hidden sm:inline">Portfolio</span>
+          </TabsTrigger>
+          <TabsTrigger value="activity" className="flex items-center gap-2 py-3">
+            <Activity className="h-4 w-4" />
+            <span className="hidden sm:inline">Hoạt động</span>
           </TabsTrigger>
         </TabsList>
 
