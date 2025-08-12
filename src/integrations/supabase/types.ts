@@ -591,9 +591,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      account_type: "free" | "premium" | "enterprise"
       order_status: "pending" | "paid" | "shipped" | "delivered" | "cancelled"
       post_status: "draft" | "published"
+      privacy_profile: "public" | "private" | "friends"
       team_role: "admin" | "member"
+      theme_preference: "light" | "dark" | "system"
+      user_role: "user" | "admin" | "premium"
     }
     CompositeTypes: {
       [_ in never]: never
