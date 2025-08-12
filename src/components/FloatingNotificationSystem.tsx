@@ -501,7 +501,11 @@ export const useFloatingNotifications = () => {
       if (error) throw error;
       return true;
     } catch (error) {
-      console.error('Error creating floating notification:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error creating floating notification:', {
+        message: errorMessage,
+        error
+      });
       return false;
     }
   };
