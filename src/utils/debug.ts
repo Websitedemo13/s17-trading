@@ -21,7 +21,11 @@ export const debugSupabase = {
       
       return !error;
     } catch (error) {
-      console.error(`Error checking table ${tableName}:`, error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error(`Error checking table ${tableName}:`, {
+        message: errorMessage,
+        error
+      });
       return false;
     }
   },
