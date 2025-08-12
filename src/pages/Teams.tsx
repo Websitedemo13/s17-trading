@@ -535,26 +535,35 @@ const Teams = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleViewTeam(team.id)}>
-                            <MessageSquare className="h-4 w-4 mr-2" />
-                            Xem nhóm
-                          </DropdownMenuItem>
-                          {team.role === 'admin' && (
+                          {team.role ? (
                             <>
-                              <DropdownMenuItem>
-                                <Settings className="h-4 w-4 mr-2" />
-                                Cài đặt
+                              <DropdownMenuItem onClick={() => handleViewTeam(team.id)}>
+                                <MessageSquare className="h-4 w-4 mr-2" />
+                                Xem nhóm
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleShareTeam(team.id, team.name)}>
-                                <Share2 className="h-4 w-4 mr-2" />
-                                Chia sẻ link mời
+                              {team.role === 'admin' && (
+                                <>
+                                  <DropdownMenuItem>
+                                    <Settings className="h-4 w-4 mr-2" />
+                                    Cài đặt
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => handleShareTeam(team.id, team.name)}>
+                                    <Share2 className="h-4 w-4 mr-2" />
+                                    Chia sẻ link mời
+                                  </DropdownMenuItem>
+                                </>
+                              )}
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600">
+                                Rời nhóm
                               </DropdownMenuItem>
                             </>
+                          ) : (
+                            <DropdownMenuItem onClick={() => handleRequestToJoin(team.id)}>
+                              <Mail className="h-4 w-4 mr-2" />
+                              Yêu cầu tham gia
+                            </DropdownMenuItem>
                           )}
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="text-red-600">
-                            Rời nhóm
-                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
