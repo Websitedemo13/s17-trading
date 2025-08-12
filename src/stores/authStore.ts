@@ -211,10 +211,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // If user is already signed in, ensure profile exists
       if (session?.user) {
         try {
-          await supabase.rpc('ensure_profile_exists', {
-            user_id: session.user.id,
-            user_email: session.user.email
-          });
+          // First check if profile exists
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', session.user.id)
+            .single();
+
+          // If no profile exists, create one
+          if (!existingProfile) {
+            await supabase
+              .from('profiles')
+              .insert({
+                id: session.user.id,
+                email: session.user.email,
+                display_name: session.user.user_metadata?.display_name ||
+                             session.user.email?.split('@')[0] || 'User',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              });
+          }
         } catch (error) {
           console.warn('Could not ensure profile exists:', error);
         }
