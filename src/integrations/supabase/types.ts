@@ -725,9 +725,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: ["free", "premium", "enterprise"],
       order_status: ["pending", "paid", "shipped", "delivered", "cancelled"],
       post_status: ["draft", "published"],
+      privacy_profile: ["public", "private", "friends"],
       team_role: ["admin", "member"],
+      theme_preference: ["light", "dark", "system"],
+      user_role: ["user", "admin", "premium"],
     },
   },
 } as const
