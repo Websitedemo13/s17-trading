@@ -8,6 +8,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useThemeStore } from "@/stores/themeStore";
 import { initializeI18n } from "@/stores/i18nStore";
 import Navbar from "@/components/Layout/Navbar";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 // Lazy load components to reduce initial bundle size
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -61,26 +62,48 @@ const App = () => {
   const { initializeTheme } = useThemeStore();
 
   useEffect(() => {
-    initialize();
-    initializeTheme();
-    initializeI18n();
-  }, [initialize, initializeTheme]);
+    let unsubscribe: (() => void) | undefined;
+
+    const initializeApp = async () => {
+      try {
+        unsubscribe = initialize();
+        initializeTheme();
+        initializeI18n();
+      } catch (error) {
+        console.error('App initialization error:', error);
+      }
+    };
+
+    initializeApp();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []); // Remove dependencies to prevent infinite loops
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="min-h-screen bg-background">
-            <Navbar />
-            <main>
-              <Suspense fallback={<LoadingSpinner />}>
-                <FloatingNotifications />
-              </Suspense>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <div className="min-h-screen bg-background">
+              <ErrorBoundary fallback={<div className="p-4 text-center text-red-600">Lỗi tải navigation</div>}>
+                <Navbar />
+              </ErrorBoundary>
+              <main>
+                <ErrorBoundary fallback={<div className="p-4 text-center text-yellow-600">Lỗi tải thông báo</div>}>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <FloatingNotifications />
+                  </Suspense>
+                </ErrorBoundary>
 
-              <Suspense fallback={<LoadingSpinner />}>
-                <Routes>
+                <ErrorBoundary>
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
@@ -174,13 +197,15 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                </Routes>
-              </Suspense>
-            </main>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+                    </Routes>
+                  </Suspense>
+                </ErrorBoundary>
+              </main>
+            </div>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

@@ -61,21 +61,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
           .limit(20);
 
         if (error) {
-          console.error('Error fetching notifications:', {
+          console.warn('Error fetching notifications (non-blocking):', {
             message: error.message || 'Unknown error',
-            details: error.details,
-            hint: error.hint,
-            code: error.code,
-            error
+            code: error.code
           });
-          // Don't show error for table not existing yet
-          if (error.code !== 'PGRST116' && error.code !== '42P01' && error.code !== '42703') {
-            toast({
-              title: "Lỗi",
-              description: `Không thể tải thông báo: ${error.message}`,
-              variant: "destructive"
-            });
-          }
+          // Just return empty array - don't show error to user
           setNotifications([]);
           return;
         }

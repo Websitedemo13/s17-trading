@@ -84,7 +84,7 @@ const AdminDashboard = () => {
     const success = await createPost({
       title: newPostTitle,
       content: newPostContent,
-      author: adminUser?.email || 'admin',
+      author: adminUser?.email || user?.email || 'admin',
       status: 'draft',
       slug: newPostTitle.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now()
     });
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
             Admin Dashboard
           </h1>
           <p className="text-muted-foreground">
-            Chào mừng {adminUser.displayName} - Quản lý toàn bộ hệ thống S17 Trading
+            Chào mừng {adminUser?.displayName || 'Admin'} - Quản lý toàn bộ hệ thống S17 Trading
           </p>
         </div>
         <Badge variant="outline" className="flex items-center gap-2">
