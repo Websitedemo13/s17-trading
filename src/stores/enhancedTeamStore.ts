@@ -599,7 +599,7 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
         if (!canJoin) {
           toast({
-            title: "Giới h��n nhóm",
+            title: "Giới hạn nhóm",
             description: "Bạn đã đạt giới hạn số lượng nhóm. Hãy nâng cấp tài khoản để tham gia thêm nhóm.",
             variant: "destructive"
           });
@@ -686,7 +686,15 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
               is_admin: false
             });
 
-          if (error) throw error;
+          if (error) {
+            console.error('Supabase error upserting profile:', {
+              message: error.message,
+              details: error.details,
+              hint: error.hint,
+              code: error.code
+            });
+            throw error;
+          }
 
           // Fetch the updated profile
           await get().fetchUserProfile();
