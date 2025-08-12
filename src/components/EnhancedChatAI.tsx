@@ -116,7 +116,7 @@ const EnhancedChatAI = () => {
 📈 **Market insights** - Tin tức, phân tích thị trường real-time
 🚀 **DeFi & Trading** - Chiến lược yield farming, futures, options
 
-Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
+Hãy hỏi tôi bất cứ điều gì v��� đầu tư và trading!`,
       role: 'assistant',
       timestamp: new Date(),
       type: 'text'
@@ -521,6 +521,58 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
           )}
         </div>
       </ScrollArea>
+
+      {/* Quick Actions - Moved below messages */}
+      <div className="border-t bg-muted/20 p-2 md:p-3">
+        <div className="mb-2">
+          <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+            <Zap className="h-4 w-4 text-primary" />
+            Actions nhanh
+          </h4>
+          <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+            <TabsList className="w-full justify-start overflow-x-auto">
+              {categories.map((category) => (
+                <TabsTrigger
+                  key={category.id}
+                  value={category.id}
+                  className="flex items-center gap-2 text-xs"
+                >
+                  <category.icon className="h-3 w-3" />
+                  {category.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
+
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+          {filteredActions.map((action) => (
+            <motion.div
+              key={action.id}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Card
+                className="cursor-pointer hover:shadow-md transition-all duration-200 border-muted"
+                onClick={() => handleQuickAction(action)}
+              >
+                <CardContent className="p-2">
+                  <div className="flex flex-col items-center gap-1 text-center">
+                    <div className="p-1 bg-primary/10 rounded">
+                      <action.icon className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-xs line-clamp-1">
+                        {action.title}
+                      </h5>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
       {/* Input */}
       <div className="border-t bg-card/50 backdrop-blur-sm p-2 md:p-4">
