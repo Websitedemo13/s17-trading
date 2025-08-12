@@ -168,6 +168,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Always clear local state regardless of Supabase response
     set({ user: null, session: null, loading: false });
 
+    // Clear admin state if admin is logging out
+    const adminStore = useAdminStore.getState();
+    if (adminStore.isAdmin) {
+      adminStore.clearAdmin();
+    }
+
     toast({
       title: "Đăng xuất thành công",
       description: "Hẹn gặp lại bạn!",
