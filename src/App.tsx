@@ -63,13 +63,6 @@ const App = () => {
   const { isAdmin } = useAdminStore();
   const { initializeTheme } = useThemeStore();
 
-  // Debug admin state
-  console.log('App render - Admin state:', {
-    user: user?.email,
-    isAdmin,
-    userId: user?.id
-  });
-
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
 
