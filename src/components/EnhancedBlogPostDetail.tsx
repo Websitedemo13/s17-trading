@@ -167,9 +167,9 @@ const EnhancedBlogPostDetail = ({
           />
         </div>
 
-        <div className="flex h-full">
+        <div className="flex min-h-full">
           {/* Main Content */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1">
             {/* Header */}
             <div className="border-b bg-card/50 backdrop-blur-sm p-6">
               <div className="flex items-start justify-between mb-4">
