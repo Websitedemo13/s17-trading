@@ -452,7 +452,12 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
         .single();
 
       if (error) {
-        console.error('Supabase error fetching profile:', error);
+        console.error('Supabase error fetching profile:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         // Create default profile if doesn't exist
         if (error.code === 'PGRST116') {
           const { data: newProfile, error: createError } = await supabase
