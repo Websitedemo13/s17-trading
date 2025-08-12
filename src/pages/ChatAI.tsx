@@ -13,7 +13,7 @@ const ChatAI = () => {
           </p>
         </div>
         
-        <div className="bg-card rounded-lg border shadow-lg h-[calc(100%-120px)]">
+        <div className="bg-card rounded-lg border shadow-lg h-[calc(100%-80px)]">
           <EnhancedChatAI />
         </div>
       </div>
