@@ -317,6 +317,64 @@ const Teams = () => {
               </div>
             </DialogContent>
           </Dialog>
+
+          {/* Request to Join Dialog */}
+          <Dialog open={showRequestDialog} onOpenChange={setShowRequestDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Yêu cầu tham gia nhóm</DialogTitle>
+                <DialogDescription>
+                  Gửi yêu cầu tham gia nhóm cho quản trị viên duyệt
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Lời nhắn (không bắt buộc)</label>
+                  <Textarea
+                    placeholder="Xin chào, tôi muốn tham gia nhóm này để cùng học hỏi và chia sẻ kinh nghiệm trading..."
+                    value={requestMessage}
+                    onChange={(e) => setRequestMessage(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+                <div className="bg-muted/50 p-4 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-medium">Quy trình phê duyệt</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Yêu cầu của bạn sẽ được gửi đến quản trị viên nhóm để xem xét và phê duyệt
+                  </p>
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowRequestDialog(false)}
+                    className="flex-1"
+                  >
+                    Hủy
+                  </Button>
+                  <Button
+                    onClick={handleSubmitJoinRequest}
+                    disabled={processing}
+                    className="flex-1"
+                  >
+                    {processing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Đang gửi...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="h-4 w-4 mr-2" />
+                        Gửi yêu cầu
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -494,7 +552,7 @@ const Teams = () => {
                           )}
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-red-600">
-                            R��i nhóm
+                            Rời nhóm
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
