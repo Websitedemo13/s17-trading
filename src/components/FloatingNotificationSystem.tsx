@@ -54,12 +54,17 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
           .limit(showAll ? 50 : 5);
 
         if (error) {
-          console.error('Supabase error fetching notifications:', error);
+          console.error('Supabase error fetching notifications:', {
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            code: error.code
+          });
           // Don't show error for table not existing yet
           if (error.code !== 'PGRST116' && error.code !== '42P01') {
             toast({
               title: "Lỗi",
-              description: "Không thể tải thông báo",
+              description: `Không thể tải thông báo: ${error.message || 'Unknown error'}`,
               variant: "destructive"
             });
           }
