@@ -54,12 +54,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           const isAdminValid = adminStore.checkAdminStatus(email);
 
           if (isAdminValid) {
+            // Set user state first
             set({ user: mockUser, session: mockSession, loading: false });
 
-            toast({
-              title: "Đăng nhập Admin thành công",
-              description: "Chào mừng Super Admin!",
-            });
+            // Delay toast to ensure state is updated
+            setTimeout(() => {
+              toast({
+                title: "Đăng nhập Admin thành công",
+                description: "Chào mừng Super Admin!",
+              });
+            }, 100);
 
             return {};
           } else {
