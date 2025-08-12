@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User, Settings, Crown } from 'lucide-react';
 import { HeaderNotificationSystem } from '@/components/HeaderNotificationSystem';
+import { LanguageToggle } from '@/components/LanguageToggle';
 
 const Navbar = () => {
   const location = useLocation();
