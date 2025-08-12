@@ -60,6 +60,7 @@ const LoadingSpinner = () => (
 
 const App = () => {
   const { initialize, user } = useAuthStore();
+  const { isAdmin } = useAdminStore();
   const { initializeTheme } = useThemeStore();
 
   useEffect(() => {
