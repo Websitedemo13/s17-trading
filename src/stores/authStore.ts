@@ -151,7 +151,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       toast({
         title: "Đăng ký thành công",
-        description: "Vui lòng kiểm tra email để xác th��c tài khoản.",
+        description: "Vui lòng kiểm tra email để xác thực tài khoản.",
       });
 
       return {};
@@ -173,7 +173,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     // Always clear local state regardless of Supabase response
-    set({ user: null, session: null, loading: false });
+    set({ user: null, session: null, loading: false, isAdminSession: false });
 
     // Clear admin state if admin is logging out
     const adminStore = useAdminStore.getState();
@@ -201,7 +201,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       toast({
         title: "Email đã được gửi",
-        description: "Vui l��ng kiểm tra email ��ể reset mật khẩu.",
+        description: "Vui l��ng kiểm tra email để reset mật khẩu.",
       });
 
       return {};
