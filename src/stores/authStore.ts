@@ -113,7 +113,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           : error.message.includes('Email not confirmed')
           ? 'Vui lòng xác thực email trước khi đăng nhập'
           : error.message.includes('Too many requests')
-          ? 'Quá nhiều lần thử. Vui lòng đ���i một chút rồi thử lại'
+          ? 'Quá nhiều lần thử. Vui lòng đợi một chút rồi thử lại'
           : error.message;
         return { error: errorMessage };
       }
@@ -336,7 +336,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({
           session,
           user: session?.user ?? null,
-          loading: false
+          loading: false,
+          isAdminSession: false // Reset admin flag for regular auth
         });
 
         // Handle profile creation in background if needed
