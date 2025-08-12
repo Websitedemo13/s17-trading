@@ -58,6 +58,22 @@ const getNotificationStyle = (type: string) => {
 
 const FloatingNotifications = () => {
   const { floatingNotifications, hideFloatingNotification, markAsRead } = useNotificationStore();
+  const { user } = useAuthStore();
+  const { checkAdminStatus } = useAdminStore();
+
+  // Check if current user is admin
+  const isAdmin = user?.email ? checkAdminStatus(user.email) : false;
+
+  // Filter notifications - only show system notifications to admins
+  const filteredNotifications = floatingNotifications.filter(notification => {
+    // System/error notifications only for admins
+    const systemNotificationTypes = ['error', 'warning', 'info'];
+    if (systemNotificationTypes.includes(notification.type)) {
+      return isAdmin;
+    }
+    // User-specific notifications (team actions, etc.) for all users
+    return true;
+  });
 
   useEffect(() => {
     // Cleanup expired notifications
