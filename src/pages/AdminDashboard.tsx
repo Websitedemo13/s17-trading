@@ -50,65 +50,25 @@ const AdminDashboard = () => {
   const [editingPost, setEditingPost] = useState<any>(null);
 
   useEffect(() => {
-    if (isAdmin) {
+    // Only load basic stats initially, don't load heavy data
+    if (isAdmin && !stats) {
       fetchStats();
-      loadUsers();
-      fetchPosts();
-
-      // Set up real-time updates
-      const statsInterval = setInterval(() => {
-        fetchStats();
-      }, 30000); // Update stats every 30 seconds
-
-      const usersInterval = setInterval(() => {
-        loadUsers();
-      }, 60000); // Update users every minute
-
-      // Subscribe to blog posts changes
-      const blogSubscription = supabase
-        .channel('blog-changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'blog_posts'
-          },
-          () => {
-            fetchPosts();
-          }
-        )
-        .subscribe();
-
-      // Subscribe to profile changes
-      const profileSubscription = supabase
-        .channel('profile-changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'profiles'
-          },
-          () => {
-            loadUsers();
-            fetchStats();
-          }
-        )
-        .subscribe();
-
-      return () => {
-        clearInterval(statsInterval);
-        clearInterval(usersInterval);
-        supabase.removeChannel(blogSubscription);
-        supabase.removeChannel(profileSubscription);
-      };
     }
-  }, [isAdmin, fetchStats, fetchPosts]);
+  }, [isAdmin, fetchStats, stats]);
 
   const loadUsers = async () => {
     const userData = await getAllUsers();
     setUsers(userData);
+  };
+
+  // Load data on demand when user switches tabs
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (value === 'users' && users.length === 0) {
+      loadUsers();
+    } else if (value === 'posts' && posts.length === 0) {
+      fetchPosts();
+    }
   };
 
   const handleCreatePost = async () => {
@@ -279,7 +239,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <TabsList className="grid grid-cols-2 lg:grid-cols-6 w-full">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />

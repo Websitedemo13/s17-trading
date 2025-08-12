@@ -25,10 +25,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       // Check for admin account first
       if (email === 'quachthanhlong2k3@gmail.com' && password === '13072003') {
-        const adminStore = useAdminStore.getState();
-        const isAdmin = adminStore.checkAdminStatus(email);
-
-        if (isAdmin) {
+        try {
           // For admin, create a mock user session
           const mockUser = {
             id: 'admin-' + email.split('@')[0],
@@ -36,17 +33,41 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             user_metadata: {
               display_name: 'Super Admin',
               avatar_url: null
-            }
+            },
+            aud: 'authenticated',
+            role: 'authenticated',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
           } as User;
 
-          set({ user: mockUser, session: { user: mockUser } as Session });
+          const mockSession = {
+            user: mockUser,
+            access_token: 'mock-admin-token',
+            token_type: 'bearer',
+            expires_in: 3600,
+            expires_at: Math.floor(Date.now() / 1000) + 3600,
+            refresh_token: 'mock-refresh-token'
+          } as Session;
 
-          toast({
-            title: "Đăng nhập Admin thành công",
-            description: "Chào mừng Super Admin!",
-          });
+          // Set admin status in the admin store
+          const adminStore = useAdminStore.getState();
+          const isAdminValid = adminStore.checkAdminStatus(email);
 
-          return {};
+          if (isAdminValid) {
+            set({ user: mockUser, session: mockSession });
+
+            toast({
+              title: "Đăng nhập Admin thành công",
+              description: "Chào mừng Super Admin!",
+            });
+
+            return {};
+          } else {
+            return { error: "Tài khoản admin không hợp lệ" };
+          }
+        } catch (error) {
+          console.error('Admin login error:', error);
+          return { error: "Lỗi đăng nhập admin" };
         }
       }
 
@@ -167,12 +188,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         // If user signed in, ensure profile exists
         if (event === 'SIGNED_IN' && session?.user) {
           try {
-            await supabase.rpc('ensure_profile_exists', {
-              user_id: session.user.id,
-              user_email: session.user.email
-            });
+            // First check if profile exists
+            const { data: existingProfile } = await supabase
+              .from('profiles')
+              .select('id')
+              .eq('id', session.user.id)
+              .single();
+
+            // If no profile exists, create one
+            if (!existingProfile) {
+              await supabase
+                .from('profiles')
+                .insert({
+                  id: session.user.id,
+                  email: session.user.email,
+                  display_name: session.user.user_metadata?.display_name ||
+                               session.user.email?.split('@')[0] || 'User',
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString()
+                });
+            }
           } catch (error) {
             console.warn('Could not ensure profile exists:', error);
+            // Fallback toast notification
+            toast({
+              title: "Không thể tạo profile",
+              description: "Vui lòng thử đăng nhập lại",
+              variant: "destructive"
+            });
           }
         }
 
@@ -189,10 +232,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // If user is already signed in, ensure profile exists
       if (session?.user) {
         try {
-          await supabase.rpc('ensure_profile_exists', {
-            user_id: session.user.id,
-            user_email: session.user.email
-          });
+          // First check if profile exists
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', session.user.id)
+            .single();
+
+          // If no profile exists, create one
+          if (!existingProfile) {
+            await supabase
+              .from('profiles')
+              .insert({
+                id: session.user.id,
+                email: session.user.email,
+                display_name: session.user.user_metadata?.display_name ||
+                             session.user.email?.split('@')[0] || 'User',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              });
+          }
         } catch (error) {
           console.warn('Could not ensure profile exists:', error);
         }
