@@ -58,8 +58,8 @@ export const useRoleAccess = (teamId?: string): RolePermissions & {
     setLoading(false);
   }, [teamId, teams]);
 
-  // System admin permissions
-  const isSystemAdmin = userProfile?.is_admin || false;
+  // System admin permissions - check both database admin flag and admin store
+  const isSystemAdmin = userProfile?.is_admin || isAdmin;
   
   // Account info
   const accountType = userProfile?.account_type || 'basic';
