@@ -137,9 +137,13 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
         get().logActivity(userId, 'profile_viewed', { timestamp: new Date().toISOString() });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
       set({ error: errorMessage, loading: false });
-      console.error('Error fetching profile:', error);
+      console.error('Error fetching profile:', {
+        message: errorMessage,
+        error: error,
+        details: error instanceof Error ? error.stack : error
+      });
     }
   },
 
@@ -173,16 +177,20 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       set({ loading: false });
       return true;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
       set({ error: errorMessage, loading: false });
-      
+
       toast({
         title: "Lỗi",
-        description: "Không thể cập nhật hồ sơ",
+        description: `Không thể cập nhật hồ sơ: ${errorMessage}`,
         variant: "destructive"
       });
-      
-      console.error('Error updating profile:', error);
+
+      console.error('Error updating profile:', {
+        message: errorMessage,
+        error: error,
+        details: error instanceof Error ? error.stack : error
+      });
       return false;
     }
   },
@@ -231,16 +239,20 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
 
       throw new Error('Không thể cập nhật URL avatar');
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
       set({ error: errorMessage, loading: false });
-      
+
       toast({
         title: "Lỗi",
         description: errorMessage,
         variant: "destructive"
       });
-      
-      console.error('Error uploading avatar:', error);
+
+      console.error('Error uploading avatar:', {
+        message: errorMessage,
+        error: error,
+        details: error instanceof Error ? error.stack : error
+      });
       return null;
     }
   },
@@ -279,16 +291,20 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       set({ loading: false });
       return success;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
       set({ error: errorMessage, loading: false });
-      
+
       toast({
         title: "Lỗi",
-        description: "Không thể xóa ảnh đại diện",
+        description: `Không thể xóa ảnh đại diện: ${errorMessage}`,
         variant: "destructive"
       });
-      
-      console.error('Error deleting avatar:', error);
+
+      console.error('Error deleting avatar:', {
+        message: errorMessage,
+        error: error,
+        details: error instanceof Error ? error.stack : error
+      });
       return false;
     }
   },
@@ -328,16 +344,20 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
       set({ loading: false });
       return true;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
       set({ error: errorMessage, loading: false });
-      
+
       toast({
         title: "Lỗi",
         description: errorMessage,
         variant: "destructive"
       });
-      
-      console.error('Error changing password:', error);
+
+      console.error('Error changing password:', {
+        message: errorMessage,
+        error: error,
+        details: error instanceof Error ? error.stack : error
+      });
       return false;
     }
   },
