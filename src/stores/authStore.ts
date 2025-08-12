@@ -308,6 +308,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           )
         ]);
 
+        // Check if current user is admin to prevent override
+        const currentState = get();
+        const isCurrentUserAdmin = currentState.user?.email === 'quachthanhlong2k3@gmail.com';
+
+        if (isCurrentUserAdmin) {
+          console.log('Preserving admin session during initialization');
+          set({ loading: false }); // Only update loading
+          return;
+        }
+
         // Update state immediately
         set({
           session,
