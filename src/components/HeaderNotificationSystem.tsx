@@ -117,6 +117,11 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
         },
         (payload) => {
           const newNotification = payload.new as FloatingNotification;
+          // Filter real-time notifications based on admin status
+          const systemNotificationTypes = ['error', 'warning', 'info', 'system'];
+          if (systemNotificationTypes.includes(newNotification.type) && !isAdmin) {
+            return; // Don't add system notifications for non-admin users
+          }
           setNotifications(prev => [newNotification, ...prev.slice(0, 19)]);
         }
       )
@@ -370,7 +375,7 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
               <Bell className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
               <h4 className="font-medium text-sm">Không có thông báo</h4>
               <p className="text-xs text-muted-foreground mt-1">
-                Thông báo mới sẽ hiển thị ở đây
+                Thông báo mới s�� hiển thị ở đây
               </p>
             </div>
           ) : (
