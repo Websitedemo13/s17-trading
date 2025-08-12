@@ -75,11 +75,12 @@ const App = () => {
           <div className="min-h-screen bg-background">
             <Navbar />
             <main>
-              {/* Original floating notifications for general app notifications */}
-              <FloatingNotifications />
-              
-              
-              <Routes>
+              <Suspense fallback={<LoadingSpinner />}>
+                <FloatingNotifications />
+              </Suspense>
+
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
                 <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <Index />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
@@ -173,7 +174,8 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-              </Routes>
+                </Routes>
+              </Suspense>
             </main>
           </div>
         </BrowserRouter>
