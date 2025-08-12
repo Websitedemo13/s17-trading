@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
-import MarketStats from '@/components/MarketStats';
-import CryptoChart from '@/components/CryptoChart';
-import CryptoList from '@/components/CryptoList';
-import AIInsights from '@/components/AIInsights';
+import { useEffect, Suspense, lazy } from 'react';
+import OptimizedMarketStats from '@/components/OptimizedMarketStats';
+import LazyLoadWrapper from '@/components/LazyLoadWrapper';
 import { useMarketStore } from '@/stores/marketStore';
+
+// Lazy load heavy components để giảm initial bundle size
+const CryptoChart = lazy(() => import('@/components/CryptoChart'));
+const CryptoList = lazy(() => import('@/components/CryptoList'));
+const AIInsights = lazy(() => import('@/components/AIInsights'));
 
 const Dashboard = () => {
   const { fetchCryptoData, fetchMarketStats } = useMarketStore();
