@@ -185,84 +185,129 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       async (event, session) => {
         console.log('Auth state changed:', event, session);
 
-        // If user signed in, ensure profile exists
-        if (event === 'SIGNED_IN' && session?.user) {
-          try {
-            // First check if profile exists
-            const { data: existingProfile } = await supabase
-              .from('profiles')
-              .select('id')
-              .eq('id', session.user.id)
-              .single();
-
-            // If no profile exists, create one
-            if (!existingProfile) {
-              await supabase
-                .from('profiles')
-                .insert({
-                  id: session.user.id,
-                  email: session.user.email,
-                  display_name: session.user.user_metadata?.display_name ||
-                               session.user.email?.split('@')[0] || 'User',
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString()
-                });
-            }
-          } catch (error) {
-            console.warn('Could not ensure profile exists:', error);
-            // Fallback toast notification
-            toast({
-              title: "Không thể tạo profile",
-              description: "Vui lòng thử đăng nhập lại",
-              variant: "destructive"
-            });
-          }
-        }
-
+        // Update auth state immediately to prevent UI freezing
         set({
           session,
           user: session?.user ?? null,
           loading: false
         });
+
+        // If user signed in, try to ensure profile exists (non-blocking)
+        if (event === 'SIGNED_IN' && session?.user) {
+          // Run profile creation in background without blocking login
+          setTimeout(async () => {
+            try {
+              // First check if profile exists with timeout
+              const profileQuery = supabase
+                .from('profiles')
+                .select('id')
+                .eq('id', session.user.id)
+                .single();
+
+              const { data: existingProfile } = await Promise.race([
+                profileQuery,
+                new Promise((_, reject) =>
+                  setTimeout(() => reject(new Error('Profile check timeout')), 3000)
+                )
+              ]);
+
+              // If no profile exists, create one with timeout
+              if (!existingProfile) {
+                const insertQuery = supabase
+                  .from('profiles')
+                  .insert({
+                    id: session.user.id,
+                    email: session.user.email,
+                    display_name: session.user.user_metadata?.display_name ||
+                                 session.user.email?.split('@')[0] || 'User',
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                  });
+
+                await Promise.race([
+                  insertQuery,
+                  new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Profile creation timeout')), 3000)
+                  )
+                ]);
+              }
+            } catch (error) {
+              console.warn('Could not ensure profile exists (non-blocking):', error);
+              // Don't show error toast for profile creation issues
+              // as they don't block the login process
+            }
+          }, 100);
+        }
       }
     );
 
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      // If user is already signed in, ensure profile exists
-      if (session?.user) {
-        try {
-          // First check if profile exists
-          const { data: existingProfile } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('id', session.user.id)
-            .single();
+    // Get initial session with timeout
+    const initializeSession = async () => {
+      try {
+        const sessionPromise = supabase.auth.getSession();
+        const { data: { session } } = await Promise.race([
+          sessionPromise,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Session fetch timeout')), 5000)
+          )
+        ]);
 
-          // If no profile exists, create one
-          if (!existingProfile) {
-            await supabase
-              .from('profiles')
-              .insert({
-                id: session.user.id,
-                email: session.user.email,
-                display_name: session.user.user_metadata?.display_name ||
-                             session.user.email?.split('@')[0] || 'User',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-              });
-          }
-        } catch (error) {
-          console.warn('Could not ensure profile exists:', error);
+        // Update state immediately
+        set({
+          session,
+          user: session?.user ?? null,
+          loading: false
+        });
+
+        // Handle profile creation in background if needed
+        if (session?.user) {
+          setTimeout(async () => {
+            try {
+              const { data: existingProfile } = await Promise.race([
+                supabase
+                  .from('profiles')
+                  .select('id')
+                  .eq('id', session.user.id)
+                  .single(),
+                new Promise((_, reject) =>
+                  setTimeout(() => reject(new Error('Profile check timeout')), 3000)
+                )
+              ]);
+
+              if (!existingProfile) {
+                await Promise.race([
+                  supabase
+                    .from('profiles')
+                    .insert({
+                      id: session.user.id,
+                      email: session.user.email,
+                      display_name: session.user.user_metadata?.display_name ||
+                                   session.user.email?.split('@')[0] || 'User',
+                      created_at: new Date().toISOString(),
+                      updated_at: new Date().toISOString()
+                    }),
+                  new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Profile creation timeout')), 3000)
+                  )
+                ]);
+              }
+            } catch (error) {
+              console.warn('Background profile setup failed (non-blocking):', error);
+            }
+          }, 100);
         }
+      } catch (error) {
+        console.error('Session initialization failed:', error);
+        // Set loading to false even if session fetch fails
+        set({
+          session: null,
+          user: null,
+          loading: false
+        });
       }
+    };
 
-      set({
-        session,
-        user: session?.user ?? null,
-        loading: false
-      });
-    });
+    initializeSession();
 
     return () => subscription.unsubscribe();
   },
