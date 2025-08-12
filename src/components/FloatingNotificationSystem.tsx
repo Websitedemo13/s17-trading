@@ -77,8 +77,11 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
         }
         setNotifications(data || []);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.error('Error fetching notifications:', errorMessage);
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error fetching notifications:', {
+          message: errorMessage,
+          error
+        });
       }
     };
 
@@ -152,7 +155,11 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
 
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
     } catch (error) {
-      console.error('Error dismissing notification:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error dismissing notification:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
@@ -169,7 +176,11 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       );
     } catch (error) {
-      console.error('Error marking notification as read:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error marking notification as read:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
@@ -192,7 +203,11 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
         description: "Đã đánh d��u tất cả thông báo là đã đọc"
       });
     } catch (error) {
-      console.error('Error marking all as read:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error marking all as read:', {
+        message: errorMessage,
+        error
+      });
     }
   };
 
@@ -254,7 +269,7 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
               size="sm"
               onClick={() => toggleNotifications(true)}
             >
-              B��t
+              Bật
             </Button>
           </div>
         </Card>
