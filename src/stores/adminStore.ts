@@ -60,7 +60,10 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   loading: false,
 
   checkAdminStatus: (email: string) => {
+    console.log('Checking admin status for:', email);
     const adminAccount = ADMIN_ACCOUNTS.find(admin => admin.email === email);
+    console.log('Found admin account:', adminAccount);
+
     if (adminAccount) {
       const adminUser: AdminUser = {
         id: 'admin-' + email.split('@')[0],
@@ -78,8 +81,11 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         loading: false
       });
 
+      console.log('Admin status set to true for:', email);
       return true;
     }
+
+    console.log('Admin account not found for:', email);
     return false;
   },
 
