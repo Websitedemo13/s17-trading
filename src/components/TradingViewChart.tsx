@@ -16,12 +16,11 @@ const TradingViewChart = memo(() => {
   };
 
   return (
-    <div className="glass-card p-3 sm:p-4 lg:p-6 rounded-lg animate-fade-in">
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h2 className="text-lg sm:text-xl font-semibold">Bitcoin Advanced Chart</h2>
-        <a 
-          href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT" 
-          target="_blank" 
+    <div className="w-full h-full">
+      <div className="flex items-center justify-between mb-4">
+        <a
+          href="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT"
+          target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm text-primary hover:underline"
         >
@@ -29,8 +28,8 @@ const TradingViewChart = memo(() => {
           Open in TradingView
         </a>
       </div>
-      
-      <div className="h-[250px] sm:h-[350px] lg:h-[400px] w-full relative">
+
+      <div className="w-full h-full relative">
         {isLoading && (
           <div className="absolute inset-0 bg-muted/20 rounded-lg animate-pulse flex items-center justify-center">
             <div className="text-center">
