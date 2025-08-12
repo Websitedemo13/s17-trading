@@ -218,7 +218,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       toast({
         title: "Đổi mật khẩu thành công",
-        description: "Mật khẩu của bạn đã được cập nhật.",
+        description: "Mật khẩu của bạn đã đ��ợc cập nhật.",
       });
 
       return {};
@@ -314,7 +314,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const isCurrentAdminSession = currentState.isAdminSession;
 
         if (isCurrentAdminSession) {
-          console.log('Preserving admin session during initialization');
           set({ loading: false }); // Only update loading
           return;
         }
