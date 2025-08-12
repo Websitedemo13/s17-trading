@@ -62,6 +62,11 @@ const App = () => {
   useEffect(() => {
     if (user) {
       fetchUserProfile();
+
+      // Debug table existence in development
+      if (process.env.NODE_ENV === 'development') {
+        debugSupabase.checkAllTables();
+      }
     }
   }, [user, fetchUserProfile]);
 
