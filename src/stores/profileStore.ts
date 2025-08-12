@@ -149,8 +149,6 @@ export const useProfileStore = create<ProfileStore>((set, get) => ({
               id: userId,
               email: user.user.email,
               display_name: user.user.email?.split('@')[0] || 'User',
-              role: 'user',
-              account_type: 'free',
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString()
             });
