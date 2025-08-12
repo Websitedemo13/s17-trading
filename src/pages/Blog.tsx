@@ -103,16 +103,19 @@ const Blog = () => {
   }, []);
 
   const filteredAndSortedPosts = useMemo(() => {
-    let filtered = posts.filter(post => {
+    if (posts.length === 0) return [];
+
+    const filtered = posts.filter(post => {
       if (post.status !== 'published') return false;
-      
-      const matchesSearch = 
-        post.title[currentLanguage].toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.excerpt[currentLanguage].toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = !searchTerm ||
+        post.title[currentLanguage].toLowerCase().includes(searchLower) ||
+        post.excerpt[currentLanguage].toLowerCase().includes(searchLower) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchLower));
+
       const matchesCategory = selectedCategory === 'all' || post.category.id === selectedCategory;
-      
+
       const matchesTab = activeTab === 'all' ||
         (activeTab === 'featured' && post.featured) ||
         (activeTab === 'trending' && post.trending) ||
@@ -124,19 +127,14 @@ const Blog = () => {
 
     switch (sortBy) {
       case 'popular':
-        filtered.sort((a, b) => b.metrics.views - a.metrics.views);
-        break;
+        return filtered.sort((a, b) => b.metrics.views - a.metrics.views);
       case 'trending':
-        filtered.sort((a, b) => (b.metrics.likes + b.metrics.comments_count + b.metrics.shares) - (a.metrics.likes + a.metrics.comments_count + a.metrics.shares));
-        break;
+        return filtered.sort((a, b) => (b.metrics.likes + b.metrics.comments_count + b.metrics.shares) - (a.metrics.likes + a.metrics.comments_count + a.metrics.shares));
       case 'latest':
       default:
-        filtered.sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime());
-        break;
+        return filtered.sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime());
     }
-
-    return filtered;
-  }, [posts, searchTerm, selectedCategory, sortBy, currentLanguage, activeTab]);
+  }, [posts, searchTerm, selectedCategory, sortBy, currentLanguage, activeTab, bookmarkedPosts]);
 
   const paginatedPosts = filteredAndSortedPosts.slice(
     (currentPage - 1) * postsPerPage,
