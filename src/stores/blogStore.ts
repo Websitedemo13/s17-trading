@@ -481,7 +481,7 @@ Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát h�
 ### Halving lần 1 (2012): Block 210,000
 - Trước halving: $12.31 (Tháng 11/2012)
 - Sau 1 năm: $1,156 (+9,300%)
-- Đỉnh của đợt t��ng: $1,156 (Tháng 11/2013)
+- Đỉnh của đợt tăng: $1,156 (Tháng 11/2013)
 
 ### Halving lần 2 (2016): Block 420,000
 - Trước halving: $663 (Tháng 7/2016)
@@ -548,7 +548,7 @@ Bitcoin Halving là sự kiện quan trọng nhất trong lịch trình phát h�
 4. Rủi ro Cạnh tranh: Ethereum, các L1 khác chiếm thị phần
 
 ### Chiến lược Giảm thiểu
-- Đa dạng hóa: Không đặt tất cả vào Bitcoin
+- Đa dạng hóa: Không đặt t��t cả vào Bitcoin
 - Cắt lỗ: Đặt quy tắc thoát rõ ràng
 - Nghiên cứu: Theo dõi chỉ số on-chain
 - Kiên nhẫn: Không FOMO, tuân thủ kế hoạch
@@ -572,7 +572,7 @@ Tuyên bố từ chối trách nhiệm: Đây không phải lời khuyên đầu
             role: 'Crypto Research Director',
             bio: {
               en: 'Blockchain analysis expert with 8+ years of experience. Former investment fund analyst with 100+ published crypto research papers.',
-              vi: 'Chuyên gia phân tích blockchain với 8+ năm kinh nghiệm. T���ng làm việc tại các quỹ đầu tư lớn và publish 100+ b��i nghiên cứu về crypto.'
+              vi: 'Chuyên gia phân tích blockchain với 8+ năm kinh nghiệm. Từng làm việc tại các quỹ đầu tư lớn và publish 100+ b��i nghiên cứu về crypto.'
             },
             verified: true
           },
@@ -1274,6 +1274,226 @@ Risk Disclosure: Phân tích này chỉ mang tính tham khảo. Investors nên c
       return true;
     } catch (error) {
       return false;
+    }
+  },
+
+  // User interactions
+  likePost: async (postId: string) => {
+    try {
+      const { posts, likedPosts } = get();
+
+      // Update local state immediately for better UX
+      const updatedPosts = posts.map(post =>
+        post.id === postId
+          ? { ...post, metrics: { ...post.metrics, likes: post.metrics.likes + 1 } }
+          : post
+      );
+      const updatedLikedPosts = [...likedPosts, postId];
+
+      set({
+        posts: updatedPosts,
+        likedPosts: updatedLikedPosts
+      });
+
+      // Try to update in Supabase
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .update({
+            metrics: updatedPosts.find(p => p.id === postId)?.metrics
+          })
+          .eq('id', postId);
+
+        if (error) throw error;
+      } catch (supabaseError) {
+        console.log('Supabase not available, using local state only');
+      }
+
+      // Save to localStorage
+      localStorage.setItem('likedPosts', JSON.stringify(updatedLikedPosts));
+
+      toast({
+        title: "Đã thích bài viết",
+        description: "Cảm ơn bạn đã thích bài viết này!"
+      });
+
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error liking post:', {
+        message: errorMessage,
+        error
+      });
+      return false;
+    }
+  },
+
+  unlikePost: async (postId: string) => {
+    try {
+      const { posts, likedPosts } = get();
+
+      const updatedPosts = posts.map(post =>
+        post.id === postId
+          ? { ...post, metrics: { ...post.metrics, likes: Math.max(0, post.metrics.likes - 1) } }
+          : post
+      );
+      const updatedLikedPosts = likedPosts.filter(id => id !== postId);
+
+      set({
+        posts: updatedPosts,
+        likedPosts: updatedLikedPosts
+      });
+
+      // Try to update in Supabase
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .update({
+            metrics: updatedPosts.find(p => p.id === postId)?.metrics
+          })
+          .eq('id', postId);
+
+        if (error) throw error;
+      } catch (supabaseError) {
+        console.log('Supabase not available, using local state only');
+      }
+
+      localStorage.setItem('likedPosts', JSON.stringify(updatedLikedPosts));
+
+      toast({
+        title: "Đã bỏ thích",
+        description: "Đã bỏ thích bài viết"
+      });
+
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error unliking post:', {
+        message: errorMessage,
+        error
+      });
+      return false;
+    }
+  },
+
+  bookmarkPost: async (postId: string) => {
+    try {
+      const { posts, bookmarkedPosts } = get();
+      const post = posts.find(p => p.id === postId);
+
+      if (!post) return false;
+
+      const updatedBookmarkedPosts = [...bookmarkedPosts, postId];
+      const updatedUserBookmarks = [...get().userBookmarks, post];
+
+      set({
+        bookmarkedPosts: updatedBookmarkedPosts,
+        userBookmarks: updatedUserBookmarks
+      });
+
+      // Save to localStorage
+      localStorage.setItem('bookmarkedPosts', JSON.stringify(updatedBookmarkedPosts));
+      localStorage.setItem('userBookmarks', JSON.stringify(updatedUserBookmarks));
+
+      toast({
+        title: "Đã lưu bài viết",
+        description: "Bài viết đã được thêm vào danh sách đã lưu"
+      });
+
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error bookmarking post:', {
+        message: errorMessage,
+        error
+      });
+      return false;
+    }
+  },
+
+  unbookmarkPost: async (postId: string) => {
+    try {
+      const { bookmarkedPosts, userBookmarks } = get();
+
+      const updatedBookmarkedPosts = bookmarkedPosts.filter(id => id !== postId);
+      const updatedUserBookmarks = userBookmarks.filter(post => post.id !== postId);
+
+      set({
+        bookmarkedPosts: updatedBookmarkedPosts,
+        userBookmarks: updatedUserBookmarks
+      });
+
+      localStorage.setItem('bookmarkedPosts', JSON.stringify(updatedBookmarkedPosts));
+      localStorage.setItem('userBookmarks', JSON.stringify(updatedUserBookmarks));
+
+      toast({
+        title: "Đã bỏ lưu",
+        description: "Bài viết đã được xóa khỏi danh sách đã lưu"
+      });
+
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error unbookmarking post:', {
+        message: errorMessage,
+        error
+      });
+      return false;
+    }
+  },
+
+  fetchUserBookmarks: async () => {
+    try {
+      // Load from localStorage
+      const savedBookmarks = localStorage.getItem('bookmarkedPosts');
+      const savedUserBookmarks = localStorage.getItem('userBookmarks');
+
+      if (savedBookmarks) {
+        set({ bookmarkedPosts: JSON.parse(savedBookmarks) });
+      }
+
+      if (savedUserBookmarks) {
+        set({ userBookmarks: JSON.parse(savedUserBookmarks) });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error fetching user bookmarks:', {
+        message: errorMessage,
+        error
+      });
+    }
+  },
+
+  incrementViews: async (postId: string) => {
+    try {
+      const { posts } = get();
+      const updatedPosts = posts.map(post =>
+        post.id === postId
+          ? { ...post, metrics: { ...post.metrics, views: post.metrics.views + 1 } }
+          : post
+      );
+
+      set({ posts: updatedPosts });
+
+      // Try to update in Supabase
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .update({
+            metrics: updatedPosts.find(p => p.id === postId)?.metrics
+          })
+          .eq('id', postId);
+
+        if (error) throw error;
+      } catch (supabaseError) {
+        console.log('Supabase not available, using local state only');
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error incrementing views:', {
+        message: errorMessage,
+        error
+      });
     }
   },
 
