@@ -1,10 +1,10 @@
 import { useEffect, Suspense, lazy } from 'react';
 import OptimizedMarketStats from '@/components/OptimizedMarketStats';
+import CryptoChart from '@/components/CryptoChart';
 import LazyLoadWrapper from '@/components/LazyLoadWrapper';
 import { useMarketStore } from '@/stores/marketStore';
 
-// Lazy load heavy components để giảm initial bundle size
-const CryptoChart = lazy(() => import('@/components/CryptoChart'));
+// Lazy load non-critical components
 const CryptoList = lazy(() => import('@/components/CryptoList'));
 const AIInsights = lazy(() => import('@/components/AIInsights'));
 
