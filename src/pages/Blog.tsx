@@ -112,10 +112,11 @@ const Blog = () => {
       
       const matchesCategory = selectedCategory === 'all' || post.category.id === selectedCategory;
       
-      const matchesTab = activeTab === 'all' || 
+      const matchesTab = activeTab === 'all' ||
         (activeTab === 'featured' && post.featured) ||
         (activeTab === 'trending' && post.trending) ||
-        (activeTab === 'premium' && post.premium);
+        (activeTab === 'premium' && post.premium) ||
+        (activeTab === 'saved' && bookmarkedPosts.includes(post.id));
 
       return matchesSearch && matchesCategory && matchesTab;
     });
@@ -750,7 +751,7 @@ const Blog = () => {
                   <p className="text-muted-foreground mb-4">
                     {currentLanguage === 'vi'
                       ? (searchTerm 
-                          ? 'Thử ��iều chỉnh từ khóa tìm kiếm hoặc bộ lọc'
+                          ? 'Thử điều chỉnh từ khóa tìm kiếm hoặc bộ lọc'
                           : 'Các bài viết sẽ được cập nhật sớm'
                         )
                       : (searchTerm
