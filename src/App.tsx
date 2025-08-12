@@ -53,6 +53,7 @@ const App = () => {
   const { initialize, user } = useAuthStore();
   const { initializeTheme } = useThemeStore();
   const { fetchUserProfile } = useEnhancedTeamStore();
+  const { fetchProfile } = useProfileStore();
 
   useEffect(() => {
     initialize();
@@ -69,12 +70,21 @@ const App = () => {
         });
       });
 
+      // Initialize profile store
+      fetchProfile(user.id).catch((error) => {
+        const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+        console.error('Error initializing profile store:', {
+          message: errorMessage,
+          error
+        });
+      });
+
       // Debug table existence in development
       if (process.env.NODE_ENV === 'development') {
         debugSupabase.checkAllTables();
       }
     }
-  }, [user, fetchUserProfile]);
+  }, [user, fetchUserProfile, fetchProfile]);
 
   return (
     <QueryClientProvider client={queryClient}>
