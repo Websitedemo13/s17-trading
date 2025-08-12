@@ -13,15 +13,10 @@ const SimpleBitcoinChart = memo(() => {
 
   if (loading) {
     return (
-      <div className="glass-card p-3 sm:p-4 lg:p-6 rounded-lg animate-fade-in">
-        <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold">Bitcoin Price</h2>
-        </div>
-        <div className="h-[250px] sm:h-[350px] lg:h-[400px] w-full bg-muted/20 rounded-lg animate-pulse flex items-center justify-center">
-          <div className="text-center">
-            <Activity className="h-8 w-8 mx-auto mb-2 animate-pulse text-primary" />
-            <p className="text-sm text-muted-foreground">Loading Bitcoin data...</p>
-          </div>
+      <div className="w-full h-full bg-muted/20 rounded-lg animate-pulse flex items-center justify-center">
+        <div className="text-center">
+          <Activity className="h-8 w-8 mx-auto mb-2 animate-pulse text-primary" />
+          <p className="text-sm text-muted-foreground">Loading Bitcoin data...</p>
         </div>
       </div>
     );
@@ -29,15 +24,10 @@ const SimpleBitcoinChart = memo(() => {
 
   if (!btcData) {
     return (
-      <div className="glass-card p-3 sm:p-4 lg:p-6 rounded-lg animate-fade-in">
-        <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-semibold">Bitcoin Price</h2>
-        </div>
-        <div className="h-[250px] sm:h-[350px] lg:h-[400px] w-full bg-muted/20 rounded-lg flex items-center justify-center">
-          <div className="text-center text-muted-foreground">
-            <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p>Bitcoin data unavailable</p>
-          </div>
+      <div className="w-full h-full bg-muted/20 rounded-lg flex items-center justify-center">
+        <div className="text-center text-muted-foreground">
+          <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <p>Bitcoin data unavailable</p>
         </div>
       </div>
     );
