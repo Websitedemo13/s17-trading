@@ -151,7 +151,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       toast({
         title: "Đăng ký thành công",
-        description: "Vui lòng kiểm tra email để xác thực tài khoản.",
+        description: "Vui lòng ki��m tra email để xác thực tài khoản.",
       });
 
       return {};
@@ -244,12 +244,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       async (event, session) => {
         console.log('Auth state changed:', event, session);
 
-        // Check if current user is admin to prevent override
+        // Check if current session is admin to prevent override
         const currentState = get();
-        const isCurrentUserAdmin = currentState.user?.email === 'quachthanhlong2k3@gmail.com';
+        const isCurrentAdminSession = currentState.isAdminSession;
 
         // Don't override admin session with null session
-        if (isCurrentUserAdmin && !session) {
+        if (isCurrentAdminSession && !session) {
           console.log('Preserving admin session, ignoring auth state change');
           return;
         }
