@@ -61,6 +61,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { BlogPost, BlogCategory, useBlogStore } from '@/stores/blogStore';
+import BlogPostDetail from '@/components/BlogPostDetail';
 
 const Blog = () => {
   const {
@@ -70,15 +71,23 @@ const Blog = () => {
     currentLanguage,
     setLanguage,
     fetchPosts,
-    fetchCategories
+    fetchCategories,
+    likePost,
+    unlikePost,
+    bookmarkPost,
+    unbookmarkPost,
+    likedPosts,
+    bookmarkedPosts,
+    userBookmarks,
+    fetchUserBookmarks,
+    incrementViews
   } = useBlogStore();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'latest' | 'popular' | 'trending'>('latest');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [bookmarkedPosts, setBookmarkedPosts] = useState<string[]>([]);
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
+  const [showPostDetail, setShowPostDetail] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [sharePost, setSharePost] = useState<BlogPost | null>(null);
@@ -89,6 +98,7 @@ const Blog = () => {
   useEffect(() => {
     fetchPosts();
     fetchCategories();
+    fetchUserBookmarks();
   }, []);
 
   const filteredAndSortedPosts = useMemo(() => {
@@ -140,33 +150,25 @@ const Blog = () => {
     .slice(0, 5);
 
   const toggleBookmark = (postId: string) => {
-    setBookmarkedPosts(prev => 
-      prev.includes(postId) 
-        ? prev.filter(id => id !== postId)
-        : [...prev, postId]
-    );
-    
-    toast({
-      title: bookmarkedPosts.includes(postId) ? "Đã bỏ lưu" : "Đã lưu bài viết",
-      description: bookmarkedPosts.includes(postId) 
-        ? "Bài viết đã được xóa khỏi danh sách lưu" 
-        : "Bài viết đã được thêm vào danh sách đã lưu"
-    });
+    if (bookmarkedPosts.includes(postId)) {
+      unbookmarkPost(postId);
+    } else {
+      bookmarkPost(postId);
+    }
   };
 
   const toggleLike = (postId: string) => {
-    const isCurrentlyLiked = likedPosts.includes(postId);
-    
-    setLikedPosts(prev => 
-      isCurrentlyLiked 
-        ? prev.filter(id => id !== postId)
-        : [...prev, postId]
-    );
-    
-    toast({
-      title: isCurrentlyLiked ? "Đã bỏ thích" : "Đã thích bài viết",
-      description: isCurrentlyLiked ? "Đã hủy thích bài viết" : "Cảm ơn bạn đã thích bài viết này!"
-    });
+    if (likedPosts.includes(postId)) {
+      unlikePost(postId);
+    } else {
+      likePost(postId);
+    }
+  };
+
+  const handlePostClick = (post: BlogPost) => {
+    setSelectedPost(post);
+    setShowPostDetail(true);
+    incrementViews(post.id);
   };
 
   const handleShare = (post: BlogPost) => {
