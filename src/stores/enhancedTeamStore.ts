@@ -711,7 +711,15 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
         })
         .eq('id', authUser.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error updating notification settings:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        throw error;
+      }
 
       set({
         userProfile: {
