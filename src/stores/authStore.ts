@@ -238,7 +238,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
         // Don't override admin session with null session
         if (isCurrentAdminSession && !session) {
-          console.log('Preserving admin session, ignoring auth state change');
           return;
         }
 
