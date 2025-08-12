@@ -161,7 +161,7 @@ Tôi là AI chuyên gia crypto với khả năng phân tích thị trường rea
 • On-chain analysis và whale tracking
 • Market sentiment và news impact
 
-**Hãy h��i tôi bất cứ điều gì về crypto - từ cơ bản đến nâng cao!**`,
+**Hãy hỏi tôi bất cứ điều gì về crypto - từ cơ bản đến nâng cao!**`,
           timestamp: new Date(),
           marketData: data.slice(0, 8)
         };
@@ -228,7 +228,11 @@ Tôi là AI chuyên gia crypto với khả năng phân tích thị trường rea
         setMarketData(freshData);
       }
     } catch (error) {
-      console.error('Error getting AI response:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error getting AI response:', {
+        message: errorMessage,
+        error
+      });
       toast({
         title: "Lỗi",
         description: "Không thể nhận phản hồi từ AI. Vui lòng thử lại.",
