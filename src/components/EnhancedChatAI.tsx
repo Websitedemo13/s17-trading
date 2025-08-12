@@ -130,7 +130,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
   const inputRef = useRef<HTMLInputElement>(null);
 
   const categories = [
-    { id: 'all', label: 'T��t cả', icon: Sparkles },
+    { id: 'all', label: 'Tất cả', icon: Sparkles },
     { id: 'analysis', label: 'Phân tích', icon: BarChart3 },
     { id: 'stocks', label: 'Cổ phiếu', icon: TrendingUp },
     { id: 'defi', label: 'DeFi', icon: Target },
@@ -166,7 +166,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 
 **Tình hình hiện tại:**
 • Giá: $95,234 (+2.4% 24h)
-�� Vùng kháng cự: $97,000 - $100,000
+• Vùng kháng cự: $97,000 - $100,000
 • Vùng hỗ trợ: $92,000 - $90,000
 • RSI: 68 (gần vùng quá mua)
 
@@ -367,7 +367,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
   };
 
   return (
-    <div className="flex flex-col h-full min-h-[600px] bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
       {/* Header */}
       <div className="border-b bg-card/50 backdrop-blur-sm">
         <div className="flex items-center justify-between p-4">
