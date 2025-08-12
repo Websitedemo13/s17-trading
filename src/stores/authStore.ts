@@ -231,6 +231,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       async (event, session) => {
         console.log('Auth state changed:', event, session);
 
+        // Check if current user is admin to prevent override
+        const currentState = get();
+        const isCurrentUserAdmin = currentState.user?.email === 'quachthanhlong2k3@gmail.com';
+
+        // Don't override admin session with null session
+        if (isCurrentUserAdmin && !session) {
+          console.log('Preserving admin session, ignoring auth state change');
+          return;
+        }
+
         // Update auth state immediately to prevent UI freezing
         set({
           session,
