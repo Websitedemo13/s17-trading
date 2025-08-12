@@ -60,14 +60,19 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
             hint: error.hint,
             code: error.code
           });
-          // Don't show error for table not existing yet
-          if (error.code !== 'PGRST116' && error.code !== '42P01') {
+
+          // Don't show error for table not existing yet or relation errors
+          if (error.code !== 'PGRST116' && error.code !== '42P01' && error.code !== '42703') {
             toast({
               title: "Lỗi",
               description: `Không thể tải thông báo: ${error.message || 'Unknown error'}`,
               variant: "destructive"
             });
+          } else if (error.code === '42P01' || error.code === '42703') {
+            // Table doesn't exist yet, just log it
+            console.log('Floating notifications table not set up yet, this is normal for new installations');
           }
+          setNotifications([]); // Set empty array as fallback
           return;
         }
         setNotifications(data || []);
