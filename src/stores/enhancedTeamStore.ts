@@ -514,11 +514,15 @@ export const useEnhancedTeamStore = create<EnhancedTeamState>((set, get) => ({
 
       set({ userProfile: data });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error('Error fetching user profile:', errorMessage);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Error fetching user profile:', {
+        message: errorMessage,
+        error: error,
+        details: error instanceof Error ? error.stack : error
+      });
       toast({
         title: "Lỗi",
-        description: "Không thể tải thông tin người dùng",
+        description: `Không thể tải thông tin người dùng: ${errorMessage}`,
         variant: "destructive"
       });
     }
