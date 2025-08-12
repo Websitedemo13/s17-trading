@@ -71,17 +71,13 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         isActive: true,
         permissions: adminAccount.permissions
       };
-      
-      set({ 
-        isAdmin: true, 
-        adminUser: adminUser
+
+      set({
+        isAdmin: true,
+        adminUser: adminUser,
+        loading: false
       });
-      
-      toast({
-        title: "Đăng nhập Admin thành công",
-        description: `Chào mừng ${adminUser.role}!`
-      });
-      
+
       return true;
     }
     return false;
@@ -201,7 +197,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
 
       toast({
         title: "Thành công",
-        description: `Đã ${isActive ? 'kích hoạt' : 'vô hiệu hóa'} tài khoản người dùng`
+        description: `Đã ${isActive ? 'kích hoạt' : 'vô hiệu hóa'} t��i khoản người dùng`
       });
 
       return true;
