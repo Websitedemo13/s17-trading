@@ -808,7 +808,7 @@ const Profile = () => {
               </div>
 
               <div className="flex justify-end">
-                <Button onClick={updateProfile} disabled={loading}>
+                <Button onClick={handleUpdateProfile} disabled={loading}>
                   {loading ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                   ) : (
