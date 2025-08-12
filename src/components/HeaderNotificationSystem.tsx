@@ -245,7 +245,7 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-96 p-0 bg-background/95 backdrop-blur-sm border-border/50"
+        className="w-96 p-0 bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl"
         align="end"
         sideOffset={8}
       >
