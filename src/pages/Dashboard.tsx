@@ -9,14 +9,15 @@ const Dashboard = () => {
   const { fetchCryptoData, fetchMarketStats } = useMarketStore();
 
   useEffect(() => {
+    // Initial load
     fetchCryptoData();
     fetchMarketStats();
-    
-    // Auto refresh every 30 seconds
+
+    // Auto refresh every 2 minutes (reduced frequency to be less aggressive)
     const interval = setInterval(() => {
       fetchCryptoData();
       fetchMarketStats();
-    }, 30000);
+    }, 120000); // 2 minutes instead of 30 seconds
 
     return () => clearInterval(interval);
   }, [fetchCryptoData, fetchMarketStats]);
