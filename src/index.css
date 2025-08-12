@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import './styles/profile.css';
+@import './styles/responsive.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './styles/profile.css';
-@import './styles/responsive.css';
 
 :root {
   /* Beautiful color palette */
