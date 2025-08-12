@@ -56,7 +56,13 @@ export const HeaderNotificationSystem = ({ className }: HeaderNotificationSystem
           .limit(20);
 
         if (error) {
-          console.error('Error fetching notifications:', error);
+          console.error('Error fetching notifications:', {
+            message: error.message || 'Unknown error',
+            details: error.details,
+            hint: error.hint,
+            code: error.code,
+            error
+          });
           // Don't show error for table not existing yet
           if (error.code !== 'PGRST116' && error.code !== '42P01' && error.code !== '42703') {
             toast({
