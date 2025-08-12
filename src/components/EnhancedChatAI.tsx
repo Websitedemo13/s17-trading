@@ -116,7 +116,7 @@ const EnhancedChatAI = () => {
 📈 **Market insights** - Tin tức, phân tích thị trường real-time
 🚀 **DeFi & Trading** - Chiến lược yield farming, futures, options
 
-Hãy hỏi tôi bất cứ điều gì v��� đầu tư và trading!`,
+Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
       role: 'assistant',
       timestamp: new Date(),
       type: 'text'
@@ -130,7 +130,7 @@ Hãy hỏi tôi bất cứ điều gì v��� đầu tư và trading!`,
   const inputRef = useRef<HTMLInputElement>(null);
 
   const categories = [
-    { id: 'all', label: 'Tất cả', icon: Sparkles },
+    { id: 'all', label: 'T��t cả', icon: Sparkles },
     { id: 'analysis', label: 'Phân tích', icon: BarChart3 },
     { id: 'stocks', label: 'Cổ phiếu', icon: TrendingUp },
     { id: 'defi', label: 'DeFi', icon: Target },
@@ -166,7 +166,7 @@ Hãy hỏi tôi bất cứ điều gì v��� đầu tư và trading!`,
 
 **Tình hình hiện tại:**
 • Giá: $95,234 (+2.4% 24h)
-• Vùng kháng cự: $97,000 - $100,000
+�� Vùng kháng cự: $97,000 - $100,000
 • Vùng hỗ trợ: $92,000 - $90,000
 • RSI: 68 (gần vùng quá mua)
 
@@ -428,9 +428,9 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
                 )}
 
                 <div className={cn(
-                  "max-w-[95%] rounded-2xl p-4 space-y-3",
+                  "max-w-[90%] rounded-2xl p-3 space-y-2",
                   message.role === 'user'
-                    ? 'bg-primary text-primary-foreground ml-8'
+                    ? 'bg-primary text-primary-foreground ml-4'
                     : 'bg-card border border-border/50 shadow-sm'
                 )}>
                   <div className="prose prose-sm max-w-none dark:prose-invert">
