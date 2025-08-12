@@ -53,10 +53,22 @@ export const FloatingNotificationSystem = ({ className }: FloatingNotificationSy
           .order('created_at', { ascending: false })
           .limit(showAll ? 50 : 5);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Supabase error fetching notifications:', error);
+          // Don't show error for table not existing yet
+          if (error.code !== 'PGRST116' && error.code !== '42P01') {
+            toast({
+              title: "Lỗi",
+              description: "Không thể tải thông báo",
+              variant: "destructive"
+            });
+          }
+          return;
+        }
         setNotifications(data || []);
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error('Error fetching notifications:', errorMessage);
       }
     };
 
