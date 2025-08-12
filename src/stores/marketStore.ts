@@ -17,14 +17,35 @@ export const useMarketStore = create<MarketState>((set) => ({
   fetchCryptoData: async () => {
     set({ loading: true });
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+
       const response = await fetch(
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false'
+        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false',
+        {
+          signal: controller.signal,
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
       );
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      set({ cryptoData: data });
+
+      if (Array.isArray(data) && data.length > 0) {
+        set({ cryptoData: data });
+      } else {
+        throw new Error('Invalid API response format');
+      }
     } catch (error) {
-      console.error('Error fetching crypto data:', error);
-      // Fallback data
+      console.warn('Failed to fetch live crypto data, using fallback:', error);
+      // Enhanced fallback data with more realistic values
       set({
         cryptoData: [
           {
@@ -56,6 +77,26 @@ export const useMarketStore = create<MarketState>((set) => ({
             market_cap: 139876543210,
             total_volume: 8765432109,
             image: 'https://assets.coingecko.com/coins/images/44/small/xrp-symbol-white-128.png'
+          },
+          {
+            id: 'cardano',
+            name: 'Cardano',
+            symbol: 'ADA',
+            current_price: 1.12,
+            price_change_percentage_24h: 3.8,
+            market_cap: 39876543210,
+            total_volume: 2345678901,
+            image: 'https://assets.coingecko.com/coins/images/975/small/cardano.png'
+          },
+          {
+            id: 'solana',
+            name: 'Solana',
+            symbol: 'SOL',
+            current_price: 234.56,
+            price_change_percentage_24h: -2.1,
+            market_cap: 110123456789,
+            total_volume: 5432109876,
+            image: 'https://assets.coingecko.com/coins/images/4128/small/solana.png'
           }
         ]
       });
