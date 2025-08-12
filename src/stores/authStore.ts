@@ -231,7 +231,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session);
 
         // Check if current session is admin to prevent override
         const currentState = get();
