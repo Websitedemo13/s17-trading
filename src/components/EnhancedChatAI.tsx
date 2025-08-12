@@ -176,7 +176,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 🔸 **Volume**: Giảm dần, cần volume breakthrough
 🔸 **Fibonacci**: Đang test vùng 0.618 retracement
 
-**Dự đoán tu���n tới:**
+**Dự đoán tuần tới:**
 📈 **Kịch bản tích cực** (60%): Test $100K nếu vượt $97K
 📊 **Kịch bản trung tính** (30%): Sideway $92K-$97K
 📉 **Kịch bản tiêu cực** (10%): Về test $88K-$90K
@@ -256,7 +256,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
     if (query.toLowerCase().includes('risk') || query.toLowerCase().includes('quản lý rủi ro')) {
       return `🛡️ **Risk Management Masterclass**
 
-**📏 Position Sizing (Quan trọng nh���t)**
+**📏 Position Sizing (Quan trọng nhất)**
 • 2% rule: Không rủi ro >2% account mỗi trade
 • Kelly Criterion cho size optimization
 • Portfolio correlation analysis
@@ -401,61 +401,6 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
               <RefreshCw className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="border-b bg-muted/20 p-2 md:p-4">
-        <div className="mb-3">
-          <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-            <Zap className="h-4 w-4 text-primary" />
-            Actions nhanh
-          </h4>
-          <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-            <TabsList className="w-full justify-start overflow-x-auto">
-              {categories.map((category) => (
-                <TabsTrigger
-                  key={category.id}
-                  value={category.id}
-                  className="flex items-center gap-2 text-xs"
-                >
-                  <category.icon className="h-3 w-3" />
-                  {category.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-2">
-          {filteredActions.map((action) => (
-            <motion.div
-              key={action.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Card 
-                className="cursor-pointer hover:shadow-md transition-all duration-200 border-muted"
-                onClick={() => handleQuickAction(action)}
-              >
-                <CardContent className="p-3">
-                  <div className="flex items-start gap-2">
-                    <div className="p-1 bg-primary/10 rounded">
-                      <action.icon className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-sm line-clamp-1">
-                        {action.title}
-                      </h5>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {action.description}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
         </div>
       </div>
 
