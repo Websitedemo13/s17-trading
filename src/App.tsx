@@ -59,6 +59,7 @@ const App = () => {
   useEffect(() => {
     initialize();
     initializeTheme();
+    initializeI18n();
   }, [initialize, initializeTheme]);
 
   useEffect(() => {
