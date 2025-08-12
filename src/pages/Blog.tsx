@@ -890,6 +890,19 @@ const Blog = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Blog Post Detail Dialog */}
+      <BlogPostDetail
+        post={selectedPost}
+        open={showPostDetail}
+        onOpenChange={setShowPostDetail}
+        currentLanguage={currentLanguage}
+        onLike={toggleLike}
+        onBookmark={toggleBookmark}
+        onShare={handleShare}
+        likedPosts={likedPosts}
+        bookmarkedPosts={bookmarkedPosts}
+      />
     </div>
   );
 };
