@@ -386,8 +386,15 @@ const Profile = () => {
             {/* Profile Card */}
             <Card className="glass-card lg:col-span-1">
               <CardHeader className="text-center pb-2">
+                <div className="flex justify-end mb-2">
+                  <SettingsDialog>
+                    <Button variant="ghost" size="sm">
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  </SettingsDialog>
+                </div>
                 <div className="relative mx-auto mb-4">
-                  <Avatar className="h-24 w-24 mx-auto border-4 border-primary/20">
+                  <Avatar className="h-24 w-24 mx-auto border-4 border-primary/20 shadow-lg">
                     <AvatarImage src={profile?.avatar_url} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
                       {user.email?.charAt(0).toUpperCase()}
@@ -395,7 +402,7 @@ const Profile = () => {
                   </Avatar>
                   <div className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1/2">
                     <label htmlFor="avatar-upload" className="cursor-pointer">
-                      <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors">
+                      <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors shadow-lg">
                         <Camera className="h-4 w-4" />
                       </div>
                       <input
@@ -404,6 +411,7 @@ const Profile = () => {
                         accept="image/*"
                         className="hidden"
                         onChange={handleAvatarUpload}
+                        disabled={loading}
                       />
                     </label>
                   </div>
