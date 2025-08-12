@@ -187,66 +187,41 @@ const Profile = () => {
     }
   };
 
-  const updateProfile = async () => {
+  const handleUpdateProfile = async () => {
     if (!user) return;
 
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          display_name: displayName,
-          bio,
-          phone,
-          location,
-          birth_date: birthDate,
-          company,
-          website,
-          github_url: githubUrl,
-          twitter_url: twitterUrl,
-          linkedin_url: linkedinUrl,
-          facebook_url: facebookUrl,
-          instagram_url: instagramUrl,
-          notification_email: notificationEmail,
-          notification_push: notificationPush,
-          notification_sms: notificationSms,
-          theme_preference: themePreference,
-          language,
-          timezone,
-          currency,
-          privacy_profile: privacyProfile,
-          privacy_portfolio: privacyPortfolio,
-          privacy_activity: privacyActivity,
-          two_factor_enabled: twoFactorEnabled,
-          updated_at: new Date().toISOString()
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Thành công",
-        description: "Cập nhật hồ sơ thành công!"
-      });
-
-      fetchProfile();
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast({
-        title: "Lỗi",
-        description: "Không thể cập nhật hồ sơ",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
+    await updateProfile(user.id, {
+      display_name: displayName,
+      bio,
+      phone,
+      location,
+      birth_date: birthDate,
+      company,
+      website,
+      github_url: githubUrl,
+      twitter_url: twitterUrl,
+      linkedin_url: linkedinUrl,
+      facebook_url: facebookUrl,
+      instagram_url: instagramUrl,
+      notification_email: notificationEmail,
+      notification_push: notificationPush,
+      notification_sms: notificationSms,
+      theme_preference: themePreference,
+      language,
+      timezone,
+      currency,
+      privacy_profile: privacyProfile,
+      privacy_portfolio: privacyPortfolio,
+      privacy_activity: privacyActivity,
+      two_factor_enabled: twoFactorEnabled
+    });
   };
 
   const changePassword = async () => {
     if (newPassword !== confirmPassword) {
       toast({
         title: "Lỗi",
-        description: "Mật khẩu xác nhận không kh��p",
+        description: "Mật khẩu xác nhận không khớp",
         variant: "destructive"
       });
       return;
@@ -401,7 +376,7 @@ const Profile = () => {
       console.error('Error exporting data:', error);
       toast({
         title: "Lỗi",
-        description: "Không thể xu��t dữ liệu",
+        description: "Không thể xuất dữ liệu",
         variant: "destructive"
       });
     }
@@ -437,7 +412,7 @@ const Profile = () => {
           Hồ sơ cá nhân
         </h1>
         <p className="text-muted-foreground text-lg">
-          Quản lý thông tin cá nhân, cài đặt và b��o mật tài khoản
+          Quản lý thông tin cá nhân, cài đặt và bảo mật tài khoản
         </p>
       </div>
 
