@@ -97,7 +97,7 @@ const quickActions: QuickAction[] = [
   {
     id: '6',
     title: 'Portfolio Review',
-    description: 'Đánh giá và tối ưu portfolio',
+    description: '��ánh giá và tối ưu portfolio',
     icon: DollarSign,
     query: 'Hướng dẫn cách xây dựng portfolio crypto cân bằng cho năm 2024',
     category: 'portfolio'
@@ -212,7 +212,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
 • Catalyst: Dự án Dung Quất 2 hoạt động
 
 **💡 Chiến lược đầu tư:**
-�� Phân bổ: 40% VCB, 35% VIC, 25% HPG
+🔸 Phân bổ: 40% VCB, 35% VIC, 25% HPG
 🔸 Thời gian: 6-12 tháng
 🔸 Stop loss: -15% portfolio level`;
     }
@@ -297,7 +297,7 @@ Hãy hỏi tôi bất cứ điều gì về đầu tư và trading!`,
     // Default sophisticated response
     return `🤖 **AI Analysis Complete**
 
-Cảm ơn bạn đã hỏi! Tôi đã phân tích câu h���i của bạn và đây là insights từ database gồm hơn 10,000 báo cáo nghiên cứu và real-time market data.
+Cảm ơn bạn đã hỏi! Tôi đã phân tích câu hỏi của bạn và đây là insights từ database gồm hơn 10,000 báo cáo nghiên cứu và real-time market data.
 
 **💡 Key Insights:**
 • Thị trường hiện tại đang trong giai đoạn consolidation
@@ -489,7 +489,7 @@ Bạn có muốn tôi đi sâu vào bất kỳ aspect nào không? Tôi có th�
                     : 'bg-card border border-border/50 shadow-sm'
                 )}>
                   <div className="prose prose-sm max-w-none dark:prose-invert">
-                    <div className="whitespace-pre-wrap leading-relaxed text-sm">
+                    <div className="whitespace-pre-wrap leading-7 text-sm break-words">
                       {message.content}
                     </div>
                   </div>
