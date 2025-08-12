@@ -89,8 +89,11 @@ const CryptoList = () => {
   });
 
   if (isLoading) {
-    return <div className="glass-card rounded-lg p-6 animate-pulse">Loading...</div>;
+    return <div className="glass-card rounded-lg p-6 animate-pulse">Loading cryptocurrency data...</div>;
   }
+
+  // Always show data (either live or fallback), even if there's an error
+  const displayData = cryptos || FALLBACK_CRYPTO_DATA;
 
   return (
     <div className="glass-card rounded-lg p-3 sm:p-4 lg:p-6 animate-fade-in">
