@@ -78,7 +78,7 @@ const FloatingNotifications = () => {
   useEffect(() => {
     // Cleanup expired notifications
     const interval = setInterval(() => {
-      floatingNotifications.forEach(notification => {
+      filteredNotifications.forEach(notification => {
         if (notification.expires_at && new Date(notification.expires_at) < new Date()) {
           hideFloatingNotification(notification.id);
         }
@@ -86,7 +86,7 @@ const FloatingNotifications = () => {
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, [floatingNotifications, hideFloatingNotification]);
+  }, [filteredNotifications, hideFloatingNotification]);
 
   const handleDismiss = (notificationId: string) => {
     markAsRead(notificationId);
