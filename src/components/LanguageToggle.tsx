@@ -97,7 +97,11 @@ export const LanguageToggle = ({ className, compact = false }: LanguageTogglePro
       });
 
     } catch (error) {
-      console.error('Translation error:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Translation error:', {
+        message: errorMessage,
+        error
+      });
       setTranslationStatus(prev => ({
         ...prev,
         isTranslating: false
@@ -260,7 +264,11 @@ export const LanguageToggle = ({ className, compact = false }: LanguageTogglePro
       // Reload page to reset translations
       window.location.reload();
     } catch (error) {
-      console.error('Reset error:', error);
+      const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+      console.error('Reset error:', {
+        message: errorMessage,
+        error
+      });
       setTranslationStatus(prev => ({
         ...prev,
         isTranslating: false
