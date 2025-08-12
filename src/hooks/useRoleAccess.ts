@@ -1,0 +1,181 @@
+import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import { useEnhancedTeamStore } from '@/stores/enhancedTeamStore';
+import { EnhancedTeam } from '@/types/teams';
+
+export interface RolePermissions {
+  // Global permissions
+  isSystemAdmin: boolean;
+  canAccessAdminDashboard: boolean;
+  canUpgradeAccounts: boolean;
+  canManageAllTeams: boolean;
+  
+  // Team-specific permissions
+  canCreateTeams: boolean;
+  canJoinTeams: boolean;
+  canManageOwnTeams: boolean;
+  
+  // Account permissions
+  canRequestUpgrade: boolean;
+  maxTeams: number;
+  accountType: 'basic' | 'premium' | 'enterprise';
+}
+
+export const useRoleAccess = (teamId?: string): RolePermissions & {
+  // Team-specific permissions for current team
+  canInviteMembers: boolean;
+  canRemoveMembers: boolean;
+  canDeleteTeam: boolean;
+  canEditTeam: boolean;
+  isTeamOwner: boolean;
+  isTeamAdmin: boolean;
+  loading: boolean;
+} => {
+  const { user } = useAuthStore();
+  const { userProfile, teams, fetchUserProfile } = useEnhancedTeamStore();
+  const [loading, setLoading] = useState(true);
+  const [currentTeam, setCurrentTeam] = useState<EnhancedTeam | null>(null);
+
+  useEffect(() => {
+    if (user && !userProfile) {
+      fetchUserProfile();
+    }
+  }, [user, userProfile, fetchUserProfile]);
+
+  useEffect(() => {
+    if (teamId && teams.length > 0) {
+      const team = teams.find(t => t.id === teamId);
+      setCurrentTeam(team || null);
+    }
+    setLoading(false);
+  }, [teamId, teams]);
+
+  // System admin permissions
+  const isSystemAdmin = userProfile?.is_admin || false;
+  
+  // Account info
+  const accountType = userProfile?.account_type || 'basic';
+  const maxTeams = userProfile?.max_teams || 5;
+  
+  // Current team role
+  const isTeamOwner = currentTeam?.is_owner || false;
+  const isTeamAdmin = currentTeam?.user_role === 'admin' || isTeamOwner;
+
+  // Global permissions
+  const globalPermissions: RolePermissions = {
+    isSystemAdmin,
+    canAccessAdminDashboard: isSystemAdmin,
+    canUpgradeAccounts: isSystemAdmin,
+    canManageAllTeams: isSystemAdmin,
+    canCreateTeams: true, // All users can create teams (subject to limits)
+    canJoinTeams: true, // All users can join teams (subject to limits)
+    canManageOwnTeams: true,
+    canRequestUpgrade: accountType !== 'enterprise', // Enterprise users don't need upgrade
+    maxTeams,
+    accountType
+  };
+
+  // Team-specific permissions
+  const teamPermissions = {
+    canInviteMembers: isTeamAdmin,
+    canRemoveMembers: isTeamAdmin,
+    canDeleteTeam: isTeamOwner,
+    canEditTeam: isTeamAdmin,
+    isTeamOwner,
+    isTeamAdmin
+  };
+
+  return {
+    ...globalPermissions,
+    ...teamPermissions,
+    loading
+  };
+};
+
+// Hook for checking if user can perform specific actions
+export const usePermissionCheck = () => {
+  const { userProfile } = useEnhancedTeamStore();
+  
+  const checkTeamLimit = () => {
+    const currentTeams = userProfile?.max_teams || 5;
+    // This would need actual team count from the store
+    return { canJoinMore: true, limit: currentTeams };
+  };
+
+  const checkAdminAccess = (requiredPermission: 'system_admin' | 'team_admin', teamId?: string) => {
+    if (requiredPermission === 'system_admin') {
+      return userProfile?.is_admin || false;
+    }
+    
+    // For team admin, would need to check team membership
+    return false;
+  };
+
+  const checkFeatureAccess = (feature: string) => {
+    const accountType = userProfile?.account_type || 'basic';
+    
+    const featureMap = {
+      video_calls: ['premium', 'enterprise'],
+      advanced_admin: ['premium', 'enterprise'],
+      analytics: ['enterprise'],
+      api_access: ['enterprise']
+    };
+
+    return featureMap[feature]?.includes(accountType) || false;
+  };
+
+  return {
+    checkTeamLimit,
+    checkAdminAccess,
+    checkFeatureAccess
+  };
+};
+
+// Component wrapper for role-based rendering
+export const RoleGuard = ({ 
+  children, 
+  requireAdmin = false,
+  requireTeamRole,
+  teamId,
+  fallback = null 
+}: {
+  children: React.ReactNode;
+  requireAdmin?: boolean;
+  requireTeamRole?: 'owner' | 'admin' | 'member';
+  teamId?: string;
+  fallback?: React.ReactNode;
+}) => {
+  const permissions = useRoleAccess(teamId);
+
+  if (permissions.loading) {
+    return (
+      <div className="flex items-center justify-center p-4">
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Check system admin requirement
+  if (requireAdmin && !permissions.isSystemAdmin) {
+    return <>{fallback}</>;
+  }
+
+  // Check team role requirement
+  if (requireTeamRole) {
+    switch (requireTeamRole) {
+      case 'owner':
+        if (!permissions.isTeamOwner) return <>{fallback}</>;
+        break;
+      case 'admin':
+        if (!permissions.isTeamAdmin) return <>{fallback}</>;
+        break;
+      case 'member':
+        // All team members can access
+        break;
+    }
+  }
+
+  return <>{children}</>;
+};
+
+export default useRoleAccess;
