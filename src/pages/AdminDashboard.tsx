@@ -61,6 +61,16 @@ const AdminDashboard = () => {
     setUsers(userData);
   };
 
+  // Load data on demand when user switches tabs
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (value === 'users' && users.length === 0) {
+      loadUsers();
+    } else if (value === 'posts' && posts.length === 0) {
+      fetchPosts();
+    }
+  };
+
   const handleCreatePost = async () => {
     if (!newPostTitle.trim() || !newPostContent.trim()) {
       toast({
