@@ -55,12 +55,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           const adminStore = useAdminStore.getState();
           const isAdminValid = adminStore.checkAdminStatus(email);
 
-          console.log('Admin login process:', {
-            email,
-            isAdminValid,
-            adminStore: adminStore.isAdmin
-          });
-
           if (isAdminValid) {
             // Set user state first with admin flag
             set({
@@ -68,11 +62,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               session: mockSession,
               loading: false,
               isAdminSession: true
-            });
-
-            console.log('Admin user set successfully:', {
-              user: mockUser,
-              adminStoreAfter: useAdminStore.getState().isAdmin
             });
 
             // Delay toast to ensure state is updated
